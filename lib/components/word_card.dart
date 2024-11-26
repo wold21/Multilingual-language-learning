@@ -51,7 +51,7 @@ class _WordCardState extends State<WordCard> {
       setState(() {
         _showContent = false;
       });
-      Future.delayed(const Duration(milliseconds: 200), () {
+      Future.delayed(const Duration(milliseconds: 250), () {
         setState(() {
           isExpanded = false;
         });
@@ -61,7 +61,7 @@ class _WordCardState extends State<WordCard> {
       setState(() {
         isExpanded = true;
       });
-      Future.delayed(const Duration(milliseconds: 350), () {
+      Future.delayed(const Duration(milliseconds: 200), () {
         setState(() {
           _showContent = true;
         });
@@ -71,7 +71,6 @@ class _WordCardState extends State<WordCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 25.0,

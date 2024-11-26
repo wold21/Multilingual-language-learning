@@ -39,7 +39,13 @@ class _AddGroupPageState extends State<AddGroupPage> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const Text('New Group'),
+        title: const Text(
+          'New Group',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: _canSave
@@ -55,6 +61,8 @@ class _AddGroupPageState extends State<AddGroupPage> {
             child: Text(
               'Done',
               style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
                 color: _canSave ? Theme.of(context).primaryColor : Colors.grey,
               ),
             ),

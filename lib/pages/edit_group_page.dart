@@ -47,7 +47,13 @@ class _EditGroupPageState extends State<EditGroupPage> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const Text('Edit Group'),
+        title: const Text(
+          'Edit Group',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: _canSave

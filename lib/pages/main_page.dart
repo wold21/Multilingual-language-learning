@@ -75,7 +75,27 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Voca Storage'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Voca Storage',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '${words.length} words', // 단어 수 표시
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+              ),
+            ),
+          ],
+        ),
+        toolbarHeight: 100,
         scrolledUnderElevation: 0, // 스크롤 시 그림자 효과 제거
         elevation: 0,
         actions: [

@@ -53,7 +53,7 @@ class _SelectGroupPageState extends State<SelectGroupPage> {
                   color: primaryColor,
                 ),
                 title: const Text(
-                  'Edit Group',
+                  'Edit',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -80,7 +80,7 @@ class _SelectGroupPageState extends State<SelectGroupPage> {
                   color: primaryColor,
                 ),
                 title: const Text(
-                  'Delete Group',
+                  'Delete',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -148,13 +148,26 @@ class _SelectGroupPageState extends State<SelectGroupPage> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const Text('Select Group'),
+        title: const Text(
+          'Select Group',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context, selectedGroup); // 선택된 그룹 반환
             },
-            child: const Text('Done'),
+            child: Text(
+              'Done',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
           ),
         ],
       ),

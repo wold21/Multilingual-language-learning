@@ -107,7 +107,7 @@ class _GroupPageState extends State<GroupPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Edit Group'),
+          title: const Text('Edit'),
           content: TextField(
             controller: textController,
             autofocus: true,
@@ -191,13 +191,26 @@ class _GroupPageState extends State<GroupPage> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const Text('Select Group'),
+        title: const Text(
+          'Select Group',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context, selectedGroupIds.toList());
             },
-            child: const Text('Done'),
+            child: Text(
+              'Done',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
           ),
         ],
       ),

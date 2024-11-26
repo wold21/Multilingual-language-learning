@@ -18,7 +18,13 @@ class _AddWordPageState extends State<AddWordPage> {
   final DatabaseService _databaseService = DatabaseService.instance;
   List<Group> groups = [];
 
-  Group? _selectedGroup;
+  Group? _selectedGroup = Group(
+    id: 2,
+    name: 'Not specified',
+    createdAt: 0,
+    updatedAt: 0,
+  );
+
   bool _canSave = false;
 
   @override
