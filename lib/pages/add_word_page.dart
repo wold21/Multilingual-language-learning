@@ -54,9 +54,9 @@ class _AddWordPageState extends State<AddWordPage> {
   Future<void> _saveWord() async {
     if (_canSave) {
       final word = Word(
-        word: _wordController.text,
-        meaning: _meaningController.text,
-        memo: _memoController.text.isEmpty ? null : _memoController.text,
+        word: _wordController.text.trim(),
+        meaning: _meaningController.text.trim(),
+        memo: _memoController.text.isEmpty ? null : _memoController.text.trim(),
         groupId: _selectedGroup?.id,
         language: 'en',
         createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -67,10 +67,10 @@ class _AddWordPageState extends State<AddWordPage> {
       await _databaseService.createWord(word);
 
       if (mounted) {
-        Navigator.of(context).pushReplacement(
-          // 새로운 페이지로 교체
-          MaterialPageRoute(
-            builder: (context) => const MainPage(),
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Commited Word'),
+            duration: Duration(seconds: 1),
           ),
         );
       }
@@ -128,6 +128,8 @@ class _AddWordPageState extends State<AddWordPage> {
             child: Text(
               'Save',
               style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
                 color: _canSave ? Theme.of(context).primaryColor : Colors.grey,
               ),
             ),
@@ -200,43 +202,49 @@ class _AddWordPageState extends State<AddWordPage> {
               ),
               const SizedBox(height: 24), // 간격 좀 더 늘림
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // 추가
                 children: [
                   const Text(
-                    'Select Group',
+                    'Group',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(width: 16),
                   Expanded(
-                    child: Text(
-                      _selectedGroup?.name ?? 'Not specified',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.white,
-                    ),
-                    onPressed: () async {
-                      final selectedGroup = await Navigator.push<Group>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SelectGroupPage(),
+                    child: Row(
+                      // 그룹명과 화살표를 묶어주는 Row 추가
+                      mainAxisAlignment: MainAxisAlignment.end, // 오른쪽 정렬
+                      children: [
+                        Text(
+                          _selectedGroup?.name ?? 'Not specified',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 16,
+                          ),
                         ),
-                      );
-                      if (selectedGroup != null) {
-                        setState(() {
-                          _selectedGroup = selectedGroup;
-                        });
-                      }
-                    },
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                          onPressed: () async {
+                            final selectedGroup = await Navigator.push<Group>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SelectGroupPage(),
+                              ),
+                            );
+                            if (selectedGroup != null) {
+                              setState(() {
+                                _selectedGroup = selectedGroup;
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

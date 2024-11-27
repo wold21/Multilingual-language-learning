@@ -152,7 +152,7 @@ class _MainPageState extends State<MainPage> {
             const Text(
               'Voca Storage',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -171,7 +171,7 @@ class _MainPageState extends State<MainPage> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.sort), // 정렬 아이콘
+            icon: const Icon(Icons.sort, size: 28), // 정렬 아이콘
             onPressed: () async {
               final result = await Navigator.push<SortType>(
                 context,
@@ -194,7 +194,7 @@ class _MainPageState extends State<MainPage> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.folder_copy_outlined),
+            icon: const Icon(Icons.folder_copy_outlined, size: 28),
             onPressed: () async {
               final List<int>? result = await Navigator.push<List<int>>(
                 context,
@@ -212,52 +212,65 @@ class _MainPageState extends State<MainPage> {
                   offset = 0;
                 });
                 await _saveGroupIdsPreference(result);
-                _loadWords(); // 새로운 그룹으로 데이터 다시 로드
+                _loadWords();
               }
             },
           ),
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: Icon(
+                searchQuery?.isNotEmpty == true
+                    ? Icons.search_off_rounded
+                    : Icons.search,
+                size: 28),
             onPressed: () async {
-              final result = await showGeneralDialog<Map<String, dynamic>>(
-                context: context,
-                barrierDismissible: true,
-                barrierLabel: '',
-                barrierColor: Colors.black.withOpacity(0.3),
-                transitionDuration: const Duration(milliseconds: 300),
-                pageBuilder: (context, animation1, animation2) => Container(),
-                transitionBuilder: (context, animation1, animation2, child) {
-                  return Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(0, -1),
-                            end: Offset.zero,
-                          ).animate(animation1),
-                          child: SearchSheet(
-                            selectedGroupIds: selectedGroupIds,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              );
-
-              if (result != null) {
+              if (searchQuery?.isNotEmpty == true) {
                 setState(() {
-                  searchQuery = result['query'] as String;
-                  if (result['searchInAllGroups'] as bool) {
-                    selectedGroupIds.clear();
-                  }
+                  searchQuery = null;
                   words.clear();
                   offset = 0;
                 });
-                await _loadWords();
+                _loadWords();
+              } else {
+                final result = await showGeneralDialog<Map<String, dynamic>>(
+                  context: context,
+                  barrierDismissible: true,
+                  barrierLabel: '',
+                  barrierColor: Colors.black.withOpacity(0.3),
+                  transitionDuration: const Duration(milliseconds: 300),
+                  pageBuilder: (context, animation1, animation2) => Container(),
+                  transitionBuilder: (context, animation1, animation2, child) {
+                    return Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(0, -1),
+                              end: Offset.zero,
+                            ).animate(animation1),
+                            child: SearchSheet(
+                              selectedGroupIds: selectedGroupIds,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                if (result != null) {
+                  setState(() {
+                    searchQuery = result['query'] as String;
+                    if (result['searchInAllGroups'] as bool) {
+                      selectedGroupIds.clear();
+                    }
+                    words.clear();
+                    offset = 0;
+                  });
+                  await _loadWords();
+                }
               }
             },
           ),
@@ -275,21 +288,20 @@ class _MainPageState extends State<MainPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final result = await Navigator.push<Word>(
+          final needsRefresh = await Navigator.push<bool>(
             context,
             MaterialPageRoute(
               builder: (context) => const AddWordPage(),
-              fullscreenDialog: true, // 아래에서 위로 올라오는 애니메이션
+              fullscreenDialog: true,
             ),
           );
 
-          if (result != null) {
-            await _databaseService.createWord(result);
+          if (needsRefresh == true) {
             setState(() {
-              words.clear(); // 기존 목록 초기화
-              offset = 0; // offset 초기화
+              words.clear();
+              offset = 0;
             });
-            _loadWords(); // 처음부터 다시 로드
+            _loadWords();
           }
         },
         child: const Icon(Icons.add),
