@@ -26,9 +26,7 @@ class GroupCard extends StatelessWidget {
       ),
       child: Card(
         margin: EdgeInsets.zero,
-        color: isSelected
-            ? theme.primaryColor.withOpacity(0.5)
-            : null, // 선택 시 배경색 변경
+        color: isSelected ? theme.primaryColor.withOpacity(0.5) : null,
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
           onTap: onTap,
@@ -40,10 +38,10 @@ class GroupCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     group.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white, // 선택 시 텍스트 색상도 변경
+                      color: Colors.white,
                     ),
                   ),
                 ),

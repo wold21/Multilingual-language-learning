@@ -1,7 +1,10 @@
+import 'package:eng_word_storage/components/sheet/search_sheet.dart';
 import 'package:eng_word_storage/components/word_card.dart';
 import 'package:eng_word_storage/pages/add_word_page.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
+import 'package:eng_word_storage/pages/sort_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/database_service.dart';
 import '../models/word.dart';
 
@@ -13,17 +16,26 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  static const String SORT_KEY = 'current_sort';
+  static const String GROUP_IDS_KEY = 'selected_group_ids';
   final DatabaseService _databaseService = DatabaseService.instance;
   final ScrollController _scrollController = ScrollController();
   List<Word> words = [];
+
+  /// 검색 관련 ///
+  // 정렬 기준
+  late SortType currentSort;
+  List<int> selectedGroupIds = [];
+
   bool isLoading = false;
   int offset = 0;
   static const int limit = 300;
+  String? searchQuery;
 
   @override
   void initState() {
     super.initState();
-    _loadWords();
+    _initializePreferences();
     _scrollController.addListener(_scrollListener);
   }
 
@@ -40,6 +52,61 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  Future<void> _initializePreferences() async {
+    await _loadPreferences();
+    _loadWords(); // 설정 로드 후 단어 목록 로드
+  }
+
+  Future<void> _loadPreferences() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      // 정렬 조건 불러오기
+      currentSort = SortType.createdDesc;
+      final savedSortIndex = prefs.getInt(SORT_KEY);
+      if (savedSortIndex != null && savedSortIndex < SortType.values.length) {
+        currentSort = SortType.values[savedSortIndex];
+      }
+
+      // 선택된 그룹 ID들 불러오기
+      final savedGroupIds = prefs.getStringList(GROUP_IDS_KEY);
+      if (savedGroupIds != null) {
+        selectedGroupIds = savedGroupIds
+            .map((e) => int.tryParse(e))
+            .where((e) => e != null)
+            .map((e) => e!)
+            .toList();
+      }
+
+      setState(() {});
+    } catch (e) {
+      print('Error loading preferences: $e');
+    }
+  }
+
+  // 정렬 조건 저장
+  Future<void> _saveSortPreference(SortType sort) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(SORT_KEY, sort.index);
+    } catch (e) {
+      print('Error saving sort preference: $e');
+    }
+  }
+
+  // 선택된 그룹 ID들 저장
+  Future<void> _saveGroupIdsPreference(List<int> groupIds) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(
+        GROUP_IDS_KEY,
+        groupIds.map((e) => e.toString()).toList(),
+      );
+    } catch (e) {
+      print('Error saving group IDs: $e');
+    }
+  }
+
   Future<void> _loadWords() async {
     if (isLoading) return;
 
@@ -51,11 +118,19 @@ class _MainPageState extends State<MainPage> {
       final loadedWords = await _databaseService.getAllWords(
         limit: limit,
         offset: offset,
+        orderBy: currentSort.query,
+        groupIds: selectedGroupIds.isEmpty ? null : selectedGroupIds,
+        query: searchQuery,
       );
 
       setState(() {
-        words.addAll(loadedWords); // 기존 목록에 새로운 단어들 추가
-        offset += loadedWords.length; // 다음 페이지를 위해 offset 증가
+        if (offset == 0) {
+          // 새로운 검색일 경우
+          words = loadedWords;
+        } else {
+          words.addAll(loadedWords);
+        }
+        offset += loadedWords.length;
       });
     } catch (e) {
       print('Error loading words: $e');
@@ -64,10 +139,6 @@ class _MainPageState extends State<MainPage> {
       setState(() {
         isLoading = false;
       });
-      for (var word in words) {
-        print(
-            '단어: ${word.word}, 그룹 ID: ${word.groupId}, 그룹명: ${word.groupName}');
-      }
     }
   }
 
@@ -100,18 +171,94 @@ class _MainPageState extends State<MainPage> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.folder_copy_outlined),
-            onPressed: () {
-              Navigator.push(
+            icon: const Icon(Icons.sort), // 정렬 아이콘
+            onPressed: () async {
+              final result = await Navigator.push<SortType>(
                 context,
-                MaterialPageRoute(builder: (context) => const GroupPage()),
+                MaterialPageRoute(
+                  builder: (context) => SortPage(
+                    currentSort: currentSort, // 현재 정렬 조건 전달
+                  ),
+                ),
               );
+
+              if (result != null && result != currentSort) {
+                setState(() {
+                  currentSort = result;
+                  words.clear();
+                  offset = 0;
+                });
+                await _saveSortPreference(result);
+                _loadWords(); // 새로운 정렬 조건으로 데이터 다시 로드
+              }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.folder_copy_outlined),
+            onPressed: () async {
+              final List<int>? result = await Navigator.push<List<int>>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GroupPage(
+                    selectedGroupIds: selectedGroupIds,
+                  ),
+                ),
+              );
+
+              if (result != null) {
+                setState(() {
+                  selectedGroupIds = result;
+                  words.clear();
+                  offset = 0;
+                });
+                await _saveGroupIdsPreference(result);
+                _loadWords(); // 새로운 그룹으로 데이터 다시 로드
+              }
             },
           ),
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () {
-              // 검색 기능
+            onPressed: () async {
+              final result = await showGeneralDialog<Map<String, dynamic>>(
+                context: context,
+                barrierDismissible: true,
+                barrierLabel: '',
+                barrierColor: Colors.black.withOpacity(0.3),
+                transitionDuration: const Duration(milliseconds: 300),
+                pageBuilder: (context, animation1, animation2) => Container(),
+                transitionBuilder: (context, animation1, animation2, child) {
+                  return Stack(
+                    children: [
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0, -1),
+                            end: Offset.zero,
+                          ).animate(animation1),
+                          child: SearchSheet(
+                            selectedGroupIds: selectedGroupIds,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              if (result != null) {
+                setState(() {
+                  searchQuery = result['query'] as String;
+                  if (result['searchInAllGroups'] as bool) {
+                    selectedGroupIds.clear();
+                  }
+                  words.clear();
+                  offset = 0;
+                });
+                await _loadWords();
+              }
             },
           ),
         ],

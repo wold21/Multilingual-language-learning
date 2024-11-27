@@ -6,7 +6,12 @@ import '../services/database_service.dart';
 import '../components/group_card.dart';
 
 class GroupPage extends StatefulWidget {
-  const GroupPage({super.key});
+  final List<int> selectedGroupIds;
+
+  const GroupPage({
+    super.key,
+    required this.selectedGroupIds,
+  });
 
   @override
   State<GroupPage> createState() => _GroupPageState();
@@ -15,16 +20,20 @@ class GroupPage extends StatefulWidget {
 class _GroupPageState extends State<GroupPage> {
   final DatabaseService _databaseService = DatabaseService.instance;
   List<Group> groups = [];
-  Set<int> selectedGroupIds = {};
+  List<int> selectedGroupIds = [];
 
   @override
   void initState() {
     super.initState();
+    selectedGroupIds = widget.selectedGroupIds.isEmpty
+        ? [] // 빈 리스트는 All을 의미
+        : List.from(widget.selectedGroupIds);
     _loadGroups();
   }
 
   Future<void> _loadGroups() async {
     final loadedGroups = await _databaseService.getAllGroups();
+
     setState(() {
       groups = loadedGroups;
     });
@@ -33,9 +42,8 @@ class _GroupPageState extends State<GroupPage> {
   void _showBottomSheet(Group group) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).cardColor, // 카드 배경색과 동일하게
+      backgroundColor: Theme.of(context).cardColor,
       shape: const RoundedRectangleBorder(
-        // 상단 모서리를 둥글게
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(12),
         ),
@@ -47,7 +55,7 @@ class _GroupPageState extends State<GroupPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 8), // 상단 여백 추가
+              const SizedBox(height: 8),
               ListTile(
                 leading: Icon(
                   Icons.edit_rounded,
@@ -77,7 +85,7 @@ class _GroupPageState extends State<GroupPage> {
               ),
               ListTile(
                 leading: Icon(
-                  Icons.delete_rounded, // rounded 스타일 아이콘
+                  Icons.delete_rounded,
                   color: primaryColor,
                 ),
                 title: const Text(
@@ -92,7 +100,7 @@ class _GroupPageState extends State<GroupPage> {
                   _showDeleteConfirmDialog(group);
                 },
               ),
-              const SizedBox(height: 8), // 하단 여백 추가
+              const SizedBox(height: 8),
             ],
           ),
         );
@@ -182,13 +190,30 @@ class _GroupPageState extends State<GroupPage> {
     );
   }
 
+  void _handleGroupSelection(Group group) {
+    setState(() {
+      if (group.name == 'All') {
+        // id 대신 name으로 All 그룹 판단
+        selectedGroupIds.clear(); // 모든 선택 해제
+      } else {
+        if (selectedGroupIds.contains(group.id)) {
+          selectedGroupIds.remove(group.id);
+        } else {
+          selectedGroupIds.add(group.id!);
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         centerTitle: true,
         title: const Text(
@@ -201,7 +226,7 @@ class _GroupPageState extends State<GroupPage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context, selectedGroupIds.toList());
+              Navigator.of(context).pop<List<int>>(selectedGroupIds);
             },
             child: Text(
               'Done',
@@ -218,19 +243,17 @@ class _GroupPageState extends State<GroupPage> {
         itemCount: groups.length,
         itemBuilder: (context, index) {
           final group = groups[index];
+          final isSelected = group.name == 'All' // id 대신 name으로 판단
+              ? selectedGroupIds.isEmpty
+              : selectedGroupIds.contains(group.id);
+
           return GroupCard(
             group: group,
-            isSelected: selectedGroupIds.contains(group.id),
-            onTap: () {
-              setState(() {
-                if (selectedGroupIds.contains(group.id)) {
-                  selectedGroupIds.remove(group.id);
-                } else {
-                  selectedGroupIds.add(group.id!);
-                }
-              });
-            },
-            onLongPress: () => _showBottomSheet(group),
+            isSelected: isSelected,
+            onTap: () => _handleGroupSelection(group),
+            onLongPress: group.name != 'All' // All 그룹은 편집/삭제 불가
+                ? () => _showBottomSheet(group)
+                : () {},
           );
         },
       ),

@@ -25,6 +25,17 @@ class DatabaseService {
     return _database!;
   }
 
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // 버전 1에서 2로 업그레이드
+      // word_length 컬럼 추가
+      await db.execute('ALTER TABLE words ADD COLUMN word_length INTEGER');
+
+      // 기존 데이터의 word_length 업데이트
+      await db.execute('UPDATE words SET word_length = length(word)');
+    }
+  }
+
   Future<Database> _initDB(String filePath) async {
     try {
       final dbPath = await getDatabasesPath();
@@ -34,8 +45,9 @@ class DatabaseService {
 
       final db = await openDatabase(
         path,
-        version: 1,
+        version: 2,
         onCreate: _createDB,
+        onUpgrade: _onUpgrade,
       );
 
       // 데이터베이스 초기화 완료
@@ -58,45 +70,113 @@ class DatabaseService {
     )
   ''');
     await db.execute('''
-      CREATE TABLE words (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        word TEXT NOT NULL,
-        meaning TEXT NOT NULL,
-        memo TEXT,
-        group_id INTEGER,
-        language TEXT NOT NULL DEFAULT 'en',
-        audio_path TEXT,
-        audio_last_updated INTEGER,
-        created_at INTEGER NOT NULL,
-        updated_at INTEGER NOT NULL,
-        FOREIGN KEY (group_id) REFERENCES groups(id)
-      )
-    ''');
+    CREATE TABLE words(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      word TEXT NOT NULL,
+      word_length INTEGER NOT NULL, 
+      meaning TEXT NOT NULL,
+      memo TEXT,
+      group_id INTEGER,
+      language TEXT NOT NULL,
+      audio_path TEXT,
+      audio_last_updated INTEGER,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      FOREIGN KEY (group_id) REFERENCES groups (id)
+    )
+  ''');
+
+    await db.execute('''
+    CREATE INDEX idx_word_length ON words(word_length)
+  ''');
   }
 
   // Word CRUD operations
   Future<Word> createWord(Word word) async {
     final db = await database;
-    final id = await db.insert('words', word.toMap());
-    return word.copyWith(id: id); // 생성된 id 반영
+    final wordLength = word.word.length; // 단어 길이 계산
+
+    final id = await db.insert(
+      'words',
+      {
+        ...word.toMap(),
+        'word_length': wordLength, // 단어 길이 추가
+      },
+    );
+
+    return word.copyWith(id: id);
   }
 
-  Future<List<Word>> getAllWords({int limit = 20, int offset = 0}) async {
+  Future<List<Word>> getAllWords({
+    int limit = 300,
+    int offset = 0,
+    String orderBy = 'created_at DESC',
+    List<int>? groupIds,
+    String? query,
+  }) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery('''
-    SELECT w.*, g.id, g.name as group_name
+
+    String sqlQuery = '''
+    SELECT w.*, g.name as group_name 
     FROM words w 
     LEFT JOIN groups g ON w.group_id = g.id
-    ORDER BY w.created_at DESC
-    LIMIT ? OFFSET ?
-  ''', [limit, offset]);
+    WHERE 1=1
+  ''';
 
-    print(maps);
+    List<dynamic> args = [];
+
+    if (groupIds != null && groupIds.isNotEmpty) {
+      sqlQuery +=
+          ' AND w.group_id IN (${List.filled(groupIds.length, '?').join(',')})';
+      args.addAll(groupIds);
+    }
+
+    if (query != null && query.isNotEmpty) {
+      sqlQuery += ' AND (w.word LIKE ? OR w.meaning LIKE ?)';
+      args.addAll(['%$query%', '%$query%']);
+    }
+
+    sqlQuery += ' ORDER BY $orderBy LIMIT ? OFFSET ?';
+    args.addAll([limit, offset]);
+
+    final List<Map<String, dynamic>> maps = await db.rawQuery(sqlQuery, args);
+
     return List.generate(maps.length, (i) {
-      final word = Word.fromMap(maps[i]);
-      return word.copyWith(
-        groupId: maps[i]['id'] as int?, // 그룹 ID 추가
-        groupName: maps[i]['group_name'] as String?, // 그룹명 추가
+      return Word.fromMap(maps[i]).copyWith(
+        groupName: maps[i]['group_name'] as String?,
+      );
+    });
+  }
+
+  Future<List<Word>> searchWords(
+    String query, {
+    List<int>? groupIds,
+    String orderBy = 'created_at DESC',
+  }) async {
+    final db = await database;
+
+    String sql = '''
+    SELECT w.*, g.name as group_name 
+    FROM words w 
+    LEFT JOIN groups g ON w.group_id = g.id
+    WHERE (w.word LIKE ? OR w.meaning LIKE ?)
+  ''';
+
+    List<dynamic> args = ['%$query%', '%$query%'];
+
+    if (groupIds != null && groupIds.isNotEmpty) {
+      sql +=
+          ' AND w.group_id IN (${List.filled(groupIds.length, '?').join(',')})';
+      args.addAll(groupIds);
+    }
+
+    sql += ' ORDER BY $orderBy';
+
+    final List<Map<String, dynamic>> maps = await db.rawQuery(sql, args);
+
+    return List.generate(maps.length, (i) {
+      return Word.fromMap(maps[i]).copyWith(
+        groupName: maps[i]['group_name'] as String?,
       );
     });
   }
@@ -131,7 +211,6 @@ class DatabaseService {
     );
   }
 
-  // Group CRUD operations
   Future<Group> createGroup(Group group) async {
     final db = await database;
     final id = await db.insert('groups', group.toMap());

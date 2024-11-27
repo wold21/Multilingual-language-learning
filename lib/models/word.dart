@@ -1,6 +1,7 @@
 class Word {
   final int? id;
   final String word;
+  final int wordLength;
   final String meaning;
   final String? memo;
   final int? groupId;
@@ -14,6 +15,7 @@ class Word {
   Word({
     this.id,
     required this.word,
+    int? wordLength,
     required this.meaning,
     this.memo,
     this.groupId,
@@ -23,12 +25,13 @@ class Word {
     this.audioLastUpdated,
     required this.createdAt,
     required this.updatedAt,
-  });
+  }) : wordLength = wordLength ?? word.length;
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'word': word,
+      'word_length': wordLength,
       'meaning': meaning,
       'memo': memo,
       'group_id': groupId,
@@ -44,6 +47,7 @@ class Word {
     return Word(
       id: map['id'],
       word: map['word'],
+      wordLength: map['word_length'] as int,
       meaning: map['meaning'],
       memo: map['memo'],
       groupId: map['group_id'],
@@ -58,6 +62,7 @@ class Word {
   Word copyWith({
     int? id,
     String? word,
+    int? wordLength,
     String? meaning,
     String? memo,
     int? groupId,
@@ -71,6 +76,7 @@ class Word {
     return Word(
       id: id ?? this.id,
       word: word ?? this.word,
+      wordLength: wordLength ?? this.wordLength,
       meaning: meaning ?? this.meaning,
       memo: memo ?? this.memo,
       groupId: groupId ?? this.groupId,

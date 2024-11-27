@@ -158,7 +158,7 @@ class _SelectGroupPageState extends State<SelectGroupPage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context, selectedGroup); // 선택된 그룹 반환
+              Navigator.pop(context, selectedGroup);
             },
             child: Text(
               'Done',
