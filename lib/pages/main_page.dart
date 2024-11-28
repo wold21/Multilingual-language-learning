@@ -195,7 +195,7 @@ class _MainPageState extends State<MainPage> {
                 type: ToastType.info,
               );
 
-              await _databaseService.deleteAllWord();
+              await _databaseService.deleteAllWords();
 
               ToastUtils.show(
                 message: 'Complated!',

@@ -211,9 +211,9 @@ class DatabaseService {
     );
   }
 
-  Future<int> deleteAllWord() async {
+  Future<void> deleteAllWords() async {
     final db = await database;
-    return await db.delete('words');
+    await db.delete('words');
   }
 
   Future<Group> createGroup(Group group) async {
@@ -255,6 +255,21 @@ class DatabaseService {
     return groups;
   }
 
+  Future<Group?> findGroupByName(String name) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'groups',
+      where: 'name = ?',
+      whereArgs: [name],
+    );
+
+    if (maps.isEmpty) {
+      return null;
+    }
+
+    return Group.fromMap(maps.first);
+  }
+
   Future<int> updateGroup(Group group) async {
     final db = await database;
     return db.update(
@@ -285,6 +300,11 @@ class DatabaseService {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<void> deleteAllGroups() async {
+    final db = await database;
+    await db.delete('groups');
   }
 
   // Close database
@@ -326,5 +346,11 @@ class DatabaseService {
       print('Error initializing default groups: $e'); // 에러 로그
       rethrow;
     }
+  }
+
+  Future<List<Word>> getAllWordsForExport() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('words');
+    return List.generate(maps.length, (i) => Word.fromMap(maps[i]));
   }
 }
