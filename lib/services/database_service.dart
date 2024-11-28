@@ -266,7 +266,8 @@ class DatabaseService {
 
   Future<void> deleteAllGroups() async {
     final db = await database;
-    await db.delete('groups');
+    await db.delete('groups',
+        where: 'id > ?', whereArgs: [DefaultGroups.notSpecified]);
   }
 
   // Close database

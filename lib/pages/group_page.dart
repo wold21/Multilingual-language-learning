@@ -155,7 +155,7 @@ class _GroupPageState extends State<GroupPage> {
         title: const Text(
           'Select Group',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),

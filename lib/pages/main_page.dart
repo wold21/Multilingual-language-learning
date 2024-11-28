@@ -8,6 +8,7 @@ import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/pages/sort_page.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:eng_word_storage/utils/word_generator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/database_service.dart';
@@ -187,50 +188,52 @@ class _MainPageState extends State<MainPage> {
         scrolledUnderElevation: 0, // 스크롤 시 그림자 효과 제거
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.folder_delete_rounded),
-            onPressed: () async {
-              ToastUtils.show(
-                message: 'Delete All Words',
-                type: ToastType.info,
-              );
+          if (kDebugMode) ...[
+            IconButton(
+              icon: const Icon(Icons.folder_delete_rounded),
+              onPressed: () async {
+                ToastUtils.show(
+                  message: 'Delete All Words',
+                  type: ToastType.info,
+                );
 
-              await _databaseService.deleteAllWords();
+                await _databaseService.deleteAllWords();
 
-              ToastUtils.show(
-                message: 'Complated!',
-                type: ToastType.success,
-              );
+                ToastUtils.show(
+                  message: 'Complated!',
+                  type: ToastType.success,
+                );
 
-              setState(() {
-                words.clear();
-                offset = 0;
-              });
-              _loadWords();
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.bug_report_rounded),
-            onPressed: () async {
-              ToastUtils.show(
-                message: 'Generating dummy data...',
-                type: ToastType.info,
-              );
+                setState(() {
+                  words.clear();
+                  offset = 0;
+                });
+                _loadWords();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.bug_report_rounded),
+              onPressed: () async {
+                ToastUtils.show(
+                  message: 'Generating dummy data...',
+                  type: ToastType.info,
+                );
 
-              await WordGenerator.generateDummyData(DatabaseService.instance);
+                await WordGenerator.generateDummyData(DatabaseService.instance);
 
-              ToastUtils.show(
-                message: 'Dummy data generated!',
-                type: ToastType.success,
-              );
+                ToastUtils.show(
+                  message: 'Dummy data generated!',
+                  type: ToastType.success,
+                );
 
-              setState(() {
-                words.clear();
-                offset = 0;
-              });
-              _loadWords();
-            },
-          ),
+                setState(() {
+                  words.clear();
+                  offset = 0;
+                });
+                _loadWords();
+              },
+            ),
+          ],
           IconButton(
             icon: const Icon(Icons.sort, size: 28), // 정렬 아이콘
             onPressed: () async {

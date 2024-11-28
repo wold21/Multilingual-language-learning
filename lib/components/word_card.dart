@@ -1,3 +1,4 @@
+import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import '../models/word.dart';
@@ -27,7 +28,7 @@ class _WordCardState extends State<WordCard> {
 
   Future<void> _initTts() async {
     await flutterTts.setLanguage(widget.word.language);
-    await flutterTts.setSpeechRate(0.5); // 속도 설정 (0.0 ~ 1.0)
+    await flutterTts.setSpeechRate(0.5);
   }
 
   Future<void> _speak() async {
@@ -35,11 +36,9 @@ class _WordCardState extends State<WordCard> {
       await flutterTts.speak(widget.word.word);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('발음을 재생할 수 없습니다.'),
-            duration: Duration(seconds: 2),
-          ),
+        ToastUtils.show(
+          message: 'TTS Error',
+          type: ToastType.error,
         );
       }
     }
@@ -47,7 +46,6 @@ class _WordCardState extends State<WordCard> {
 
   void _handleExpand() {
     if (isExpanded) {
-      // 접을 때: 글자 먼저 숨기고, 약간의 딜레이 후 컴포넌트를 접음
       setState(() {
         _showContent = false;
       });
@@ -57,7 +55,6 @@ class _WordCardState extends State<WordCard> {
         });
       });
     } else {
-      // 펼칠 때: 먼저 컴포넌트를 펼치고, 펼쳐진 후에 글자를 표시
       setState(() {
         isExpanded = true;
       });
@@ -85,7 +82,7 @@ class _WordCardState extends State<WordCard> {
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut, // 부드러운 애니메이션을 위한 커브 추가
+            curve: Curves.easeInOut,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -99,7 +96,11 @@ class _WordCardState extends State<WordCard> {
                           children: [
                             Text(
                               widget.word.word,
-                              style: const TextStyle(
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.color,
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -121,7 +122,7 @@ class _WordCardState extends State<WordCard> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.volume_up),
+                        icon: const Icon(Icons.volume_down_rounded, size: 28),
                         onPressed: _speak,
                       ),
                     ],

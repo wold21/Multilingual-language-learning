@@ -46,7 +46,7 @@ class _SortPageState extends State<SortPage> {
         title: const Text(
           'Sort By',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -95,7 +95,7 @@ class _SortPageState extends State<SortPage> {
                   }
                 },
                 activeColor: Theme.of(context).primaryColor,
-                checkColor: Colors.white,
+                checkColor: Theme.of(context).textTheme.bodyMedium?.color,
               ),
             );
           },

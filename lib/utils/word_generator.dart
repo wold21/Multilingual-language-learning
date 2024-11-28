@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:eng_word_storage/models/word.dart';
 import 'package:eng_word_storage/services/database_service.dart';
+import 'package:eng_word_storage/utils/toast_util.dart';
 
 class WordGenerator {
   static final _random = Random();
@@ -97,6 +98,14 @@ class WordGenerator {
     final groups = await db.getAllGroups();
     final userGroups = groups.where((group) => group.id! >= 2).toList();
 
+    if (userGroups.isEmpty) {
+      ToastUtils.show(
+        message: 'Please create a group first.',
+        type: ToastType.error,
+      );
+      return;
+    }
+
     final now = DateTime.now();
 
     try {
@@ -117,13 +126,22 @@ class WordGenerator {
 
         // 진행상황 출력 (선택사항)
         if (i % 100 == 0) {
-          print('Generated ${i + 1} words');
+          ToastUtils.show(
+            message: 'Generated ${i + 1} words',
+            type: ToastType.info,
+          );
         }
       }
 
-      print('Completed generating 1000 dummy words');
+      ToastUtils.show(
+        message: 'Completed generating 1000 dummy words',
+        type: ToastType.success,
+      );
     } catch (e) {
-      print('Error generating dummy data: $e');
+      ToastUtils.show(
+        message: 'Error generating dummy data: $e',
+        type: ToastType.error,
+      );
     }
   }
 }

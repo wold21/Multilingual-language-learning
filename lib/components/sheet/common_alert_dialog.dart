@@ -17,16 +17,18 @@ class CommonAlertDialog {
         ),
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
+            color: Theme.of(context).textTheme.titleMedium?.color,
             fontWeight: FontWeight.bold,
           ),
         ),
         content: SingleChildScrollView(
           child: Text(
             content,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
+              color: Theme.of(context).textTheme.bodyMedium?.color,
             ),
           ),
         ),

@@ -18,16 +18,16 @@ class ConfirmDialog {
         ),
         title: Text(
           title,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: Theme.of(context).textTheme.titleMedium?.color,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
         content: Text(
           content,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyMedium?.color,
             fontSize: 16,
           ),
         ),

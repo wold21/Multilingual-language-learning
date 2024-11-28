@@ -38,10 +38,10 @@ class CommonBottomSheet extends StatelessWidget {
                 Icons.edit_outlined,
                 color: primaryColor,
               ),
-              title: const Text(
+              title: Text(
                 'Edit',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
                   fontSize: 16,
                 ),
               ),
@@ -55,10 +55,10 @@ class CommonBottomSheet extends StatelessWidget {
                 Icons.delete_outline,
                 color: primaryColor,
               ),
-              title: const Text(
+              title: Text(
                 'Delete',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
                   fontSize: 16,
                 ),
               ),

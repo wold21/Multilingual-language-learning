@@ -38,8 +38,10 @@ class GroupCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     group.name,
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500),
                   ),
                 ),
                 group.id != 1

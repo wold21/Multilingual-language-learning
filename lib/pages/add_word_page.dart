@@ -21,6 +21,7 @@ class _AddWordPageState extends State<AddWordPage> {
   final DatabaseService _databaseService = DatabaseService.instance;
   List<Group> groups = [];
   bool _canSave = false;
+  Word? _editedWord;
 
   Group? _selectedGroup = Group(
     id: 2,
@@ -132,7 +133,7 @@ class _AddWordPageState extends State<AddWordPage> {
       } else {
         // 기존 단어 수정
         await _databaseService.updateWord(word);
-        print('Updated word groupId: ${word.groupId}');
+        _editedWord = word;
 
         if (mounted) {
           ToastUtils.show(
@@ -166,7 +167,12 @@ class _AddWordPageState extends State<AddWordPage> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context, true),
+          onPressed: () => {
+            if (widget.wordToEdit == null)
+              {Navigator.pop(context, true)}
+            else
+              {Navigator.pop(context, _editedWord)}
+          },
         ),
         actions: [
           TextButton(
@@ -258,18 +264,19 @@ class _AddWordPageState extends State<AddWordPage> {
                     'Group',
                     style: TextStyle(
                       fontSize: 16,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                   Expanded(
                     child: Row(
-                      // 그룹명과 화살표를 묶어주는 Row 추가
-                      mainAxisAlignment: MainAxisAlignment.end, // 오른쪽 정렬
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
                           _selectedGroup?.name ?? 'Not specified',
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         IconButton(

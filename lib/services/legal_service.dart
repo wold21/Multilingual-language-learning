@@ -24,8 +24,7 @@ class LegalService {
     CommonAlertDialog.show(
       context: context,
       title: 'Terms of Service',
-      content:
-          'All responsibility for the use of this app lies with the user...',
+      content: 'All responsibility for the use of this app lies with the user.',
       confirmText: 'Close',
     );
   }
