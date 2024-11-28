@@ -68,60 +68,76 @@ class _SearchSheetState extends State<SearchSheet> {
                 IconButton(
                   icon: const Icon(
                     Icons.close,
-                    color: Colors.white,
                     size: 28,
                   ),
                   padding: const EdgeInsets.all(12),
                   onPressed: () => Navigator.pop(context),
                 ),
                 Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    autofocus: true,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                    onSubmitted: _performSearch,
-                    decoration: InputDecoration(
-                      hintText: _searchInAllGroups
-                          ? 'Search for full words'
-                          : 'Search in current group',
-                      hintStyle: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.white.withOpacity(0.7),
-                      ),
-                      border: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white.withOpacity(0.3),
+                  child: ValueListenableBuilder(
+                    valueListenable: _searchController,
+                    builder: (context, TextEditingValue value, _) {
+                      return TextField(
+                        controller: _searchController,
+                        autofocus: true,
+                        style: const TextStyle(
+                          fontSize: 16,
                         ),
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 2,
+                        onSubmitted: _performSearch,
+                        decoration: InputDecoration(
+                          hintText: _searchInAllGroups
+                              ? 'Search in all groups'
+                              : 'Search in current group',
+                          hintStyle: TextStyle(
+                            color: Colors.grey.withOpacity(0.5),
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.grey.withOpacity(0.7),
+                          ),
+                          suffixIcon: value.text.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(
+                                    Icons.close,
+                                    color: Colors.grey.withOpacity(0.7),
+                                  ),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                  },
+                                )
+                              : null,
+                          border: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey.withOpacity(0.3),
+                            ),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                              width: 2,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
                 IconButton(
                   icon: Icon(
                     _searchInAllGroups ? Icons.public : Icons.filter_list,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.grey.withOpacity(0.5),
                   ),
                   onPressed: () {
                     setState(() {
                       _searchInAllGroups = !_searchInAllGroups;
                     });
                   },
-                  tooltip: _searchInAllGroups ? '전체 검색' : '현재 그룹만 검색',
+                  tooltip: _searchInAllGroups
+                      ? 'Search in all groups'
+                      : 'Search in current group',
                 ),
               ],
             ),

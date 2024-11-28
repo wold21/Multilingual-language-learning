@@ -37,18 +37,44 @@ class _GroupPageState extends State<GroupPage> {
   void initState() {
     super.initState();
     if (widget.mode == GroupSelectionMode.multiple) {
-      selectedGroupIds = widget.selectedGroupIds?.isEmpty == true
+      selectedGroupIds = widget.selectedGroupIds.isEmpty == true
           ? []
-          : List.from(widget.selectedGroupIds!);
+          : List.from(widget.selectedGroupIds);
+    } else {
+      if (widget.selectedGroupIds.isNotEmpty) {
+        selectedGroup = Group(
+          id: widget.selectedGroupIds.first,
+          name: '',
+          createdAt: 0,
+          updatedAt: 0,
+        );
+      }
     }
     _loadGroups();
   }
 
   Future<void> _loadGroups() async {
     final loadedGroups = await _databaseService.getAllGroups();
-
     setState(() {
-      groups = loadedGroups;
+      if (widget.mode == GroupSelectionMode.single) {
+        groups = loadedGroups.where((group) => group.id! >= 2).toList();
+
+        if (selectedGroup != null) {
+          final actualGroup = groups.firstWhere(
+            (g) => g.id == selectedGroup!.id,
+            orElse: () => Group(
+              id: 2,
+              name: 'Not specified',
+              createdAt: 0,
+              updatedAt: 0,
+            ),
+          );
+          selectedGroup = actualGroup;
+        }
+      } else {
+        // 다중 선택 모드: 모든 그룹 표시
+        groups = loadedGroups;
+      }
     });
   }
 
@@ -73,51 +99,6 @@ class _GroupPageState extends State<GroupPage> {
         },
         onDelete: () => _showDeleteConfirmDialog(group),
       ),
-    );
-  }
-
-  Future<void> _showEditGroupDialog(Group group) async {
-    final textController = TextEditingController(text: group.name);
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Edit'),
-          content: TextField(
-            controller: textController,
-            autofocus: true,
-            decoration: const InputDecoration(
-              hintText: 'Enter group name',
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (textController.text.isNotEmpty) {
-                  final updatedGroup = Group(
-                    id: group.id,
-                    name: textController.text,
-                    createdAt: group.createdAt,
-                    updatedAt: DateTime.now().millisecondsSinceEpoch,
-                  );
-                  await _databaseService.updateGroup(updatedGroup);
-                  ToastUtils.show(
-                    message: 'updated',
-                    type: ToastType.success,
-                  );
-                  _loadGroups();
-                  if (mounted) Navigator.pop(context);
-                }
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -147,14 +128,8 @@ class _GroupPageState extends State<GroupPage> {
   void _handleSelection(Group group) {
     setState(() {
       if (widget.mode == GroupSelectionMode.single) {
-        // 단일 선택 모드
-        if (selectedGroup?.id == group.id) {
-          selectedGroup = null;
-        } else {
-          selectedGroup = group;
-        }
+        selectedGroup = group;
       } else {
-        // 다중 선택 모드
         if (group.name == 'All') {
           selectedGroupIds.clear();
         } else {
@@ -188,7 +163,14 @@ class _GroupPageState extends State<GroupPage> {
           TextButton(
             onPressed: () {
               if (widget.mode == GroupSelectionMode.single) {
-                Navigator.pop(context, selectedGroup);
+                if (selectedGroup != null) {
+                  Navigator.pop(context, selectedGroup);
+                } else {
+                  ToastUtils.show(
+                    message: 'Please select a group',
+                    type: ToastType.error,
+                  );
+                }
               } else {
                 Navigator.pop(context, selectedGroupIds);
               }
@@ -218,8 +200,9 @@ class _GroupPageState extends State<GroupPage> {
             group: group,
             isSelected: isSelected,
             onTap: () => _handleSelection(group),
-            onLongPress:
-                group.name != 'All' ? () => _showBottomSheet(group) : () {},
+            onLongPress: group.id != 1 && group.id != 2
+                ? () => _showBottomSheet(group)
+                : () {},
           );
         },
       ),

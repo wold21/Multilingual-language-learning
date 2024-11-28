@@ -4,7 +4,7 @@ class Word {
   final int wordLength;
   final String meaning;
   final String? memo;
-  final int? groupId;
+  final int groupId;
   final String? groupName;
   final String language;
   final String? audioPath;
@@ -18,7 +18,7 @@ class Word {
     int? wordLength,
     required this.meaning,
     this.memo,
-    this.groupId,
+    required this.groupId,
     this.groupName,
     this.language = 'en',
     this.audioPath,

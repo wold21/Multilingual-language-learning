@@ -1,4 +1,5 @@
 import 'package:eng_word_storage/components/confirm_dialog.dart';
+import 'package:eng_word_storage/components/indicator/indicator.dart';
 import 'package:eng_word_storage/components/sheet/common_bottom_sheet.dart';
 import 'package:eng_word_storage/components/sheet/search_sheet.dart';
 import 'package:eng_word_storage/components/word_card.dart';
@@ -7,7 +8,6 @@ import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/pages/sort_page.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:eng_word_storage/utils/word_generator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/database_service.dart';
@@ -23,6 +23,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   static const String SORT_KEY = 'current_sort';
   static const String GROUP_IDS_KEY = 'selected_group_ids';
+
   final DatabaseService _databaseService = DatabaseService.instance;
   final ScrollController _scrollController = ScrollController();
   List<Word> words = [];
@@ -34,7 +35,7 @@ class _MainPageState extends State<MainPage> {
 
   bool isLoading = false;
   int offset = 0;
-  static const int limit = 300;
+  static const int limit = 10;
   String? searchQuery;
 
   @override
@@ -85,7 +86,10 @@ class _MainPageState extends State<MainPage> {
 
       setState(() {});
     } catch (e) {
-      print('Error loading preferences: $e');
+      ToastUtils.show(
+        message: 'Error loading preferences',
+        type: ToastType.error,
+      );
     }
   }
 
@@ -95,7 +99,10 @@ class _MainPageState extends State<MainPage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(SORT_KEY, sort.index);
     } catch (e) {
-      print('Error saving sort preference: $e');
+      ToastUtils.show(
+        message: 'Error saving sort preference',
+        type: ToastType.error,
+      );
     }
   }
 
@@ -108,7 +115,10 @@ class _MainPageState extends State<MainPage> {
         groupIds.map((e) => e.toString()).toList(),
       );
     } catch (e) {
-      print('Error saving group IDs: $e');
+      ToastUtils.show(
+        message: 'Error saving group IDs',
+        type: ToastType.error,
+      );
     }
   }
 
@@ -138,8 +148,10 @@ class _MainPageState extends State<MainPage> {
         offset += loadedWords.length;
       });
     } catch (e) {
-      print('Error loading words: $e');
-      // TODO: 에러 처리 (예: 스낵바 표시)
+      ToastUtils.show(
+        message: 'Error loading words',
+        type: ToastType.error,
+      );
     } finally {
       setState(() {
         isLoading = false;
@@ -331,41 +343,40 @@ class _MainPageState extends State<MainPage> {
         itemCount: words.length + 1,
         itemBuilder: (context, index) {
           if (index == words.length) {
-            return _buildLoadingIndicator();
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Center(
+                child: isLoading
+                    ? const BouncingDotsIndicator()
+                    : const SizedBox(),
+              ),
+            );
           }
           return _buildWordCard(words[index]);
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final needsRefresh = await Navigator.push<bool>(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AddWordPage(),
-              fullscreenDialog: true,
-            ),
-          );
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 60), // 네비게이션 바 높이 + 여유 공간
+        child: FloatingActionButton(
+          onPressed: () async {
+            final needsRefresh = await Navigator.push<bool>(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AddWordPage(),
+                fullscreenDialog: true,
+              ),
+            );
 
-          if (needsRefresh == true) {
-            setState(() {
-              words.clear();
-              offset = 0;
-            });
-            _loadWords();
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  Widget _buildLoadingIndicator() {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(
-        child: isLoading
-            ? const CircularProgressIndicator()
-            : const SizedBox.shrink(),
+            if (needsRefresh == true) {
+              setState(() {
+                words.clear();
+                offset = 0;
+              });
+              _loadWords();
+            }
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -379,14 +390,21 @@ class _MainPageState extends State<MainPage> {
           builder: (context) => CommonBottomSheet(
             title: word.word,
             onEdit: () async {
-              final needsRefresh = await Navigator.push<bool>(
+              final updatedWord = await Navigator.push<Word>(
+                // bool 대신 Word를 반환받음
                 context,
                 MaterialPageRoute(
                   builder: (context) => AddWordPage(wordToEdit: word),
                   fullscreenDialog: true,
                 ),
               );
-              if (needsRefresh == true) {
+              if (updatedWord != null) {
+                setState(() {
+                  final index = words.indexWhere((w) => w.id == updatedWord.id);
+                  if (index != -1) {
+                    words[index] = updatedWord;
+                  }
+                });
                 setState(() {
                   words.clear();
                   offset = 0;

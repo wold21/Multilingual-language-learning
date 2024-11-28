@@ -104,20 +104,19 @@ class _WordCardState extends State<WordCard> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            if (widget.word.groupId != null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 4.0),
-                                child: Text(
-                                  '${widget.word.groupName}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.color,
-                                  ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Text(
+                                '${widget.word.groupName}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.color,
                                 ),
                               ),
+                            ),
                           ],
                         ),
                       ),

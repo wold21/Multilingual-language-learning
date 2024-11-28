@@ -105,7 +105,7 @@ class WordGenerator {
           word: _generateWord(),
           meaning: _generateMeaning(),
           memo: _random.nextBool() ? '메모 #$i' : null,
-          groupId: userGroups[_random.nextInt(userGroups.length)].id,
+          groupId: userGroups[_random.nextInt(userGroups.length)].id!,
           language: 'en',
           createdAt: now
               .subtract(Duration(days: _random.nextInt(30)))

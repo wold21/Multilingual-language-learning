@@ -1,5 +1,4 @@
 import 'package:eng_word_storage/pages/group_page.dart';
-import 'package:eng_word_storage/pages/select_group_page.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
 import '../models/word.dart';
@@ -36,22 +35,31 @@ class _AddWordPageState extends State<AddWordPage> {
     _updateSaveButton();
     _wordController.addListener(_updateSaveButton);
     _meaningController.addListener(_updateSaveButton);
+    if (widget.wordToEdit != null) {
+      // 그룹 목록 로드 후 편집 모드 초기화
+      _wordController.text = widget.wordToEdit!.word;
+      _meaningController.text = widget.wordToEdit!.meaning;
+      _memoController.text = widget.wordToEdit!.memo ?? '';
+      _selectedGroup = Group(
+        id: widget.wordToEdit!.groupId,
+        name: '', // 임시로 빈 이름 설정
+        createdAt: 0,
+        updatedAt: 0,
+      );
+    }
     _loadGroups().then((_) {
       if (widget.wordToEdit != null) {
-        // 그룹 목록 로드 후 편집 모드 초기화
-        _wordController.text = widget.wordToEdit!.word;
-        _meaningController.text = widget.wordToEdit!.meaning;
-        _memoController.text = widget.wordToEdit!.memo ?? '';
-        _selectedGroup = groups.firstWhere(
-          (group) => group.id == widget.wordToEdit!.groupId,
-          orElse: () => Group(
-            id: 2,
-            name: 'Not specified',
-            createdAt: 0,
-            updatedAt: 0,
-          ),
-        );
-        setState(() {}); // UI 업데이트
+        setState(() {
+          _selectedGroup = groups.firstWhere(
+            (group) => group.id == widget.wordToEdit!.groupId,
+            orElse: () => Group(
+              id: 2,
+              name: 'Not specified',
+              createdAt: 0,
+              updatedAt: 0,
+            ),
+          );
+        });
       }
     });
   }
@@ -72,15 +80,23 @@ class _AddWordPageState extends State<AddWordPage> {
 
   Future<void> _saveWord() async {
     if (_canSave) {
+      final int groupId;
+      if (_selectedGroup?.id != null) {
+        groupId = _selectedGroup!.id!;
+      } else if (widget.wordToEdit?.groupId != null) {
+        groupId = widget.wordToEdit!.groupId;
+      } else {
+        groupId = 2; // Not specified 그룹
+      }
       final word = Word(
-        id: widget.wordToEdit?.id, // 편집 모드일 때 기존 ID 유지
+        id: widget.wordToEdit?.id,
         word: _wordController.text.trim(),
         meaning: _meaningController.text.trim(),
         memo: _memoController.text.isEmpty ? null : _memoController.text.trim(),
-        groupId: _selectedGroup?.id,
+        groupId: groupId,
         language: 'en',
         createdAt: widget.wordToEdit?.createdAt ??
-            DateTime.now().millisecondsSinceEpoch, // 편집 시 생성일 유지
+            DateTime.now().millisecondsSinceEpoch,
         updatedAt: DateTime.now().millisecondsSinceEpoch,
       );
 
@@ -116,6 +132,7 @@ class _AddWordPageState extends State<AddWordPage> {
       } else {
         // 기존 단어 수정
         await _databaseService.updateWord(word);
+        print('Updated word groupId: ${word.groupId}');
 
         if (mounted) {
           ToastUtils.show(
@@ -124,9 +141,8 @@ class _AddWordPageState extends State<AddWordPage> {
           );
         }
 
-        // 수정 완료 후 이전 화면으로 돌아가기
         if (mounted) {
-          Navigator.pop(context, true); // true를 반환하여 목록 새로고침 트리거
+          Navigator.pop(context, word);
         }
       }
     }

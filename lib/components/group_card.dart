@@ -39,10 +39,7 @@ class GroupCard extends StatelessWidget {
                   child: Text(
                     group.name,
                     style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
+                        fontSize: 15, fontWeight: FontWeight.w500),
                   ),
                 ),
               ],
