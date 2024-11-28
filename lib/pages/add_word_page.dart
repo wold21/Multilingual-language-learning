@@ -1,12 +1,14 @@
-import 'package:eng_word_storage/pages/main_page.dart';
+import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/pages/select_group_page.dart';
+import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
 import '../models/word.dart';
 import '../models/group.dart';
 import '../services/database_service.dart';
 
 class AddWordPage extends StatefulWidget {
-  const AddWordPage({super.key});
+  final Word? wordToEdit;
+  const AddWordPage({super.key, this.wordToEdit});
 
   @override
   State<AddWordPage> createState() => _AddWordPageState();
@@ -34,7 +36,24 @@ class _AddWordPageState extends State<AddWordPage> {
     _updateSaveButton();
     _wordController.addListener(_updateSaveButton);
     _meaningController.addListener(_updateSaveButton);
-    _loadGroups();
+    _loadGroups().then((_) {
+      if (widget.wordToEdit != null) {
+        // 그룹 목록 로드 후 편집 모드 초기화
+        _wordController.text = widget.wordToEdit!.word;
+        _meaningController.text = widget.wordToEdit!.meaning;
+        _memoController.text = widget.wordToEdit!.memo ?? '';
+        _selectedGroup = groups.firstWhere(
+          (group) => group.id == widget.wordToEdit!.groupId,
+          orElse: () => Group(
+            id: 2,
+            name: 'Not specified',
+            createdAt: 0,
+            updatedAt: 0,
+          ),
+        );
+        setState(() {}); // UI 업데이트
+      }
+    });
   }
 
   Future<void> _loadGroups() async {
@@ -54,47 +73,62 @@ class _AddWordPageState extends State<AddWordPage> {
   Future<void> _saveWord() async {
     if (_canSave) {
       final word = Word(
+        id: widget.wordToEdit?.id, // 편집 모드일 때 기존 ID 유지
         word: _wordController.text.trim(),
         meaning: _meaningController.text.trim(),
         memo: _memoController.text.isEmpty ? null : _memoController.text.trim(),
         groupId: _selectedGroup?.id,
         language: 'en',
-        createdAt: DateTime.now().millisecondsSinceEpoch,
+        createdAt: widget.wordToEdit?.createdAt ??
+            DateTime.now().millisecondsSinceEpoch, // 편집 시 생성일 유지
         updatedAt: DateTime.now().millisecondsSinceEpoch,
       );
 
-      // 단어 저장
-      await _databaseService.createWord(word);
+      if (widget.wordToEdit == null) {
+        // 새 단어 추가
+        await _databaseService.createWord(word);
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Commited Word'),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        if (mounted) {
+          ToastUtils.show(
+            message: 'Saved',
+            type: ToastType.success,
+          );
+        }
+
+        // 입력 필드 초기화
+        setState(() {
+          _wordController.clear();
+          _meaningController.clear();
+          _memoController.clear();
+          _selectedGroup = Group(
+            id: 2,
+            name: 'Not specified',
+            createdAt: 0,
+            updatedAt: 0,
+          );
+        });
+
+        // 키보드 포커스 재설정
+        FocusScope.of(context).requestFocus(FocusNode());
+        Future.delayed(const Duration(milliseconds: 50), () {
+          FocusScope.of(context).requestFocus(_wordFocusNode);
+        });
+      } else {
+        // 기존 단어 수정
+        await _databaseService.updateWord(word);
+
+        if (mounted) {
+          ToastUtils.show(
+            message: 'Updated',
+            type: ToastType.success,
+          );
+        }
+
+        // 수정 완료 후 이전 화면으로 돌아가기
+        if (mounted) {
+          Navigator.pop(context, true); // true를 반환하여 목록 새로고침 트리거
+        }
       }
-
-      // 입력 필드 초기화
-      setState(() {
-        _wordController.clear();
-        _meaningController.clear();
-        _memoController.clear();
-        _selectedGroup = Group(
-          id: 2,
-          name: 'Not specified',
-          createdAt: 0,
-          updatedAt: 0,
-        ); // 그룹을 Not specified로 초기화
-      });
-
-      // 키보드 포커스를 단어 입력 필드로 이동
-      FocusScope.of(context).requestFocus(
-        FocusNode(),
-      );
-      Future.delayed(const Duration(milliseconds: 50), () {
-        FocusScope.of(context).requestFocus(_wordFocusNode);
-      });
     }
   }
 
@@ -233,7 +267,9 @@ class _AddWordPageState extends State<AddWordPage> {
                             final selectedGroup = await Navigator.push<Group>(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const SelectGroupPage(),
+                                builder: (context) => const GroupPage(
+                                    mode: GroupSelectionMode.single,
+                                    selectedGroupIds: []),
                               ),
                             );
                             if (selectedGroup != null) {

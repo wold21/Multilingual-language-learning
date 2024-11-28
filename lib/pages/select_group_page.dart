@@ -1,3 +1,5 @@
+import 'package:eng_word_storage/components/confirm_dialog.dart';
+import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
 import '../models/group.dart';
 import '../services/database_service.dart';
@@ -100,43 +102,19 @@ class _SelectGroupPageState extends State<SelectGroupPage> {
   }
 
   Future<void> _showDeleteConfirmDialog(Group group) async {
-    return showDialog(
+    final confirmed = await ConfirmDialog.show(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).cardColor,
-        title: const Text(
-          'Delete Group',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: Text(
-          'Are you sure you want to delete "${group.name}"?',
-          style: const TextStyle(color: Colors.white),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              await _databaseService.deleteGroup(group.id!);
-              _loadGroups();
-              if (mounted) Navigator.pop(context);
-            },
-            child: Text(
-              'Delete',
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
+      title: 'Delete Group',
+      content: 'Are you sure you want to delete this group?',
     );
+
+    if (confirmed == true) {
+      await _databaseService.deleteGroup(group.id!);
+      ToastUtils.show(
+        message: 'Group deleted',
+        type: ToastType.success,
+      );
+    }
   }
 
   @override

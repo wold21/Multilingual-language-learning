@@ -1,15 +1,25 @@
+import 'package:eng_word_storage/components/confirm_dialog.dart';
+import 'package:eng_word_storage/components/sheet/common_bottom_sheet.dart';
 import 'package:eng_word_storage/pages/add_group_page.dart';
 import 'package:eng_word_storage/pages/edit_group_page.dart';
+import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
 import '../models/group.dart';
 import '../services/database_service.dart';
 import '../components/group_card.dart';
 
+enum GroupSelectionMode {
+  single,
+  multiple,
+}
+
 class GroupPage extends StatefulWidget {
+  final GroupSelectionMode mode;
   final List<int> selectedGroupIds;
 
   const GroupPage({
     super.key,
+    this.mode = GroupSelectionMode.single,
     required this.selectedGroupIds,
   });
 
@@ -20,14 +30,17 @@ class GroupPage extends StatefulWidget {
 class _GroupPageState extends State<GroupPage> {
   final DatabaseService _databaseService = DatabaseService.instance;
   List<Group> groups = [];
+  Group? selectedGroup;
   List<int> selectedGroupIds = [];
 
   @override
   void initState() {
     super.initState();
-    selectedGroupIds = widget.selectedGroupIds.isEmpty
-        ? [] // 빈 리스트는 All을 의미
-        : List.from(widget.selectedGroupIds);
+    if (widget.mode == GroupSelectionMode.multiple) {
+      selectedGroupIds = widget.selectedGroupIds?.isEmpty == true
+          ? []
+          : List.from(widget.selectedGroupIds!);
+    }
     _loadGroups();
   }
 
@@ -42,75 +55,29 @@ class _GroupPageState extends State<GroupPage> {
   void _showBottomSheet(Group group) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).cardColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(12),
-        ),
+      backgroundColor: Colors.transparent,
+      builder: (context) => CommonBottomSheet(
+        title: group.name,
+        onEdit: () async {
+          final result = await Navigator.push<Group>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditGroupPage(group: group),
+            ),
+          );
+
+          if (result != null) {
+            await _databaseService.updateGroup(result);
+            _loadGroups();
+          }
+        },
+        onDelete: () => _showDeleteConfirmDialog(group),
       ),
-      builder: (context) {
-        final primaryColor = Theme.of(context).primaryColor;
-
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 8),
-              ListTile(
-                leading: Icon(
-                  Icons.edit_rounded,
-                  color: primaryColor,
-                ),
-                title: const Text(
-                  'Edit',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final result = await Navigator.push<Group>(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditGroupPage(group: group),
-                    ),
-                  );
-
-                  if (result != null) {
-                    await _databaseService.updateGroup(result);
-                    _loadGroups();
-                  }
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.delete_rounded,
-                  color: primaryColor,
-                ),
-                title: const Text(
-                  'Delete',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  _showDeleteConfirmDialog(group);
-                },
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        );
-      },
     );
   }
 
   Future<void> _showEditGroupDialog(Group group) async {
     final textController = TextEditingController(text: group.name);
-
     return showDialog(
       context: context,
       builder: (context) {
@@ -138,6 +105,10 @@ class _GroupPageState extends State<GroupPage> {
                     updatedAt: DateTime.now().millisecondsSinceEpoch,
                   );
                   await _databaseService.updateGroup(updatedGroup);
+                  ToastUtils.show(
+                    message: 'updated',
+                    type: ToastType.success,
+                  );
                   _loadGroups();
                   if (mounted) Navigator.pop(context);
                 }
@@ -151,55 +122,47 @@ class _GroupPageState extends State<GroupPage> {
   }
 
   Future<void> _showDeleteConfirmDialog(Group group) async {
-    return showDialog(
+    final confirmed = await ConfirmDialog.show(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).cardColor,
-        title: const Text(
-          'Delete Group',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: Text(
-          'Are you sure you want to delete "${group.name}"?',
-          style: const TextStyle(color: Colors.white),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              await _databaseService.deleteGroup(group.id!);
-              _loadGroups();
-              if (mounted) Navigator.pop(context);
-            },
-            child: Text(
-              'Delete',
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
+      title: 'Delete Group',
+      content: 'Are you sure you want to delete this group?',
     );
+
+    if (confirmed == true) {
+      await _databaseService.deleteGroup(group.id!);
+
+      setState(() {
+        selectedGroupIds.remove(group.id);
+      });
+
+      ToastUtils.show(
+        message: 'Deleted',
+        type: ToastType.success,
+      );
+
+      _loadGroups();
+    }
   }
 
-  void _handleGroupSelection(Group group) {
+  void _handleSelection(Group group) {
     setState(() {
-      if (group.name == 'All') {
-        // id 대신 name으로 All 그룹 판단
-        selectedGroupIds.clear(); // 모든 선택 해제
-      } else {
-        if (selectedGroupIds.contains(group.id)) {
-          selectedGroupIds.remove(group.id);
+      if (widget.mode == GroupSelectionMode.single) {
+        // 단일 선택 모드
+        if (selectedGroup?.id == group.id) {
+          selectedGroup = null;
         } else {
-          selectedGroupIds.add(group.id!);
+          selectedGroup = group;
+        }
+      } else {
+        // 다중 선택 모드
+        if (group.name == 'All') {
+          selectedGroupIds.clear();
+        } else {
+          if (selectedGroupIds.contains(group.id)) {
+            selectedGroupIds.remove(group.id);
+          } else {
+            selectedGroupIds.add(group.id!);
+          }
         }
       }
     });
@@ -211,9 +174,7 @@ class _GroupPageState extends State<GroupPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
         title: const Text(
@@ -226,7 +187,11 @@ class _GroupPageState extends State<GroupPage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop<List<int>>(selectedGroupIds);
+              if (widget.mode == GroupSelectionMode.single) {
+                Navigator.pop(context, selectedGroup);
+              } else {
+                Navigator.pop(context, selectedGroupIds);
+              }
             },
             child: Text(
               'Done',
@@ -243,17 +208,18 @@ class _GroupPageState extends State<GroupPage> {
         itemCount: groups.length,
         itemBuilder: (context, index) {
           final group = groups[index];
-          final isSelected = group.name == 'All' // id 대신 name으로 판단
-              ? selectedGroupIds.isEmpty
-              : selectedGroupIds.contains(group.id);
+          final isSelected = widget.mode == GroupSelectionMode.single
+              ? selectedGroup?.id == group.id
+              : (group.name == 'All'
+                  ? selectedGroupIds.isEmpty
+                  : selectedGroupIds.contains(group.id));
 
           return GroupCard(
             group: group,
             isSelected: isSelected,
-            onTap: () => _handleGroupSelection(group),
-            onLongPress: group.name != 'All' // All 그룹은 편집/삭제 불가
-                ? () => _showBottomSheet(group)
-                : () {},
+            onTap: () => _handleSelection(group),
+            onLongPress:
+                group.name != 'All' ? () => _showBottomSheet(group) : () {},
           );
         },
       ),
@@ -261,11 +227,18 @@ class _GroupPageState extends State<GroupPage> {
         onPressed: () async {
           final result = await Navigator.push<Group>(
             context,
-            MaterialPageRoute(builder: (context) => const AddGroupPage()),
+            MaterialPageRoute(
+              builder: (context) => const AddGroupPage(),
+              fullscreenDialog: true,
+            ),
           );
 
           if (result != null) {
             await _databaseService.createGroup(result);
+            ToastUtils.show(
+              message: 'Group created',
+              type: ToastType.success,
+            );
             _loadGroups();
           }
         },

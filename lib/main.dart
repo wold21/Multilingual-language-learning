@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         // 기본 색상
-        primaryColor: const Color(0xFF324BB9), // 파스텔 블루
+        primaryColor: const Color(0xFF3955D0), // 파스텔 블루
         scaffoldBackgroundColor: Colors.grey[50],
 
         // AppBar 테마
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.dark,
         // 기본 색상
-        primaryColor: const Color(0xFF324BB9), // 다크모드용 파스텔 블루
+        primaryColor: const Color(0xFF3955D0), // 다크모드용 파스텔 블루
         scaffoldBackgroundColor: const Color(0xFF121212),
 
         // AppBar 테마

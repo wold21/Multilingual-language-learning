@@ -1,8 +1,13 @@
+import 'package:eng_word_storage/components/confirm_dialog.dart';
+import 'package:eng_word_storage/components/sheet/common_bottom_sheet.dart';
 import 'package:eng_word_storage/components/sheet/search_sheet.dart';
 import 'package:eng_word_storage/components/word_card.dart';
 import 'package:eng_word_storage/pages/add_word_page.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/pages/sort_page.dart';
+import 'package:eng_word_storage/utils/toast_util.dart';
+import 'package:eng_word_storage/utils/word_generator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/database_service.dart';
@@ -171,6 +176,50 @@ class _MainPageState extends State<MainPage> {
         elevation: 0,
         actions: [
           IconButton(
+            icon: const Icon(Icons.folder_delete_rounded),
+            onPressed: () async {
+              ToastUtils.show(
+                message: 'Delete All Words',
+                type: ToastType.info,
+              );
+
+              await _databaseService.deleteAllWord();
+
+              ToastUtils.show(
+                message: 'Complated!',
+                type: ToastType.success,
+              );
+
+              setState(() {
+                words.clear();
+                offset = 0;
+              });
+              _loadWords();
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.bug_report_rounded),
+            onPressed: () async {
+              ToastUtils.show(
+                message: 'Generating dummy data...',
+                type: ToastType.info,
+              );
+
+              await WordGenerator.generateDummyData(DatabaseService.instance);
+
+              ToastUtils.show(
+                message: 'Dummy data generated!',
+                type: ToastType.success,
+              );
+
+              setState(() {
+                words.clear();
+                offset = 0;
+              });
+              _loadWords();
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.sort, size: 28), // 정렬 아이콘
             onPressed: () async {
               final result = await Navigator.push<SortType>(
@@ -196,22 +245,23 @@ class _MainPageState extends State<MainPage> {
           IconButton(
             icon: const Icon(Icons.folder_copy_outlined, size: 28),
             onPressed: () async {
-              final List<int>? result = await Navigator.push<List<int>>(
+              final selectedIds = await Navigator.push<List<int>>(
                 context,
                 MaterialPageRoute(
                   builder: (context) => GroupPage(
+                    mode: GroupSelectionMode.multiple,
                     selectedGroupIds: selectedGroupIds,
                   ),
                 ),
               );
 
-              if (result != null) {
+              if (selectedIds != null) {
                 setState(() {
-                  selectedGroupIds = result;
+                  selectedGroupIds = selectedIds;
                   words.clear();
                   offset = 0;
                 });
-                await _saveGroupIdsPreference(result);
+                await _saveGroupIdsPreference(selectedIds);
                 _loadWords();
               }
             },
@@ -321,6 +371,55 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _buildWordCard(Word word) {
-    return WordCard(word: word);
+    return GestureDetector(
+      onLongPress: () {
+        showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          builder: (context) => CommonBottomSheet(
+            title: word.word,
+            onEdit: () async {
+              final needsRefresh = await Navigator.push<bool>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddWordPage(wordToEdit: word),
+                  fullscreenDialog: true,
+                ),
+              );
+              if (needsRefresh == true) {
+                setState(() {
+                  words.clear();
+                  offset = 0;
+                });
+                _loadWords();
+              }
+            },
+            onDelete: () => _showDeleteConfirmDialog(word),
+          ),
+        );
+      },
+      child: WordCard(word: word),
+    );
+  }
+
+  Future<void> _showDeleteConfirmDialog(Word word) async {
+    final confirmed = await ConfirmDialog.show(
+      context: context,
+      title: 'Delete Word',
+      content: 'Are you sure you want to delete this word?',
+    );
+
+    if (confirmed == true) {
+      await _databaseService.deleteWord(word.id!);
+      ToastUtils.show(
+        message: 'Word deleted',
+        type: ToastType.success,
+      );
+      setState(() {
+        words.clear();
+        offset = 0;
+      });
+      _loadWords();
+    }
   }
 }

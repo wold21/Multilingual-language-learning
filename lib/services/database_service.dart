@@ -211,6 +211,11 @@ class DatabaseService {
     );
   }
 
+  Future<int> deleteAllWord() async {
+    final db = await database;
+    return await db.delete('words');
+  }
+
   Future<Group> createGroup(Group group) async {
     final db = await database;
     final id = await db.insert('groups', group.toMap());
