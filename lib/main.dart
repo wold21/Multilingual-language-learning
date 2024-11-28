@@ -1,9 +1,11 @@
 import 'package:eng_word_storage/pages/root_page.dart';
+import 'package:eng_word_storage/services/database_service.dart';
 import 'package:eng_word_storage/services/theme_service.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseService.instance.initialize();
   await ThemeService.instance.initialize();
   runApp(const MyApp());
 }

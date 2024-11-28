@@ -3,12 +3,14 @@ class Group {
   final String name;
   final int createdAt;
   final int updatedAt;
+  final int wordCount;
 
   Group({
     this.id,
     required this.name,
     required this.createdAt,
     required this.updatedAt,
+    this.wordCount = 0,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +28,7 @@ class Group {
       name: map['name'],
       createdAt: map['created_at'],
       updatedAt: map['updated_at'],
+      wordCount: map['word_count'] ?? 0,
     );
   }
 

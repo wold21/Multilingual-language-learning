@@ -1,3 +1,4 @@
+import 'package:eng_word_storage/databases/migration_manager.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/word.dart';
@@ -9,14 +10,19 @@ class DefaultGroups {
 }
 
 class DatabaseService {
+  final int _databaseVersion = 2;
   static final DatabaseService instance = DatabaseService._init();
   static Database? _database;
 
   DatabaseService._init();
 
   Future<void> initialize() async {
-    await database; // 데이터베이스 초기화
-    await initializeDefaultGroups(); // 기본 그룹 생성
+    try {
+      await database;
+      await initializeDefaultGroups();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<Database> get database async {
@@ -25,29 +31,19 @@ class DatabaseService {
     return _database!;
   }
 
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
-      // 버전 1에서 2로 업그레이드
-      // word_length 컬럼 추가
-      await db.execute('ALTER TABLE words ADD COLUMN word_length INTEGER');
-
-      // 기존 데이터의 word_length 업데이트
-      await db.execute('UPDATE words SET word_length = length(word)');
-    }
-  }
-
   Future<Database> _initDB(String filePath) async {
     try {
       final dbPath = await getDatabasesPath();
       final path = join(dbPath, filePath);
-
-      print('Initializing database at path: $path');
-
       final db = await openDatabase(
         path,
-        version: 2,
-        onCreate: _createDB,
-        onUpgrade: _onUpgrade,
+        version: _databaseVersion,
+        onCreate: (db, version) async {
+          await MigrationManager.migrate(db, 0, version);
+        },
+        onUpgrade: (db, oldVersion, newVersion) async {
+          await MigrationManager.migrate(db, oldVersion, newVersion);
+        },
       );
 
       // 데이터베이스 초기화 완료
@@ -55,40 +51,8 @@ class DatabaseService {
 
       return db;
     } catch (e) {
-      print('Error initializing database: $e');
       rethrow;
     }
-  }
-
-  Future<void> _createDB(Database db, int version) async {
-    await db.execute('''
-    CREATE TABLE IF NOT EXISTS groups (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      created_at INTEGER NOT NULL,
-      updated_at INTEGER NOT NULL
-    )
-  ''');
-    await db.execute('''
-    CREATE TABLE words(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      word TEXT NOT NULL,
-      word_length INTEGER NOT NULL, 
-      meaning TEXT NOT NULL,
-      memo TEXT,
-      group_id INTEGER,
-      language TEXT NOT NULL,
-      audio_path TEXT,
-      audio_last_updated INTEGER,
-      created_at INTEGER NOT NULL,
-      updated_at INTEGER NOT NULL,
-      FOREIGN KEY (group_id) REFERENCES groups (id)
-    )
-  ''');
-
-    await db.execute('''
-    CREATE INDEX idx_word_length ON words(word_length)
-  ''');
   }
 
   // Word CRUD operations
@@ -224,7 +188,8 @@ class DatabaseService {
 
   Future<List<Group>> getAllGroups() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('groups');
+    final List<Map<String, dynamic>> maps =
+        await db.query('groups_with_word_count');
     return List.generate(maps.length, (i) => Group.fromMap(maps[i]));
   }
 
@@ -240,7 +205,6 @@ class DatabaseService {
   }
 
   Future<List<Group>> getUserGroups() async {
-    print('Getting user groups...'); // 메서드 호출 확인
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'groups',
@@ -248,10 +212,8 @@ class DatabaseService {
       whereArgs: [DefaultGroups.all],
       orderBy: 'id ASC',
     );
-    print('Database query result: $maps'); // DB 쿼리 결과 확인
 
     final groups = List.generate(maps.length, (i) => Group.fromMap(maps[i]));
-    print('Converted groups: $groups'); // 변환된 그룹 객체 확인
     return groups;
   }
 
@@ -319,11 +281,8 @@ class DatabaseService {
       final db = await database;
       final groups = await getAllGroups();
 
-      print('Existing groups: $groups'); // 디버깅용 로그
-
       // All group 생성
       if (!groups.any((g) => g.id == DefaultGroups.all)) {
-        print('Creating All group...'); // 디버깅용 로그
         await db.insert('groups', {
           'id': DefaultGroups.all,
           'name': 'All',
@@ -334,7 +293,6 @@ class DatabaseService {
 
       // Not specified group 생성
       if (!groups.any((g) => g.id == DefaultGroups.notSpecified)) {
-        print('Creating Not specified group...'); // 디버깅용 로그
         await db.insert('groups', {
           'id': DefaultGroups.notSpecified,
           'name': 'Not specified',
@@ -343,7 +301,6 @@ class DatabaseService {
         });
       }
     } catch (e) {
-      print('Error initializing default groups: $e'); // 에러 로그
       rethrow;
     }
   }

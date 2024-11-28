@@ -166,7 +166,7 @@ class _AddWordPageState extends State<AddWordPage> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, true),
         ),
         actions: [
           TextButton(
@@ -257,7 +257,6 @@ class _AddWordPageState extends State<AddWordPage> {
                   const Text(
                     'Group',
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                     ),
                   ),
@@ -277,7 +276,6 @@ class _AddWordPageState extends State<AddWordPage> {
                           icon: const Icon(
                             Icons.arrow_forward_ios,
                             size: 16,
-                            color: Colors.white,
                           ),
                           onPressed: () async {
                             final selectedGroup = await Navigator.push<Group>(

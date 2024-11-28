@@ -42,6 +42,19 @@ class GroupCard extends StatelessWidget {
                         fontSize: 15, fontWeight: FontWeight.w500),
                   ),
                 ),
+                group.id != 1
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          '${group.wordCount.toString()} words',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium?.color,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ],
             ),
           ),
