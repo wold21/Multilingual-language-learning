@@ -9,5 +9,5 @@ class AppInfoService {
     return packageInfo.version;
   }
 
-  String get appName => 'Voca Storage';
+  String get appName => 'Laboca';
 }

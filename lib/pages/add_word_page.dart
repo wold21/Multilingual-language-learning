@@ -17,6 +17,7 @@ class AddWordPage extends StatefulWidget {
 }
 
 class _AddWordPageState extends State<AddWordPage> {
+  static const String FIRST_RUN_KEY = 'is_first_run';
   static const String _lastSelectedLanguageKey = 'last_selected_language';
   final _wordController = TextEditingController();
   final _meaningController = TextEditingController();
@@ -122,7 +123,6 @@ class _AddWordPageState extends State<AddWordPage> {
       );
 
       if (widget.wordToEdit == null) {
-        // 새 단어 추가
         await _databaseService.createWord(word);
 
         if (mounted) {
@@ -147,9 +147,9 @@ class _AddWordPageState extends State<AddWordPage> {
 
         // 키보드 포커스 재설정
         FocusScope.of(context).requestFocus(FocusNode());
-        Future.delayed(const Duration(milliseconds: 50), () {
-          FocusScope.of(context).requestFocus(_wordFocusNode);
-        });
+        FocusScope.of(context).requestFocus(_wordFocusNode);
+
+        Navigator.pop(context, true);
       } else {
         // 기존 단어 수정
         await _databaseService.updateWord(word);

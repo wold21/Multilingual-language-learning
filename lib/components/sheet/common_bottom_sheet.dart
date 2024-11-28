@@ -41,7 +41,7 @@ class CommonBottomSheet extends StatelessWidget {
               title: Text(
                 'Edit',
                 style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                  color: Theme.of(context).textTheme.titleMedium?.color,
                   fontSize: 16,
                 ),
               ),
@@ -58,7 +58,7 @@ class CommonBottomSheet extends StatelessWidget {
               title: Text(
                 'Delete',
                 style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                  color: Theme.of(context).textTheme.titleMedium?.color,
                   fontSize: 16,
                 ),
               ),
