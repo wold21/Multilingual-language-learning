@@ -1,6 +1,7 @@
+import 'package:eng_word_storage/services/tts_service.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import '../models/word.dart';
 
 class WordCard extends StatefulWidget {
@@ -16,24 +17,29 @@ class WordCard extends StatefulWidget {
 }
 
 class _WordCardState extends State<WordCard> {
-  final FlutterTts flutterTts = FlutterTts();
+  final TtsService _tts = TtsService();
   bool isExpanded = false;
   bool _showContent = false;
 
   @override
   void initState() {
     super.initState();
-    _initTts();
   }
 
-  Future<void> _initTts() async {
-    await flutterTts.setLanguage(widget.word.language);
-    await flutterTts.setSpeechRate(0.5);
+  @override
+  void dispose() {
+    _tts.dispose();
+    super.dispose();
   }
 
-  Future<void> _speak() async {
+  Future<void> _speak(double speechRate) async {
     try {
-      await flutterTts.speak(widget.word.word);
+      // _tts.init();
+      await _tts.speak(
+        widget.word.word,
+        widget.word.language,
+        speechRate,
+      );
     } catch (e) {
       if (mounted) {
         ToastUtils.show(
@@ -121,10 +127,58 @@ class _WordCardState extends State<WordCard> {
                           ],
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.volume_down_rounded, size: 28),
-                        onPressed: _speak,
-                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Material(
+                            color: Colors.transparent,
+                            child: SizedBox(
+                              width: 36,
+                              height: 36,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(18),
+                                onTap: () => _speak(0.25),
+                                child: const Center(
+                                  child: FaIcon(FontAwesomeIcons.personWalking,
+                                      size: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Material(
+                            color: Colors.transparent,
+                            child: SizedBox(
+                              width: 36,
+                              height: 36,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(18),
+                                onTap: () => _speak(0.5),
+                                child: const Center(
+                                  child: FaIcon(FontAwesomeIcons.personRunning,
+                                      size: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Material(
+                            color: Colors.transparent,
+                            child: SizedBox(
+                              width: 36,
+                              height: 36,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(18),
+                                onTap: () => _speak(1.0),
+                                child: const Center(
+                                  child:
+                                      FaIcon(FontAwesomeIcons.bolt, size: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),

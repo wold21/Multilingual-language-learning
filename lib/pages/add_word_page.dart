@@ -1,6 +1,9 @@
 import 'package:eng_word_storage/pages/group_page.dart';
+import 'package:eng_word_storage/utils/content_language.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/word.dart';
 import '../models/group.dart';
 import '../services/database_service.dart';
@@ -14,33 +17,32 @@ class AddWordPage extends StatefulWidget {
 }
 
 class _AddWordPageState extends State<AddWordPage> {
+  static const String _lastSelectedLanguageKey = 'last_selected_language';
   final _wordController = TextEditingController();
   final _meaningController = TextEditingController();
   final _memoController = TextEditingController();
   final _wordFocusNode = FocusNode();
   final DatabaseService _databaseService = DatabaseService.instance;
+  ContentLanguage _selectedLanguage = ContentLanguage.enUS;
+
   List<Group> groups = [];
   bool _canSave = false;
   Word? _editedWord;
 
-  Group? _selectedGroup = Group(
-    id: 2,
-    name: 'Not specified',
-    createdAt: 0,
-    updatedAt: 0,
-  );
+  Group? _selectedGroup;
 
   @override
   void initState() {
     super.initState();
     _updateSaveButton();
+    _loadLastSelectedLanguage();
     _wordController.addListener(_updateSaveButton);
     _meaningController.addListener(_updateSaveButton);
     if (widget.wordToEdit != null) {
-      // 그룹 목록 로드 후 편집 모드 초기화
       _wordController.text = widget.wordToEdit!.word;
       _meaningController.text = widget.wordToEdit!.meaning;
       _memoController.text = widget.wordToEdit!.memo ?? '';
+      _selectedLanguage = ContentLanguage.fromCode(widget.wordToEdit!.language);
       _selectedGroup = Group(
         id: widget.wordToEdit!.groupId,
         name: '', // 임시로 빈 이름 설정
@@ -60,6 +62,8 @@ class _AddWordPageState extends State<AddWordPage> {
               updatedAt: 0,
             ),
           );
+          _selectedLanguage =
+              ContentLanguage.fromCode(widget.wordToEdit!.language);
         });
       }
     });
@@ -70,6 +74,22 @@ class _AddWordPageState extends State<AddWordPage> {
     setState(() {
       groups = userGroups;
     });
+  }
+
+  Future<void> _loadLastSelectedLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastLanguageCode = prefs.getString(_lastSelectedLanguageKey);
+    if (lastLanguageCode != null) {
+      setState(() {
+        _selectedLanguage = ContentLanguage.fromCode(lastLanguageCode);
+      });
+    }
+  }
+
+  // 선택한 언어 저장하기
+  Future<void> _saveSelectedLanguage(ContentLanguage language) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_lastSelectedLanguageKey, language.code);
   }
 
   void _updateSaveButton() {
@@ -95,7 +115,7 @@ class _AddWordPageState extends State<AddWordPage> {
         meaning: _meaningController.text.trim(),
         memo: _memoController.text.isEmpty ? null : _memoController.text.trim(),
         groupId: groupId,
-        language: 'en',
+        language: _selectedLanguage.code,
         createdAt: widget.wordToEdit?.createdAt ??
             DateTime.now().millisecondsSinceEpoch,
         updatedAt: DateTime.now().millisecondsSinceEpoch,
@@ -163,6 +183,14 @@ class _AddWordPageState extends State<AddWordPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          'New Word',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -214,6 +242,12 @@ class _AddWordPageState extends State<AddWordPage> {
                     ),
                     style: const TextStyle(fontSize: 16),
                     textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.multiline,
+                    enableIMEPersonalizedLearning: true,
+                    enableSuggestions: true,
+                    strutStyle: const StrutStyle(
+                      forceStrutHeight: true,
+                    ),
                   ),
                 ),
               ),
@@ -233,6 +267,12 @@ class _AddWordPageState extends State<AddWordPage> {
                     ),
                     style: const TextStyle(fontSize: 16),
                     textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.multiline,
+                    enableIMEPersonalizedLearning: true,
+                    enableSuggestions: true,
+                    strutStyle: const StrutStyle(
+                      forceStrutHeight: true,
+                    ),
                   ),
                 ),
               ),
@@ -252,6 +292,12 @@ class _AddWordPageState extends State<AddWordPage> {
                     ),
                     style: const TextStyle(fontSize: 16),
                     textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.multiline,
+                    enableIMEPersonalizedLearning: true,
+                    enableSuggestions: true,
+                    strutStyle: const StrutStyle(
+                      forceStrutHeight: true,
+                    ),
                     maxLines: null, // 여러 줄 입력 가능
                   ),
                 ),
@@ -271,26 +317,18 @@ class _AddWordPageState extends State<AddWordPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          _selectedGroup?.name ?? 'Not specified',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
-                          ),
+                        CupertinoButton(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
                           onPressed: () async {
                             final selectedGroup = await Navigator.push<Group>(
                               context,
-                              MaterialPageRoute(
+                              CupertinoPageRoute(
+                                // 옆에서 미는 효과
                                 builder: (context) => const GroupPage(
-                                    mode: GroupSelectionMode.single,
-                                    selectedGroupIds: []),
+                                  mode: GroupSelectionMode.single,
+                                  selectedGroupIds: [],
+                                ),
                               ),
                             );
                             if (selectedGroup != null) {
@@ -299,12 +337,60 @@ class _AddWordPageState extends State<AddWordPage> {
                               });
                             }
                           },
-                        ),
+                          child: Text(
+                            _selectedGroup?.name ?? 'Not specified',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
                 ],
               ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                const Text(
+                  'Language',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                DropdownButton<ContentLanguage>(
+                  value: _selectedLanguage,
+                  underline: const SizedBox(),
+                  alignment: AlignmentDirectional.centerEnd,
+                  icon: const Icon(
+                    Icons.arrow_drop_down,
+                    size: 25,
+                  ),
+                  dropdownColor:
+                      Theme.of(context).scaffoldBackgroundColor, // 여기를 수정
+                  borderRadius: BorderRadius.circular(15),
+                  items: ContentLanguage.values.map((language) {
+                    return DropdownMenuItem<ContentLanguage>(
+                      value: language,
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '${language.name}  ${language.flag}',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (ContentLanguage? newValue) async {
+                    print(newValue);
+                    if (newValue != null) {
+                      setState(() {
+                        _selectedLanguage = newValue;
+                      });
+                    }
+                    await _saveSelectedLanguage(newValue!);
+                  },
+                ),
+              ])
             ],
           ),
         ),
