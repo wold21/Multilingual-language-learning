@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ConfirmDialog {
   static Future<bool?> show({
@@ -36,7 +37,10 @@ class ConfirmDialog {
             children: [
               Expanded(
                 child: TextButton(
-                  onPressed: () => Navigator.pop(context, false),
+                  onPressed: () async {
+                    await HapticFeedback.lightImpact();
+                    Navigator.pop(context, false);
+                  },
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
@@ -57,7 +61,10 @@ class ConfirmDialog {
               ),
               Expanded(
                 child: TextButton(
-                  onPressed: () => Navigator.pop(context, true),
+                  onPressed: () async {
+                    await HapticFeedback.lightImpact();
+                    Navigator.pop(context, true);
+                  },
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 15),
                   ),

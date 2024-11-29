@@ -12,6 +12,7 @@ import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/pages/sort_page.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:eng_word_storage/utils/word_generator.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -472,6 +473,7 @@ class _MainPageState extends State<MainPage> {
             ),
             child: FloatingActionButton(
               onPressed: () async {
+                await HapticFeedback.mediumImpact();
                 final needsRefresh = await Navigator.push<bool>(
                   context,
                   MaterialPageRoute(
@@ -501,7 +503,8 @@ class _MainPageState extends State<MainPage> {
 
   Widget _buildWordCard(Word word) {
     return GestureDetector(
-      onLongPress: () {
+      onLongPress: () async {
+        await HapticFeedback.mediumImpact();
         showModalBottomSheet(
           context: context,
           backgroundColor: Colors.transparent,

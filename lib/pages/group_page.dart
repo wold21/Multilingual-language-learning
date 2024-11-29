@@ -4,6 +4,7 @@ import 'package:eng_word_storage/pages/add_group_page.dart';
 import 'package:eng_word_storage/pages/edit_group_page.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/group.dart';
 import '../services/database_service.dart';
 import '../components/group_card.dart';
@@ -199,10 +200,16 @@ class _GroupPageState extends State<GroupPage> {
           return GroupCard(
             group: group,
             isSelected: isSelected,
-            onTap: () => _handleSelection(group),
-            onLongPress: group.id != 1 && group.id != 2
-                ? () => _showBottomSheet(group)
-                : () {},
+            onTap: () async {
+              await HapticFeedback.lightImpact();
+              _handleSelection(group);
+            },
+            onLongPress: () async {
+              await HapticFeedback.mediumImpact();
+              if (group.id != 1 && group.id != 2) {
+                _showBottomSheet(group);
+              }
+            },
           );
         },
       ),

@@ -2,11 +2,13 @@ import 'package:eng_word_storage/pages/root_page.dart';
 import 'package:eng_word_storage/services/database_service.dart';
 import 'package:eng_word_storage/services/theme_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseService.instance.initialize();
   await ThemeService.instance.initialize();
+  SystemSound.play(SystemSoundType.click);
   runApp(const MyApp());
 }
 
@@ -61,6 +63,13 @@ class MyApp extends StatelessWidget {
               bodyLarge: TextStyle(color: Colors.black87),
               bodyMedium: TextStyle(color: Colors.black54),
             ),
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+              },
+            ),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           darkTheme: ThemeData(
             useMaterial3: true,
@@ -102,6 +111,13 @@ class MyApp extends StatelessWidget {
               bodyLarge: TextStyle(color: Colors.white),
               bodyMedium: TextStyle(color: Colors.white70),
             ),
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+              },
+            ),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           home: const RootPage(),
         );

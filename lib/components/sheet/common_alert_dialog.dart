@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CommonAlertDialog {
   static Future<void> show({
@@ -36,7 +37,10 @@ class CommonAlertDialog {
           SizedBox(
             width: double.infinity,
             child: TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () async {
+                await HapticFeedback.lightImpact();
+                Navigator.pop(context);
+              },
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 15),
               ),

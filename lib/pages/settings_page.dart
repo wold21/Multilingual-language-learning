@@ -202,7 +202,8 @@ class _ThemeSelectorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: const Text('Select Theme'),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      title: const Text('Select Theme', style: TextStyle(fontSize: 18)),
       children: ThemeMode.values.map((mode) {
         return SimpleDialogOption(
           onPressed: () {
