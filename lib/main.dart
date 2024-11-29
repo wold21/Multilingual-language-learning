@@ -1,6 +1,6 @@
-import 'package:eng_word_storage/pages/root_page.dart';
 import 'package:eng_word_storage/services/database_service.dart';
 import 'package:eng_word_storage/services/theme_service.dart';
+import 'package:eng_word_storage/utils/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
             ),
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          home: const RootPage(),
+          home: const SplashScreen(),
         );
       },
     );
