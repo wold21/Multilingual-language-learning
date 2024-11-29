@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 enum SortType {
   createdDesc('Newest', 'created_at DESC'),
@@ -85,6 +86,12 @@ class _SortPageState extends State<SortPage> {
             final sortType = SortType.values[index];
             return ListTile(
               title: Text(sortType.label),
+              onTap: () async {
+                await HapticFeedback.lightImpact();
+                setState(() {
+                  _selectedSort = sortType;
+                });
+              },
               leading: Checkbox(
                 value: _selectedSort == sortType,
                 onChanged: (bool? value) {
@@ -95,8 +102,9 @@ class _SortPageState extends State<SortPage> {
                   }
                 },
                 activeColor: Theme.of(context).primaryColor,
-                checkColor: Theme.of(context).textTheme.bodyMedium?.color,
+                checkColor: Colors.white,
               ),
+              splashColor: Colors.transparent,
             );
           },
         ),

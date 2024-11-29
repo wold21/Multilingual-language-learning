@@ -46,7 +46,7 @@ class _AddWordPageState extends State<AddWordPage> {
       _selectedLanguage = ContentLanguage.fromCode(widget.wordToEdit!.language);
       _selectedGroup = Group(
         id: widget.wordToEdit!.groupId,
-        name: '', // 임시로 빈 이름 설정
+        name: '',
         createdAt: 0,
         updatedAt: 0,
       );
@@ -87,7 +87,6 @@ class _AddWordPageState extends State<AddWordPage> {
     }
   }
 
-  // 선택한 언어 저장하기
   Future<void> _saveSelectedLanguage(ContentLanguage language) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_lastSelectedLanguageKey, language.code);
@@ -108,7 +107,7 @@ class _AddWordPageState extends State<AddWordPage> {
       } else if (widget.wordToEdit?.groupId != null) {
         groupId = widget.wordToEdit!.groupId;
       } else {
-        groupId = 2; // Not specified 그룹
+        groupId = 2;
       }
       final word = Word(
         id: widget.wordToEdit?.id,
@@ -132,7 +131,6 @@ class _AddWordPageState extends State<AddWordPage> {
           );
         }
 
-        // 입력 필드 초기화
         setState(() {
           _wordController.clear();
           _meaningController.clear();
@@ -145,13 +143,11 @@ class _AddWordPageState extends State<AddWordPage> {
           );
         });
 
-        // 키보드 포커스 재설정
         FocusScope.of(context).requestFocus(FocusNode());
         FocusScope.of(context).requestFocus(_wordFocusNode);
 
         Navigator.pop(context, true);
       } else {
-        // 기존 단어 수정
         await _databaseService.updateWord(word);
         _editedWord = word;
 
@@ -233,7 +229,7 @@ class _AddWordPageState extends State<AddWordPage> {
                   child: TextField(
                     controller: _wordController,
                     focusNode: _wordFocusNode,
-                    autofocus: true, // 자동 포커스 설정
+                    autofocus: true,
                     decoration: const InputDecoration(
                       hintText: 'Word',
                       hintStyle: TextStyle(color: Colors.grey),
@@ -298,13 +294,13 @@ class _AddWordPageState extends State<AddWordPage> {
                     strutStyle: const StrutStyle(
                       forceStrutHeight: true,
                     ),
-                    maxLines: null, // 여러 줄 입력 가능
+                    maxLines: null,
                   ),
                 ),
               ),
-              const SizedBox(height: 24), // 간격 좀 더 늘림
+              const SizedBox(height: 24),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // 추가
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Group',
@@ -324,7 +320,6 @@ class _AddWordPageState extends State<AddWordPage> {
                             final selectedGroup = await Navigator.push<Group>(
                               context,
                               CupertinoPageRoute(
-                                // 옆에서 미는 효과
                                 builder: (context) => const GroupPage(
                                   mode: GroupSelectionMode.single,
                                   selectedGroupIds: [],
@@ -367,8 +362,7 @@ class _AddWordPageState extends State<AddWordPage> {
                     Icons.arrow_drop_down,
                     size: 25,
                   ),
-                  dropdownColor:
-                      Theme.of(context).scaffoldBackgroundColor, // 여기를 수정
+                  dropdownColor: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(15),
                   items: ContentLanguage.values.map((language) {
                     return DropdownMenuItem<ContentLanguage>(
@@ -381,7 +375,6 @@ class _AddWordPageState extends State<AddWordPage> {
                     );
                   }).toList(),
                   onChanged: (ContentLanguage? newValue) async {
-                    print(newValue);
                     if (newValue != null) {
                       setState(() {
                         _selectedLanguage = newValue;
