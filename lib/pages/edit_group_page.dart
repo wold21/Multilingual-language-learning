@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../models/group.dart';
 
@@ -38,6 +41,44 @@ class _EditGroupPageState extends State<EditGroupPage> {
     });
   }
 
+  Widget _buildTextField({
+    required TextEditingController controller,
+    bool autofocus = false,
+  }) {
+    if (Platform.isIOS) {
+      return CupertinoTextField(
+        controller: controller,
+        autofocus: autofocus,
+        placeholder: 'Enter group name',
+        placeholderStyle: const TextStyle(color: Colors.grey),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        style: const TextStyle(fontSize: 16),
+        maxLength: 20, // 20글자 제한
+        autocorrect: false,
+        enableSuggestions: false,
+      );
+    } else {
+      return TextField(
+        controller: controller,
+        autofocus: autofocus,
+        maxLength: 20, // 20글자 제한
+        decoration: const InputDecoration(
+          hintText: 'Enter group name',
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.zero,
+          counterText: '', // 글자 수 카운터 숨기기
+        ),
+        style: const TextStyle(fontSize: 16),
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.done,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +91,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
         title: const Text(
           'Edit Group',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -70,6 +111,8 @@ class _EditGroupPageState extends State<EditGroupPage> {
             child: Text(
               'Done',
               style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
                 color: _canSave ? Theme.of(context).primaryColor : Colors.grey,
               ),
             ),
@@ -97,17 +140,9 @@ class _EditGroupPageState extends State<EditGroupPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                TextField(
+                _buildTextField(
                   controller: _textController,
                   autofocus: true,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter group name',
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
                 ),
               ],
             ),

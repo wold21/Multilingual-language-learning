@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/utils/content_language.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
@@ -174,6 +176,61 @@ class _AddWordPageState extends State<AddWordPage> {
     super.dispose();
   }
 
+  Widget _buildTextField({
+    required TextEditingController controller,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    required String hintText,
+    TextInputAction? textInputAction,
+    TextInputType? keyboardType,
+  }) {
+    if (Platform.isIOS) {
+      return CupertinoTextField(
+        controller: controller,
+        focusNode: focusNode,
+        autofocus: autofocus,
+        placeholder: hintText,
+        placeholderStyle: const TextStyle(color: Colors.grey),
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        style: const TextStyle(fontSize: 16),
+        textInputAction: textInputAction,
+        keyboardType: keyboardType,
+        autocorrect: false,
+        enableSuggestions: false,
+      );
+    } else {
+      return Card(
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0.0),
+          child: TextField(
+            controller: controller,
+            focusNode: focusNode,
+            autofocus: autofocus,
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: const TextStyle(color: Colors.grey),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.zero,
+            ),
+            style: const TextStyle(fontSize: 16),
+            textInputAction: textInputAction,
+            keyboardType: keyboardType,
+            enableIMEPersonalizedLearning: true,
+            enableSuggestions: true,
+            strutStyle: const StrutStyle(
+              forceStrutHeight: true,
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,82 +278,27 @@ class _AddWordPageState extends State<AddWordPage> {
           padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
           child: Column(
             children: [
-              Card(
-                margin: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 25.0, vertical: 0.0),
-                  child: TextField(
-                    controller: _wordController,
-                    focusNode: _wordFocusNode,
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                      hintText: 'Word',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    style: const TextStyle(fontSize: 16),
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.multiline,
-                    enableIMEPersonalizedLearning: true,
-                    enableSuggestions: true,
-                    strutStyle: const StrutStyle(
-                      forceStrutHeight: true,
-                    ),
-                  ),
-                ),
+              _buildTextField(
+                controller: _wordController,
+                focusNode: _wordFocusNode,
+                autofocus: true,
+                hintText: 'Word',
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.text,
               ),
               const SizedBox(height: 16),
-              Card(
-                margin: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 25.0, vertical: 0.0),
-                  child: TextField(
-                    controller: _meaningController,
-                    decoration: const InputDecoration(
-                      hintText: 'Meaning',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    style: const TextStyle(fontSize: 16),
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.multiline,
-                    enableIMEPersonalizedLearning: true,
-                    enableSuggestions: true,
-                    strutStyle: const StrutStyle(
-                      forceStrutHeight: true,
-                    ),
-                  ),
-                ),
+              _buildTextField(
+                controller: _meaningController,
+                hintText: 'Meaning',
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.text,
               ),
               const SizedBox(height: 16),
-              Card(
-                margin: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 25.0, vertical: 0.0),
-                  child: TextField(
-                    controller: _memoController,
-                    decoration: const InputDecoration(
-                      hintText: 'Memo (optional)',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    style: const TextStyle(fontSize: 16),
-                    textInputAction: TextInputAction.done,
-                    keyboardType: TextInputType.multiline,
-                    enableIMEPersonalizedLearning: true,
-                    enableSuggestions: true,
-                    strutStyle: const StrutStyle(
-                      forceStrutHeight: true,
-                    ),
-                    maxLines: null,
-                  ),
-                ),
+              _buildTextField(
+                controller: _memoController,
+                hintText: 'Memo (optional)',
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.multiline,
               ),
               const SizedBox(height: 24),
               Row(

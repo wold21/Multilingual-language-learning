@@ -169,7 +169,7 @@ class _WordCardState extends State<WordCard> {
                               height: 36,
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(18),
-                                onTap: () => _speak(1.0),
+                                onTap: () => _speak(0.75),
                                 child: const Center(
                                   child:
                                       FaIcon(FontAwesomeIcons.bolt, size: 20),
@@ -187,38 +187,47 @@ class _WordCardState extends State<WordCard> {
                   secondChild: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 200),
-                          opacity: _showContent ? 1.0 : 0.0,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.word.meaning,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.w500,
+                      Expanded(
+                        // Row 안에 Expanded 추가
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: AnimatedOpacity(
+                            duration: const Duration(milliseconds: 200),
+                            opacity: _showContent ? 1.0 : 0.0,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.word.meaning,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  softWrap: true, // 자동 줄바꿈 활성화
+                                  overflow:
+                                      TextOverflow.visible, // 오버플로우 시 잘리지 않고 표시
                                 ),
-                              ),
-                              if (widget.word.memo != null &&
-                                  widget.word.memo!.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text(
-                                    widget.word.memo!,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.color,
+                                if (widget.word.memo != null &&
+                                    widget.word.memo!.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      widget.word.memo!,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.color,
+                                      ),
+                                      softWrap: true, // 자동 줄바꿈 활성화
+                                      overflow: TextOverflow
+                                          .visible, // 오버플로우 시 잘리지 않고 표시
                                     ),
                                   ),
-                                ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),

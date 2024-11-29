@@ -53,8 +53,9 @@ class GroupCard extends StatelessWidget {
                           '${group.wordCount.toString()} words',
                           style: TextStyle(
                             fontSize: 12,
-                            color:
-                                Theme.of(context).textTheme.bodyMedium?.color,
+                            color: isSelected
+                                ? Colors.white
+                                : Theme.of(context).textTheme.bodyMedium?.color,
                           ),
                         ),
                       )

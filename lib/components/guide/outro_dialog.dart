@@ -7,9 +7,10 @@ class OutroGuide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const String FIRST_RUN_KEY = 'is_first_run';
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
+
+    return Container(
+      color: Colors.black.withOpacity(0.85),
+      child: Stack(
         children: [
           GestureDetector(
             onTap: () async {
@@ -20,7 +21,7 @@ class OutroGuide extends StatelessWidget {
               }
             },
             child: Container(
-              color: Colors.black.withOpacity(0.85),
+              color: Colors.transparent,
             ),
           ),
           Center(
@@ -44,7 +45,7 @@ class OutroGuide extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 10),
                   Text(
                     'Click anywhere to close',
                     textAlign: TextAlign.center,

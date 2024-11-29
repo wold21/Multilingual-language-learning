@@ -49,7 +49,7 @@ class _MainPageState extends State<MainPage> {
 
   bool isLoading = false;
   int offset = 0;
-  static const int limit = 10;
+  static const int limit = 300;
   String? searchQuery;
 
   @override
@@ -57,7 +57,7 @@ class _MainPageState extends State<MainPage> {
     super.initState();
     _initializePreferences();
     _scrollController.addListener(_scrollListener);
-    _checkFirstRun();
+    _initializeApp();
   }
 
   @override
@@ -78,16 +78,18 @@ class _MainPageState extends State<MainPage> {
     return emptyMessages[random.nextInt(emptyMessages.length)];
   }
 
-  void _checkFirstRun() async {
+  void _initializeApp() async {
     final prefs = await SharedPreferences.getInstance();
     final isFirstRun = prefs.getBool(FIRST_RUN_KEY) ?? true;
 
-    if (isFirstRun && mounted) {
-      final needsRefresh = await showDialog<bool>(
-        context: context,
-        barrierDismissible: false,
-        barrierColor: Colors.transparent,
-        builder: (context) => const IntroGuide(),
+    if (!mounted) return;
+
+    if (isFirstRun) {
+      final needsRefresh = await Navigator.of(context).push<bool>(
+        PageRouteBuilder(
+          opaque: false,
+          pageBuilder: (context, _, __) => const IntroGuide(),
+        ),
       );
 
       if (needsRefresh == true) {
@@ -97,6 +99,8 @@ class _MainPageState extends State<MainPage> {
         });
         _loadWords();
       }
+    } else {
+      _loadWords();
     }
   }
 
@@ -197,11 +201,11 @@ class _MainPageState extends State<MainPage> {
         // 약간의 딜레이를 주어 화면 전환이 완료된 후 표시
         Future.delayed(const Duration(milliseconds: 300), () {
           if (mounted) {
-            showDialog(
-              context: context,
-              barrierDismissible: true,
-              barrierColor: Colors.transparent,
-              builder: (context) => const OutroGuide(),
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (context, _, __) => const OutroGuide(),
+              ),
             );
           }
         });
@@ -222,283 +226,269 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
     return Scaffold(
-        appBar: AppBar(
-          title:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/dog.png',
-                  width: 45,
-                  height: 45,
-                ),
-                const Text(
-                  ' Laboca',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 15, top: 10),
-            //   child: Text(
-            //     '${words.length} words', // 단어 수 표시
-            //     style: TextStyle(
-            //       fontSize: 14,
-            //       color: Theme.of(context).textTheme.bodyMedium?.color,
-            //     ),
-            //   ),
-            // ),
-          ]),
-          toolbarHeight: 100,
-          scrolledUnderElevation: 0, // 스크롤 시 그림자 효과 제거
-          elevation: 0,
-          actions: [
-            if (kDebugMode) ...[
-              IconButton(
-                icon: const Icon(Icons.folder_delete_rounded),
-                onPressed: () async {
-                  ToastUtils.show(
-                    message: 'Delete All Words',
-                    type: ToastType.info,
-                  );
-
-                  await _databaseService.deleteAllWords();
-
-                  ToastUtils.show(
-                    message: 'Complated!',
-                    type: ToastType.success,
-                  );
-
-                  setState(() {
-                    words.clear();
-                    offset = 0;
-                  });
-                  _loadWords();
-                },
+      appBar: AppBar(
+        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/dog.png',
+                width: 45,
+                height: 45,
               ),
-              IconButton(
-                icon: const Icon(Icons.bug_report_rounded),
-                onPressed: () async {
-                  ToastUtils.show(
-                    message: 'Generating dummy data...',
-                    type: ToastType.info,
-                  );
-
-                  await WordGenerator.generateDummyData(
-                      DatabaseService.instance);
-
-                  ToastUtils.show(
-                    message: 'Dummy data generated!',
-                    type: ToastType.success,
-                  );
-
-                  setState(() {
-                    words.clear();
-                    offset = 0;
-                  });
-                  _loadWords();
-                },
+              const Text(
+                ' Laboca',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 15, top: 10),
+          //   child: Text(
+          //     '${words.length} words', // 단어 수 표시
+          //     style: TextStyle(
+          //       fontSize: 14,
+          //       color: Theme.of(context).textTheme.bodyMedium?.color,
+          //     ),
+          //   ),
+          // ),
+        ]),
+        toolbarHeight: 80,
+        scrolledUnderElevation: 0, // 스크롤 시 그림자 효과 제거
+        elevation: 0,
+        actions: [
+          if (kDebugMode) ...[
             IconButton(
-              icon: const Icon(Icons.sort, size: 28), // 정렬 아이콘
+              icon: const Icon(Icons.folder_delete_rounded),
               onPressed: () async {
-                final result = await Navigator.push<SortType>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SortPage(
-                      currentSort: currentSort, // 현재 정렬 조건 전달
-                    ),
-                  ),
+                ToastUtils.show(
+                  message: 'Delete All Words',
+                  type: ToastType.info,
                 );
 
-                if (result != null && result != currentSort) {
-                  setState(() {
-                    currentSort = result;
-                    words.clear();
-                    offset = 0;
-                  });
-                  await _saveSortPreference(result);
-                  _loadWords(); // 새로운 정렬 조건으로 데이터 다시 로드
-                }
+                await _databaseService.deleteAllWords();
+
+                ToastUtils.show(
+                  message: 'Complated!',
+                  type: ToastType.success,
+                );
+
+                setState(() {
+                  words.clear();
+                  offset = 0;
+                });
+                _loadWords();
               },
             ),
             IconButton(
-              icon: const Icon(Icons.folder_copy_outlined, size: 28),
+              icon: const Icon(Icons.bug_report_rounded),
               onPressed: () async {
-                final selectedIds = await Navigator.push<List<int>>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GroupPage(
-                      mode: GroupSelectionMode.multiple,
-                      selectedGroupIds: selectedGroupIds,
-                    ),
-                  ),
+                ToastUtils.show(
+                  message: 'Generating dummy data...',
+                  type: ToastType.info,
                 );
 
-                if (selectedIds != null) {
-                  setState(() {
-                    selectedGroupIds = selectedIds;
-                    words.clear();
-                    offset = 0;
-                  });
-                  await _saveGroupIdsPreference(selectedIds);
-                  _loadWords();
-                }
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                  searchQuery?.isNotEmpty == true
-                      ? Icons.search_off_rounded
-                      : Icons.search,
-                  size: 28),
-              onPressed: () async {
-                if (searchQuery?.isNotEmpty == true) {
-                  setState(() {
-                    searchQuery = null;
-                    words.clear();
-                    offset = 0;
-                  });
-                  _loadWords();
-                } else {
-                  final result = await showGeneralDialog<Map<String, dynamic>>(
-                    context: context,
-                    barrierDismissible: true,
-                    barrierLabel: '',
-                    barrierColor: Colors.black.withOpacity(0.3),
-                    transitionDuration: const Duration(milliseconds: 300),
-                    pageBuilder: (context, animation1, animation2) =>
-                        Container(),
-                    transitionBuilder:
-                        (context, animation1, animation2, child) {
-                      return Stack(
-                        children: [
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0, -1),
-                                end: Offset.zero,
-                              ).animate(animation1),
-                              child: SearchSheet(
-                                selectedGroupIds: selectedGroupIds,
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                await WordGenerator.generateDummyData(DatabaseService.instance);
 
-                  if (result != null) {
-                    setState(() {
-                      searchQuery = result['query'] as String;
-                      if (result['searchInAllGroups'] as bool) {
-                        selectedGroupIds.clear();
-                      }
-                      words.clear();
-                      offset = 0;
-                    });
-                    await _loadWords();
-                  }
-                }
+                ToastUtils.show(
+                  message: 'Dummy data generated!',
+                  type: ToastType.success,
+                );
+
+                setState(() {
+                  words.clear();
+                  offset = 0;
+                });
+                _loadWords();
               },
             ),
           ],
-        ),
-        body: words.isEmpty
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const FaIcon(
-                        FontAwesomeIcons.paw,
-                        size: 35,
-                        color: Color.fromARGB(255, 234, 161, 72),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        getRandomEmptyMessage(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+          IconButton(
+            icon: const Icon(Icons.sort, size: 28), // 정렬 아이콘
+            onPressed: () async {
+              final result = await Navigator.push<SortType>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SortPage(
+                    currentSort: currentSort, // 현재 정렬 조건 전달
                   ),
                 ),
-              )
-            : ListView.builder(
-                controller: _scrollController,
-                itemCount: words.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == words.length) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: Center(
-                        child: isLoading
-                            ? const BouncingDotsIndicator()
-                            : const SizedBox(),
-                      ),
-                    );
-                  }
-                  return _buildWordCard(words[index]);
-                },
-              ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 60),
-          child: Tooltip(
-            message: 'Add Word', // 툴팁 메시지
-            waitDuration: const Duration(milliseconds: 100), // 툴팁이 나타나기까지 대기 시간
-            showDuration: const Duration(seconds: 3), // 툴팁이 표시되는 시간
-            decoration: BoxDecoration(
-              color: Colors.black87, // 툴팁 배경색
-              borderRadius: BorderRadius.circular(8), // 모서리 둥글게
-            ),
-            textStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-            ),
-            child: FloatingActionButton(
-              onPressed: () async {
-                await HapticFeedback.mediumImpact();
-                final needsRefresh = await Navigator.push<bool>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AddWordPage(),
-                    fullscreenDialog: true,
+              );
+
+              if (result != null && result != currentSort) {
+                setState(() {
+                  currentSort = result;
+                  words.clear();
+                  offset = 0;
+                });
+                await _saveSortPreference(result);
+                _loadWords(); // 새로운 정렬 조건으로 데이터 다시 로드
+              }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.folder_copy_outlined, size: 28),
+            onPressed: () async {
+              final selectedIds = await Navigator.push<List<int>>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GroupPage(
+                    mode: GroupSelectionMode.multiple,
+                    selectedGroupIds: selectedGroupIds,
                   ),
+                ),
+              );
+
+              if (selectedIds != null) {
+                setState(() {
+                  selectedGroupIds = selectedIds;
+                  words.clear();
+                  offset = 0;
+                });
+                await _saveGroupIdsPreference(selectedIds);
+                _loadWords();
+              }
+            },
+          ),
+          IconButton(
+            icon: Icon(
+                searchQuery?.isNotEmpty == true
+                    ? Icons.search_off_rounded
+                    : Icons.search,
+                size: 28),
+            onPressed: () async {
+              if (searchQuery?.isNotEmpty == true) {
+                setState(() {
+                  searchQuery = null;
+                  words.clear();
+                  offset = 0;
+                });
+                _loadWords();
+              } else {
+                final result = await showGeneralDialog<Map<String, dynamic>>(
+                  context: context,
+                  barrierDismissible: true,
+                  barrierLabel: '',
+                  barrierColor: Colors.black.withOpacity(0.3),
+                  transitionDuration: const Duration(milliseconds: 300),
+                  pageBuilder: (context, animation1, animation2) => Container(),
+                  transitionBuilder: (context, animation1, animation2, child) {
+                    return Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(0, -1),
+                              end: Offset.zero,
+                            ).animate(animation1),
+                            child: SearchSheet(
+                              selectedGroupIds: selectedGroupIds,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 );
 
-                if (needsRefresh == true) {
-                  print('MainPage: Received true, calling _loadWords');
+                if (result != null) {
                   setState(() {
+                    searchQuery = result['query'] as String;
+                    if (result['searchInAllGroups'] as bool) {
+                      selectedGroupIds.clear();
+                    }
                     words.clear();
                     offset = 0;
                   });
-                  _loadWords();
+                  await _loadWords();
                 }
-              },
-              child: const FaIcon(
-                FontAwesomeIcons.paw,
-                color: Colors.white,
-                size: 24,
-              ),
-            ),
+              }
+            },
           ),
-        ));
+        ],
+      ),
+      body: words.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const FaIcon(
+                      FontAwesomeIcons.paw,
+                      size: 35,
+                      color: Color.fromARGB(255, 234, 161, 72),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      getRandomEmptyMessage(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : ListView.builder(
+              controller: _scrollController,
+              itemCount: words.length + 1,
+              itemBuilder: (context, index) {
+                if (index == words.length) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Center(
+                      child: isLoading
+                          ? const BouncingDotsIndicator()
+                          : const SizedBox(),
+                    ),
+                  );
+                }
+                return _buildWordCard(words[index]);
+              },
+            ),
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+        child: FloatingActionButton(
+          onPressed: () async {
+            await HapticFeedback.mediumImpact();
+            final needsRefresh = await Navigator.push<bool>(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AddWordPage(),
+                fullscreenDialog: true,
+              ),
+            );
+
+            if (needsRefresh == true) {
+              setState(() {
+                words.clear();
+                offset = 0;
+              });
+              _loadWords();
+            }
+          },
+          child: const FaIcon(
+            FontAwesomeIcons.paw,
+            color: Colors.white,
+            size: 24,
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
   }
 
   Widget _buildWordCard(Word word) {

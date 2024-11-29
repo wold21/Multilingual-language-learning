@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter_tts/flutter_tts.dart';
 
 class TtsService {
@@ -23,43 +24,100 @@ class TtsService {
 
   Future<void> _setVoiceForLanguage(String languageCode) async {
     try {
-      switch (languageCode) {
-        case 'en':
-          // 미국 영어
-          await _tts.setLanguage('en-US');
-          break;
-        case 'gb':
-          // 영국 영어 (실제 존재하는 음성 사용)
-          await _tts.setLanguage('en-GB');
-          await _tts.setVoice({"name": "en-gb-x-gba-local", "locale": "en-GB"});
-          break;
-        case 'ja':
-          // 일본어
-          await _tts.setLanguage('ja-JP');
-          await _tts.setVoice(
-              {"name": "ja-jp-x-htm#female_2-local", "locale": "ja-JP"});
-          break;
-        case 'zh':
-          // 중국어
-          await _tts.setLanguage('zh-CN');
-          break;
-        case 'ko':
-          // 한국어
-          await _tts.setLanguage('ko-KR');
-          await _tts.setVoice(
-              {"name": "ko-kr-x-ism#male_2-local", "locale": "ko-KR"});
-          break;
-        case 'ph':
-          // 필리핀어
-          await _tts.setLanguage('fil-PH');
-          break;
-        default:
-          await _tts.setLanguage('en-US');
+      if (Platform.isIOS) {
+        // iOS 음성 설정
+        switch (languageCode) {
+          case 'en':
+            await _tts.setLanguage('en-US');
+            await _tts.setVoice({
+              "name": "Samantha",
+              "locale": "en-US",
+            });
+            break;
+          case 'gb':
+            await _tts.setLanguage('en-GB');
+            await _tts.setVoice({
+              "name": "Daniel",
+              "locale": "en-GB",
+            });
+            break;
+          case 'ja':
+            await _tts.setLanguage('ja-JP');
+            await _tts.setVoice({
+              "name": "Kyoko",
+              "locale": "ja-JP",
+            });
+            break;
+          case 'zh':
+            await _tts.setLanguage('zh-CN');
+            await _tts.setVoice({
+              "name": "Tingting",
+              "locale": "zh-CN",
+            });
+            break;
+          case 'ko':
+            await _tts.setLanguage('ko-KR');
+            await _tts.setVoice({
+              "name": "Yuna",
+              "locale": "ko-KR",
+            });
+            break;
+          case 'ph':
+            // iOS는 필리핀어 미지원
+            await _tts.setLanguage('en-US');
+            await _tts.setVoice({
+              "name": "Samantha",
+              "locale": "en-US",
+            });
+            break;
+          default:
+            await _tts.setLanguage('en-US');
+            await _tts.setVoice({
+              "name": "Samantha",
+              "locale": "en-US",
+            });
+        }
+      } else {
+        // Android 음성 설정
+        switch (languageCode) {
+          case 'en':
+            await _tts.setLanguage('en-US');
+            break;
+          case 'gb':
+            await _tts.setLanguage('en-GB');
+            await _tts
+                .setVoice({"name": "en-gb-x-gba-local", "locale": "en-GB"});
+            break;
+          case 'ja':
+            await _tts.setLanguage('ja-JP');
+            await _tts.setVoice(
+                {"name": "ja-jp-x-htm#female_2-local", "locale": "ja-JP"});
+            break;
+          case 'zh':
+            await _tts.setLanguage('zh-CN');
+            break;
+          case 'ko':
+            await _tts.setLanguage('ko-KR');
+            await _tts.setVoice(
+                {"name": "ko-kr-x-ism#male_2-local", "locale": "ko-KR"});
+            break;
+          case 'ph':
+            await _tts.setLanguage('fil-PH');
+            break;
+          default:
+            await _tts.setLanguage('en-US');
+        }
       }
     } catch (e) {
       print('Error setting language: $e');
-      // 에러 발생 시 기본 언어로 설정
+      // 에러 발생 시 기본 영어로 설정
       await _tts.setLanguage('en-US');
+      if (Platform.isIOS) {
+        await _tts.setVoice({
+          "name": "Samantha",
+          "locale": "en-US",
+        });
+      }
     }
   }
 
