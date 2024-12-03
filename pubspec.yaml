@@ -28,6 +28,15 @@ dev_dependencies:
     flutter_test:
         sdk: flutter
     flutter_lints: ^4.0.0
+    flutter_launcher_icons: ^0.9.2
+
+flutter_icons:
+    android: true
+    ios: true
+    remove_alpha_ios: true
+    image_path: 'assets/images/dog_icon_min.png'
+    adaptive_icon_background: '#253580'
+    adaptive_icon_foreground: 'assets/images/for_android.png'
 
 flutter:
     uses-material-design: true
