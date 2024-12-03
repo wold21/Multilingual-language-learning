@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:eng_word_storage/ads/ad_helper.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/utils/content_language.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/word.dart';
 import '../models/group.dart';
@@ -21,6 +23,8 @@ class AddWordPage extends StatefulWidget {
 class _AddWordPageState extends State<AddWordPage> {
   static const String FIRST_RUN_KEY = 'is_first_run';
   static const String _lastSelectedLanguageKey = 'last_selected_language';
+  int _adWordCount = 0;
+  InterstitialAd? _interstitialAd;
   final _wordController = TextEditingController();
   final _meaningController = TextEditingController();
   final _memoController = TextEditingController();
@@ -37,6 +41,8 @@ class _AddWordPageState extends State<AddWordPage> {
   @override
   void initState() {
     super.initState();
+    _loadWordCount();
+    _createInterstitialAd();
     _updateSaveButton();
     _loadLastSelectedLanguage();
     _wordController.addListener(_updateSaveButton);
@@ -72,6 +78,13 @@ class _AddWordPageState extends State<AddWordPage> {
     });
   }
 
+  Future<void> _loadWordCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _adWordCount = prefs.getInt('ad_word_count') ?? 0;
+    });
+  }
+
   Future<void> _loadGroups() async {
     final userGroups = await _databaseService.getUserGroups();
     setState(() {
@@ -102,6 +115,7 @@ class _AddWordPageState extends State<AddWordPage> {
   }
 
   Future<void> _saveWord() async {
+    final prefs = await SharedPreferences.getInstance();
     if (_canSave) {
       final int groupId;
       if (_selectedGroup?.id != null) {
@@ -125,6 +139,14 @@ class _AddWordPageState extends State<AddWordPage> {
 
       if (widget.wordToEdit == null) {
         await _databaseService.createWord(word);
+        _adWordCount++;
+
+        if (_adWordCount % 3 == 0) {
+          await prefs.setInt('ad_word_count', 0);
+          _showInterstitialAd();
+        }
+
+        await prefs.setInt('ad_word_count', _adWordCount);
 
         if (mounted) {
           ToastUtils.show(
@@ -148,7 +170,6 @@ class _AddWordPageState extends State<AddWordPage> {
         FocusScope.of(context).requestFocus(FocusNode());
         FocusScope.of(context).requestFocus(_wordFocusNode);
 
-        final prefs = await SharedPreferences.getInstance();
         final isFirstRun = prefs.getBool(FIRST_RUN_KEY) ?? true;
 
         print('isFirstRun: $isFirstRun');
@@ -173,12 +194,56 @@ class _AddWordPageState extends State<AddWordPage> {
     }
   }
 
+  void _showInterstitialAd() {
+    if (_interstitialAd == null) return;
+
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        _createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        debugPrint('Failed to show fullscreen content: $error');
+        ad.dispose();
+        _createInterstitialAd();
+      },
+      onAdShowedFullScreenContent: (ad) {
+        debugPrint('Ad showed fullscreen content.');
+      },
+    );
+
+    _interstitialAd!.show();
+    _interstitialAd = null;
+  }
+
+  Future<void> _createInterstitialAd() async {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          print("Interstitial ad loaded successfully.");
+          setState(() {
+            _interstitialAd = ad;
+          });
+        },
+        onAdFailedToLoad: (error) {
+          print("Failed to load interstitial ad: $error");
+          setState(() {
+            _interstitialAd = null;
+          });
+        },
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _wordFocusNode.dispose();
     _wordController.dispose();
     _meaningController.dispose();
     _memoController.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 

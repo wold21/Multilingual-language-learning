@@ -1,3 +1,4 @@
+import 'package:eng_word_storage/ads/banner_ad_widget.dart';
 import 'package:eng_word_storage/components/confirm_dialog.dart';
 import 'package:eng_word_storage/services/app_info_service.dart';
 import 'package:eng_word_storage/services/data_backup_service.dart';
@@ -54,6 +55,7 @@ class SettingsPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          const BannerAdWidget(),
           const SizedBox(height: 16),
           _SettingsSection(
             title: 'Appearance',

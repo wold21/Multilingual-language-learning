@@ -2,13 +2,17 @@ import 'package:eng_word_storage/services/database_service.dart';
 import 'package:eng_word_storage/services/theme_service.dart';
 import 'package:eng_word_storage/utils/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Firebase 초기화
+  await Firebase.initializeApp();
   await DatabaseService.instance.initialize();
   await ThemeService.instance.initialize();
-  SystemSound.play(SystemSoundType.click);
+  await MobileAds.instance.initialize();
+
   runApp(const MyApp());
 }
 

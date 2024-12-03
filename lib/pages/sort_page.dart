@@ -1,3 +1,4 @@
+import 'package:eng_word_storage/ads/banner_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -68,46 +69,53 @@ class _SortPageState extends State<SortPage> {
           ),
         ],
       ),
-      body: Theme(
-        data: Theme.of(context).copyWith(
-          checkboxTheme: CheckboxThemeData(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
-            side: const BorderSide(
-              color: Color(0x8C4E4E4E),
-              width: 1.5,
+      body: Column(
+        children: [
+          const BannerAdWidget(),
+          Expanded(
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                checkboxTheme: CheckboxThemeData(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  side: const BorderSide(
+                    color: Color(0x8C4E4E4E),
+                    width: 1.5,
+                  ),
+                ),
+              ),
+              child: ListView.builder(
+                itemCount: SortType.values.length,
+                itemBuilder: (context, index) {
+                  final sortType = SortType.values[index];
+                  return ListTile(
+                    title: Text(sortType.label),
+                    onTap: () async {
+                      await HapticFeedback.lightImpact();
+                      setState(() {
+                        _selectedSort = sortType;
+                      });
+                    },
+                    leading: Checkbox(
+                      value: _selectedSort == sortType,
+                      onChanged: (bool? value) {
+                        if (value == true) {
+                          setState(() {
+                            _selectedSort = sortType;
+                          });
+                        }
+                      },
+                      activeColor: Theme.of(context).primaryColor,
+                      checkColor: Colors.white,
+                    ),
+                    splashColor: Colors.transparent,
+                  );
+                },
+              ),
             ),
           ),
-        ),
-        child: ListView.builder(
-          itemCount: SortType.values.length,
-          itemBuilder: (context, index) {
-            final sortType = SortType.values[index];
-            return ListTile(
-              title: Text(sortType.label),
-              onTap: () async {
-                await HapticFeedback.lightImpact();
-                setState(() {
-                  _selectedSort = sortType;
-                });
-              },
-              leading: Checkbox(
-                value: _selectedSort == sortType,
-                onChanged: (bool? value) {
-                  if (value == true) {
-                    setState(() {
-                      _selectedSort = sortType;
-                    });
-                  }
-                },
-                activeColor: Theme.of(context).primaryColor,
-                checkColor: Colors.white,
-              ),
-              splashColor: Colors.transparent,
-            );
-          },
-        ),
+        ],
       ),
     );
   }

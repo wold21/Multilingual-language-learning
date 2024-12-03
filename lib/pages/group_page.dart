@@ -1,3 +1,4 @@
+import 'package:eng_word_storage/ads/banner_ad_widget.dart';
 import 'package:eng_word_storage/components/confirm_dialog.dart';
 import 'package:eng_word_storage/components/sheet/common_bottom_sheet.dart';
 import 'package:eng_word_storage/pages/add_group_page.dart';
@@ -187,32 +188,37 @@ class _GroupPageState extends State<GroupPage> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: groups.length,
-        itemBuilder: (context, index) {
-          final group = groups[index];
-          final isSelected = widget.mode == GroupSelectionMode.single
-              ? selectedGroup?.id == group.id
-              : (group.name == 'All'
-                  ? selectedGroupIds.isEmpty
-                  : selectedGroupIds.contains(group.id));
+      body: Column(children: [
+        const BannerAdWidget(),
+        Expanded(
+          child: ListView.builder(
+            itemCount: groups.length,
+            itemBuilder: (context, index) {
+              final group = groups[index];
+              final isSelected = widget.mode == GroupSelectionMode.single
+                  ? selectedGroup?.id == group.id
+                  : (group.name == 'All'
+                      ? selectedGroupIds.isEmpty
+                      : selectedGroupIds.contains(group.id));
 
-          return GroupCard(
-            group: group,
-            isSelected: isSelected,
-            onTap: () async {
-              await HapticFeedback.lightImpact();
-              _handleSelection(group);
+              return GroupCard(
+                group: group,
+                isSelected: isSelected,
+                onTap: () async {
+                  await HapticFeedback.lightImpact();
+                  _handleSelection(group);
+                },
+                onLongPress: () async {
+                  await HapticFeedback.mediumImpact();
+                  if (group.id != 1 && group.id != 2) {
+                    _showBottomSheet(group);
+                  }
+                },
+              );
             },
-            onLongPress: () async {
-              await HapticFeedback.mediumImpact();
-              if (group.id != 1 && group.id != 2) {
-                _showBottomSheet(group);
-              }
-            },
-          );
-        },
-      ),
+          ),
+        )
+      ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push<Group>(
