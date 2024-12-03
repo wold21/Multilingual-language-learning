@@ -32,15 +32,15 @@ class OutroGuide extends StatelessWidget {
                 children: [
                   Image.asset(
                     'assets/images/dog.png',
-                    width: 60,
-                    height: 60,
+                    width: 80,
+                    height: 80,
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Thank you for using Laboca!',
+                    'Happy learning with Laboca!',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),

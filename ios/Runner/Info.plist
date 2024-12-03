@@ -49,5 +49,17 @@
 	<array>
 		<string>mailto</string>
 	</array>
+    <!-- 광고 -->
+	<key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-7804050256012308~3568298274</string> 
+    <!-- iOS 14 이상을 위한 설정 -->
+    <key>SKAdNetworkItems</key>
+    <array>
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>cstr6suwn9.skadnetwork</string>
+        </dict>
+    </array>
+    <!-- -------------------------------- -->
 </dict>
 </plist>

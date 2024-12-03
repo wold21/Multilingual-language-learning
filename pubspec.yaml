@@ -23,6 +23,7 @@ dependencies:
     url_launcher: ^6.2.4
     package_info_plus: ^5.0.1
     font_awesome_flutter: ^10.6.0
+    google_mobile_ads: ^5.2.0
 
 dev_dependencies:
     flutter_test:
