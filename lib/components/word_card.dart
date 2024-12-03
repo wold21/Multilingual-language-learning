@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:eng_word_storage/services/tts_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
@@ -137,7 +139,13 @@ class _WordCardState extends State<WordCard> {
                               height: 36,
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(18),
-                                onTap: () => _speak(0.25),
+                                onTap: () {
+                                  if (Platform.isIOS) {
+                                    _speak(0.1);
+                                  } else {
+                                    _speak(0.25);
+                                  }
+                                },
                                 child: const Center(
                                   child: FaIcon(FontAwesomeIcons.personWalking,
                                       size: 20),
@@ -145,7 +153,6 @@ class _WordCardState extends State<WordCard> {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 4),
                           Material(
                             color: Colors.transparent,
                             child: SizedBox(
@@ -153,7 +160,13 @@ class _WordCardState extends State<WordCard> {
                               height: 36,
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(18),
-                                onTap: () => _speak(0.5),
+                                onTap: () {
+                                  if (Platform.isIOS) {
+                                    _speak(0.35);
+                                  } else {
+                                    _speak(0.5);
+                                  }
+                                },
                                 child: const Center(
                                   child: FaIcon(FontAwesomeIcons.personRunning,
                                       size: 20),
@@ -161,7 +174,6 @@ class _WordCardState extends State<WordCard> {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 4),
                           Material(
                             color: Colors.transparent,
                             child: SizedBox(
@@ -169,7 +181,13 @@ class _WordCardState extends State<WordCard> {
                               height: 36,
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(18),
-                                onTap: () => _speak(0.75),
+                                onTap: () {
+                                  if (Platform.isIOS) {
+                                    _speak(0.5);
+                                  } else {
+                                    _speak(0.75);
+                                  }
+                                },
                                 child: const Center(
                                   child:
                                       FaIcon(FontAwesomeIcons.bolt, size: 20),

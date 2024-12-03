@@ -148,7 +148,13 @@ class _AddWordPageState extends State<AddWordPage> {
         FocusScope.of(context).requestFocus(FocusNode());
         FocusScope.of(context).requestFocus(_wordFocusNode);
 
-        Navigator.pop(context, true);
+        final prefs = await SharedPreferences.getInstance();
+        final isFirstRun = prefs.getBool(FIRST_RUN_KEY) ?? true;
+
+        print('isFirstRun: $isFirstRun');
+        if (isFirstRun && mounted) {
+          Navigator.pop(context, true);
+        }
       } else {
         await _databaseService.updateWord(word);
         _editedWord = word;
@@ -185,22 +191,33 @@ class _AddWordPageState extends State<AddWordPage> {
     TextInputType? keyboardType,
   }) {
     if (Platform.isIOS) {
-      return CupertinoTextField(
-        controller: controller,
-        focusNode: focusNode,
-        autofocus: autofocus,
-        placeholder: hintText,
-        placeholderStyle: const TextStyle(color: Colors.grey),
-        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+      return Card(
+        margin: EdgeInsets.zero,
+        elevation: 1, // 그림자 추가
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
+          side: BorderSide(
+            // 테두리 추가
+            color: Colors.grey.withOpacity(0.2),
+            width: 0.5,
+          ),
         ),
-        style: const TextStyle(fontSize: 16),
-        textInputAction: textInputAction,
-        keyboardType: keyboardType,
-        autocorrect: false,
-        enableSuggestions: false,
+        child: CupertinoTextField(
+          controller: controller,
+          focusNode: focusNode,
+          autofocus: autofocus,
+          placeholder: hintText,
+          placeholderStyle: const TextStyle(color: Colors.grey),
+          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 12.0),
+          decoration: const BoxDecoration(
+            color: Colors.transparent,
+          ),
+          style: const TextStyle(fontSize: 16),
+          textInputAction: textInputAction,
+          keyboardType: keyboardType,
+          autocorrect: false,
+          enableSuggestions: false,
+        ),
       );
     } else {
       return Card(
@@ -237,9 +254,9 @@ class _AddWordPageState extends State<AddWordPage> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'New Word',
-          style: TextStyle(
+        title: Text(
+          widget.wordToEdit == null ? 'New Word' : 'Edit Word',
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -265,7 +282,7 @@ class _AddWordPageState extends State<AddWordPage> {
             child: Text(
               'Save',
               style: TextStyle(
-                fontSize: 17,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: _canSave ? Theme.of(context).primaryColor : Colors.grey,
               ),

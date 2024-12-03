@@ -179,7 +179,7 @@ class _GroupPageState extends State<GroupPage> {
             child: Text(
               'Done',
               style: TextStyle(
-                fontSize: 17,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).primaryColor,
               ),

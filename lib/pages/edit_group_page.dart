@@ -111,7 +111,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
             child: Text(
               'Done',
               style: TextStyle(
-                fontSize: 17,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: _canSave ? Theme.of(context).primaryColor : Colors.grey,
               ),

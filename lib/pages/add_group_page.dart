@@ -42,13 +42,12 @@ class _AddGroupPageState extends State<AddGroupPage> {
         autofocus: autofocus,
         placeholder: 'Enter group name',
         placeholderStyle: const TextStyle(color: Colors.grey),
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(8),
+        padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 12.0),
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
         ),
         style: const TextStyle(fontSize: 16),
-        maxLength: 20, // 20글자 제한
+        maxLength: 20,
         autocorrect: false,
         enableSuggestions: false,
       );
@@ -101,7 +100,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
             child: Text(
               'Done',
               style: TextStyle(
-                fontSize: 17,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: _canSave ? Theme.of(context).primaryColor : Colors.grey,
               ),

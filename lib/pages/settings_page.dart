@@ -44,7 +44,7 @@ class SettingsPage extends StatelessWidget {
         title: const Text(
           'Settings',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -65,20 +65,25 @@ class SettingsPage extends StatelessWidget {
             title: 'Data Management',
             children: [
               ListTile(
-                title: const Text('Import Data'),
-                subtitle: const Text('Load words from a file'),
+                title:
+                    const Text('Import Data', style: TextStyle(fontSize: 15)),
+                subtitle: const Text('Load words from a file',
+                    style: TextStyle(fontSize: 13)),
                 leading: const Icon(Icons.download_rounded),
                 onTap: () => DataBackupService.instance.importData(),
               ),
               ListTile(
-                title: const Text('Export Data'),
-                subtitle: const Text('Save your words as a file'),
+                title:
+                    const Text('Export Data', style: TextStyle(fontSize: 15)),
+                subtitle: const Text('Save your words as a file',
+                    style: TextStyle(fontSize: 13)),
                 leading: const Icon(Icons.upload_file),
                 onTap: () => DataBackupService.instance.exportData(),
               ),
               ListTile(
-                title: const Text('Reset Data'),
-                subtitle: const Text('Delete all words and groups'),
+                title: const Text('Reset Data', style: TextStyle(fontSize: 15)),
+                subtitle: const Text('Delete all words and groups',
+                    style: TextStyle(fontSize: 13)),
                 leading: const Icon(Icons.delete_forever),
                 textColor: Colors.red,
                 iconColor: Colors.red,
@@ -94,29 +99,35 @@ class SettingsPage extends StatelessWidget {
                 builder: (context, snapshot) {
                   return ListTile(
                     title: const Text('Version'),
-                    subtitle: Text(snapshot.data ?? 'Loading...'),
+                    subtitle: Text(snapshot.data ?? 'Loading...',
+                        style: const TextStyle(fontSize: 13)),
                     leading: const Icon(Icons.info_outline),
                   );
                 },
               ),
               ListTile(
-                title: const Text('Send Feedback'),
-                subtitle: const Text('Report bugs or suggest features'),
+                title:
+                    const Text('Send Feedback', style: TextStyle(fontSize: 15)),
+                subtitle: const Text('Report bugs or suggest features',
+                    style: TextStyle(fontSize: 13)),
                 leading: const Icon(Icons.feedback_outlined),
                 onTap: () => FeedbackService.instance.sendFeedback(),
               ),
               ListTile(
-                title: const Text('Privacy Policy'),
+                title: const Text('Privacy Policy',
+                    style: TextStyle(fontSize: 15)),
                 leading: const Icon(Icons.privacy_tip_outlined),
                 onTap: () => LegalService.instance.showPrivacyPolicy(context),
               ),
               ListTile(
-                title: const Text('Terms of Service'),
+                title: const Text('Terms of Service',
+                    style: TextStyle(fontSize: 15)),
                 leading: const Icon(Icons.description_outlined),
                 onTap: () => LegalService.instance.showTermsOfService(context),
               ),
               ListTile(
-                title: const Text('Open Source Licenses'),
+                title: const Text('Open Source Licenses',
+                    style: TextStyle(fontSize: 15)),
                 leading: const Icon(Icons.source_outlined),
                 onTap: () => LegalService.instance.showLicenses(context),
               ),
@@ -173,11 +184,11 @@ Widget _buildThemeSelector() {
     valueListenable: ThemeService.instance.themeMode,
     builder: (context, ThemeMode themeMode, child) {
       return ListTile(
-        title: const Text('Theme'),
+        title: const Text('Theme', style: TextStyle(fontSize: 15)),
         subtitle: Text(
-          themeMode.name.substring(0, 1).toUpperCase() +
-              themeMode.name.substring(1),
-        ),
+            themeMode.name.substring(0, 1).toUpperCase() +
+                themeMode.name.substring(1),
+            style: const TextStyle(fontSize: 13)),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
           showDialog(
