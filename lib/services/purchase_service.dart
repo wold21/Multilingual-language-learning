@@ -6,7 +6,7 @@ class PurchaseService {
   static final PurchaseService instance = PurchaseService._();
   PurchaseService._();
 
-  static const String _removeAdsIdAndroid = 'remove_ads_id';
+  static const String _removeAdsIdAndroid = 'remove_ads';
   static const String _removeAdsIdIOS = 'your.bundle.id.removeads';
 
   String get _removeAdsId =>
