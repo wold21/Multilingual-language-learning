@@ -88,8 +88,18 @@ class SettingsPage extends StatelessWidget {
                         trailing: isAdRemoved
                             ? null
                             : TextButton(
-                                onPressed: () =>
-                                    PurchaseService.instance.buyRemoveAds(),
+                                onPressed: () async {
+                                  try {
+                                    await PurchaseService.instance
+                                        .buyRemoveAds();
+                                  } catch (e) {
+                                    ToastUtils.show(
+                                      message:
+                                          'Purchase failed: ${e.toString()}',
+                                      type: ToastType.error,
+                                    );
+                                  }
+                                },
                                 child: Text('BUY'),
                               ),
                       ),
@@ -100,8 +110,15 @@ class SettingsPage extends StatelessWidget {
                             style: TextStyle(fontSize: 15),
                           ),
                           leading: Icon(Icons.restore),
-                          onTap: () =>
-                              PurchaseService.instance.restorePurchases(),
+                          onTap: () async {
+                            await PurchaseService.instance.restorePurchases();
+                            final isAdRemoved =
+                                await PurchaseService.instance.isAdRemoved();
+                            if (!isAdRemoved) {
+                              // 광고를 다시 활성화하는 로직
+                              // 예: setState(() { /* 광고 활성화 */ });
+                            }
+                          },
                         ),
                     ],
                   );

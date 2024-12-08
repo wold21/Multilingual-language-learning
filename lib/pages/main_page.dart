@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:eng_word_storage/components/confirm_dialog.dart';
 import 'package:eng_word_storage/components/guide/intro_dialog.dart';
-import 'package:eng_word_storage/components/guide/new_outro_dialog.dart';
 import 'package:eng_word_storage/components/guide/outro_dialog.dart';
 import 'package:eng_word_storage/components/indicator/indicator.dart';
 import 'package:eng_word_storage/components/sheet/common_bottom_sheet.dart';
@@ -12,10 +11,8 @@ import 'package:eng_word_storage/pages/add_word_page.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/pages/sort_page.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
-import 'package:eng_word_storage/utils/word_generator.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/database_service.dart';

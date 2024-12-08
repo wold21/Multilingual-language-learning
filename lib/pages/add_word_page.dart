@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:eng_word_storage/ads/ad_helper.dart';
+import 'package:eng_word_storage/ads/interstitial_ad_widget.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/utils/content_language.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
@@ -42,7 +42,6 @@ class _AddWordPageState extends State<AddWordPage> {
   void initState() {
     super.initState();
     _loadWordCount();
-    _createInterstitialAd();
     _updateSaveButton();
     _loadLastSelectedLanguage();
     _wordController.addListener(_updateSaveButton);
@@ -143,7 +142,13 @@ class _AddWordPageState extends State<AddWordPage> {
 
         if (_adWordCount % 3 == 0) {
           await prefs.setInt('ad_word_count', 0);
-          _showInterstitialAd();
+          await InterstitialAdService().loadInterstitialAd();
+
+          if (InterstitialAdService().isAdLoaded) {
+            InterstitialAdService().showInterstitialAd();
+          } else {
+            print('Ad is not loaded yet.');
+          }
         }
 
         await prefs.setInt('ad_word_count', _adWordCount);
@@ -192,49 +197,6 @@ class _AddWordPageState extends State<AddWordPage> {
         }
       }
     }
-  }
-
-  void _showInterstitialAd() {
-    if (_interstitialAd == null) return;
-
-    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdDismissedFullScreenContent: (ad) {
-        ad.dispose();
-        _createInterstitialAd();
-      },
-      onAdFailedToShowFullScreenContent: (ad, error) {
-        debugPrint('Failed to show fullscreen content: $error');
-        ad.dispose();
-        _createInterstitialAd();
-      },
-      onAdShowedFullScreenContent: (ad) {
-        debugPrint('Ad showed fullscreen content.');
-      },
-    );
-
-    _interstitialAd!.show();
-    _interstitialAd = null;
-  }
-
-  Future<void> _createInterstitialAd() async {
-    InterstitialAd.load(
-      adUnitId: AdHelper.interstitialAdUnitId,
-      request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          print("Interstitial ad loaded successfully.");
-          setState(() {
-            _interstitialAd = ad;
-          });
-        },
-        onAdFailedToLoad: (error) {
-          print("Failed to load interstitial ad: $error");
-          setState(() {
-            _interstitialAd = null;
-          });
-        },
-      ),
-    );
   }
 
   @override
