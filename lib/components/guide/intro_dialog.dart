@@ -26,19 +26,19 @@ class IntroGuide extends StatelessWidget {
                 children: [
                   Image.asset(
                     'assets/images/dog.png',
-                    width: 60,
-                    height: 60,
+                    width: 80,
+                    height: 80,
                   ),
                   const SizedBox(height: 8),
                   const Text(
                     'Welcome to Laboca!',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   const Text(
                     'Store and learn words in multiple languages\n'
                     'Listen to pronunciations with TTS\n'

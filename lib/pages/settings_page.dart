@@ -5,9 +5,11 @@ import 'package:eng_word_storage/services/data_backup_service.dart';
 import 'package:eng_word_storage/services/database_service.dart';
 import 'package:eng_word_storage/services/feedback_service.dart';
 import 'package:eng_word_storage/services/legal_service.dart';
+import 'package:eng_word_storage/services/purchase_service.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
 import '../services/theme_service.dart';
+import 'dart:io';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -57,6 +59,56 @@ class SettingsPage extends StatelessWidget {
         children: [
           const BannerAdWidget(),
           const SizedBox(height: 16),
+          _SettingsSection(
+            title: 'Premium',
+            children: [
+              FutureBuilder<bool>(
+                future: PurchaseService.instance.isAdRemoved(),
+                builder: (context, snapshot) {
+                  final bool isAdRemoved = snapshot.data ?? false;
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          isAdRemoved ? 'Premium Active' : 'Remove Ads',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        subtitle: Text(
+                          isAdRemoved
+                              ? 'Thank you for supporting us!'
+                              : 'Enjoy an ad-free experience',
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        leading: Icon(
+                          isAdRemoved
+                              ? Icons.workspace_premium
+                              : Icons.ads_click,
+                          color: isAdRemoved ? Colors.amber : null,
+                        ),
+                        trailing: isAdRemoved
+                            ? null
+                            : TextButton(
+                                onPressed: () =>
+                                    PurchaseService.instance.buyRemoveAds(),
+                                child: Text('BUY'),
+                              ),
+                      ),
+                      if (Platform.isIOS)
+                        ListTile(
+                          title: Text(
+                            'Restore Purchases',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          leading: Icon(Icons.restore),
+                          onTap: () =>
+                              PurchaseService.instance.restorePurchases(),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
           _SettingsSection(
             title: 'Appearance',
             children: [

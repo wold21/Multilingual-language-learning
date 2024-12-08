@@ -4,6 +4,7 @@ import 'package:eng_word_storage/utils/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:eng_word_storage/services/purchase_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +13,7 @@ void main() async {
   await DatabaseService.instance.initialize();
   await ThemeService.instance.initialize();
   await MobileAds.instance.initialize();
+  await PurchaseService.instance.init();
 
   runApp(const MyApp());
 }
