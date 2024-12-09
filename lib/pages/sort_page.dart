@@ -1,6 +1,7 @@
 import 'package:eng_word_storage/ads/banner_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:eng_word_storage/services/purchase_service.dart';
 
 enum SortType {
   createdDesc('Newest', 'created_at DESC'),
@@ -30,11 +31,18 @@ class SortPage extends StatefulWidget {
 
 class _SortPageState extends State<SortPage> {
   late SortType _selectedSort;
+  bool isAdRemoved = false;
 
   @override
   void initState() {
     super.initState();
     _selectedSort = widget.currentSort;
+    _checkAdRemovalStatus();
+  }
+
+  Future<void> _checkAdRemovalStatus() async {
+    isAdRemoved = await PurchaseService.instance.isAdRemoved();
+    setState(() {});
   }
 
   @override
@@ -71,7 +79,7 @@ class _SortPageState extends State<SortPage> {
       ),
       body: Column(
         children: [
-          const BannerAdWidget(),
+          BannerAdWidget(isAdRemoved: isAdRemoved),
           Expanded(
             child: Theme(
               data: Theme.of(context).copyWith(

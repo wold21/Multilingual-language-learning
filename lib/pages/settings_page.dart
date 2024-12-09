@@ -11,8 +11,26 @@ import 'package:flutter/material.dart';
 import '../services/theme_service.dart';
 import 'dart:io';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  bool isAdRemoved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAdRemovalStatus();
+  }
+
+  Future<void> _checkAdRemovalStatus() async {
+    isAdRemoved = await PurchaseService.instance.isAdRemoved();
+    setState(() {});
+  }
 
   Future<void> _resetData(BuildContext context) async {
     final confirmed = await ConfirmDialog.show(
@@ -52,12 +70,12 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
         toolbarHeight: 70,
-        scrolledUnderElevation: 0, // 스크롤 시 그림자 효과 제거
+        scrolledUnderElevation: 0,
         elevation: 0,
       ),
       body: ListView(
         children: [
-          const BannerAdWidget(),
+          BannerAdWidget(isAdRemoved: isAdRemoved),
           const SizedBox(height: 16),
           _SettingsSection(
             title: 'Premium',
@@ -65,7 +83,7 @@ class SettingsPage extends StatelessWidget {
               FutureBuilder<bool>(
                 future: PurchaseService.instance.isAdRemoved(),
                 builder: (context, snapshot) {
-                  final bool isAdRemoved = snapshot.data ?? false;
+                  bool isAdRemoved = snapshot.data ?? false;
                   return Column(
                     children: [
                       ListTile(
@@ -92,6 +110,9 @@ class SettingsPage extends StatelessWidget {
                                   try {
                                     await PurchaseService.instance
                                         .buyRemoveAds();
+                                    setState(() {
+                                      isAdRemoved = true;
+                                    });
                                   } catch (e) {
                                     ToastUtils.show(
                                       message:
@@ -100,12 +121,12 @@ class SettingsPage extends StatelessWidget {
                                     );
                                   }
                                 },
-                                child: Text('BUY'),
+                                child: const Text('BUY'),
                               ),
                       ),
                       if (Platform.isIOS)
                         ListTile(
-                          title: Text(
+                          title: const Text(
                             'Restore Purchases',
                             style: TextStyle(fontSize: 15),
                           ),
@@ -114,10 +135,9 @@ class SettingsPage extends StatelessWidget {
                             await PurchaseService.instance.restorePurchases();
                             final isAdRemoved =
                                 await PurchaseService.instance.isAdRemoved();
-                            if (!isAdRemoved) {
-                              // 광고를 다시 활성화하는 로직
-                              // 예: setState(() { /* 광고 활성화 */ });
-                            }
+                            setState(() {
+                              this.isAdRemoved = isAdRemoved;
+                            });
                           },
                         ),
                     ],

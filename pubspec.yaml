@@ -1,6 +1,6 @@
 name: eng_word_storage
 description: A word storage application for language learning
-version: 1.0.0+4
+version: 1.0.0+5
 
 environment:
     sdk: '>=3.1.5 <4.0.0'

@@ -1,10 +1,11 @@
 import 'package:eng_word_storage/ads/ad_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:eng_word_storage/services/purchase_service.dart';
 
 class BannerAdWidget extends StatefulWidget {
-  const BannerAdWidget({Key? key}) : super(key: key);
+  final bool isAdRemoved;
+
+  const BannerAdWidget({Key? key, required this.isAdRemoved}) : super(key: key);
 
   @override
   _BannerAdWidgetState createState() => _BannerAdWidgetState();
@@ -13,19 +14,10 @@ class BannerAdWidget extends StatefulWidget {
 class _BannerAdWidgetState extends State<BannerAdWidget> {
   BannerAd? _bannerAd;
   bool _isAdLoaded = false;
-  bool _isAdRemoved = false;
 
   @override
   void initState() {
     super.initState();
-    _checkAdRemovalStatus();
-  }
-
-  Future<void> _checkAdRemovalStatus() async {
-    _isAdRemoved = await PurchaseService.instance.isAdRemoved();
-    if (!_isAdRemoved) {
-      _loadAd();
-    }
   }
 
   Future<void> _loadAd() async {
@@ -69,7 +61,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_bannerAd == null || !_isAdLoaded || _isAdRemoved) {
+    if (_bannerAd == null || !_isAdLoaded || widget.isAdRemoved) {
       return const SizedBox.shrink();
     }
 
