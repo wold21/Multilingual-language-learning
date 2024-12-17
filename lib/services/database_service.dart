@@ -77,6 +77,7 @@ class DatabaseService {
     String orderBy = 'created_at DESC',
     List<int>? groupIds,
     String? query,
+    List<String>? languageCodes,
   }) async {
     final db = await database;
 
@@ -98,6 +99,12 @@ class DatabaseService {
     if (query != null && query.isNotEmpty) {
       sqlQuery += ' AND (w.word LIKE ? OR w.meaning LIKE ?)';
       args.addAll(['%$query%', '%$query%']);
+    }
+
+    if (languageCodes != null && languageCodes.isNotEmpty) {
+      sqlQuery +=
+          ' AND w.language IN (${List.filled(languageCodes.length, '?').join(',')})';
+      args.addAll(languageCodes);
     }
 
     sqlQuery += ' ORDER BY $orderBy LIMIT ? OFFSET ?';

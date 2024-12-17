@@ -9,6 +9,7 @@ import 'package:eng_word_storage/components/sheet/search_sheet.dart';
 import 'package:eng_word_storage/components/word_card.dart';
 import 'package:eng_word_storage/pages/add_word_page.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
+import 'package:eng_word_storage/pages/language_condition_page_sub.dart';
 import 'package:eng_word_storage/pages/sort_page.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +30,7 @@ class _MainPageState extends State<MainPage> {
   static const String SORT_KEY = 'current_sort';
   static const String GROUP_IDS_KEY = 'selected_group_ids';
   static const String FIRST_RUN_KEY = 'is_first_run';
+  static const String LANGUAGE_CODE_KEY = 'selected_language_code';
 
   final List<String> emptyMessages = [
     'Woof! Let\'s add some words! 🐾',
@@ -43,7 +45,9 @@ class _MainPageState extends State<MainPage> {
   /// 검색 관련 ///
   // 정렬 기준
   late SortType currentSort;
+  late List<String> currentLanguages = [];
   List<int> selectedGroupIds = [];
+  List<String> selectedLanguageCodes = [];
 
   bool isLoading = false;
   int offset = 0;
@@ -127,6 +131,14 @@ class _MainPageState extends State<MainPage> {
             .toList();
       }
 
+      // 선택된 언어 코드들 불러오기
+      final savedLanguageCodes = prefs.getStringList(LANGUAGE_CODE_KEY);
+      if (savedLanguageCodes != null) {
+        selectedLanguageCodes = savedLanguageCodes;
+      } else {
+        selectedLanguageCodes = [];
+      }
+
       setState(() {});
     } catch (e) {
       ToastUtils.show(
@@ -165,6 +177,18 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  Future<void> _saveLanguageCodesPreference(List<String> languageCodes) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(LANGUAGE_CODE_KEY, languageCodes);
+    } catch (e) {
+      ToastUtils.show(
+        message: 'Error saving language preferences',
+        type: ToastType.error,
+      );
+    }
+  }
+
   Future<void> _loadWords() async {
     if (isLoading) return;
     if (!mounted) return;
@@ -180,6 +204,7 @@ class _MainPageState extends State<MainPage> {
         orderBy: currentSort.query,
         groupIds: selectedGroupIds.isEmpty ? null : selectedGroupIds,
         query: searchQuery,
+        languageCodes: selectedLanguageCodes,
       );
 
       setState(() {
@@ -306,7 +331,46 @@ class _MainPageState extends State<MainPage> {
           //   ),
           // ],
           IconButton(
-            icon: const Icon(Icons.sort, size: 28), // 정렬 아이콘
+            icon: const Icon(Icons.language, size: 28),
+            onPressed: () async {
+              final result = await Navigator.push<List<String>>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LanguageConditionPage(
+                    currentLanguages:
+                        selectedLanguageCodes, // currentLanguages -> selectedLanguageCodes
+                  ),
+                ),
+              );
+
+              if (result != null) {
+                bool isDifferent = false;
+
+                if (selectedLanguageCodes.length != result.length) {
+                  isDifferent = true;
+                } else {
+                  for (var code in result) {
+                    if (!selectedLanguageCodes.contains(code)) {
+                      isDifferent = true;
+                      break;
+                    }
+                  }
+                }
+
+                if (isDifferent) {
+                  setState(() {
+                    selectedLanguageCodes = List.from(result);
+                    words.clear();
+                    offset = 0;
+                  });
+                  await _saveLanguageCodesPreference(result);
+                  _loadWords();
+                }
+              }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.sort, size: 28),
             onPressed: () async {
               final result = await Navigator.push<SortType>(
                 context,
