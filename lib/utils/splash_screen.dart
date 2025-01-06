@@ -1,5 +1,10 @@
+import 'dart:async';
+
+import 'package:eng_word_storage/components/check_dialog.dart';
 import 'package:eng_word_storage/components/indicator/indicator.dart';
 import 'package:eng_word_storage/pages/root_page.dart';
+import 'package:eng_word_storage/services/version_check_service.dart';
+import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,6 +16,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
+  final _versionCheckService = VersionCheckService();
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
 
@@ -30,18 +36,10 @@ class _SplashScreenState extends State<SplashScreen>
         curve: Curves.easeIn,
       ),
     );
-
-    // 애니메이션 시작
     _controller.forward();
 
-    // 2초 후 메인 화면으로 이동
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const RootPage()),
-        );
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateCheck();
     });
   }
 
@@ -49,6 +47,45 @@ class _SplashScreenState extends State<SplashScreen>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _updateCheck() async {
+    await _versionCheckService.initialize();
+    bool needUpdate = await _versionCheckService.checkForUpdate(context);
+    if (needUpdate) {
+      final confirmed = await CheckDialog.show(
+        context: context,
+        title: 'New Update',
+        content:
+            'A new update has been released! Please update for smooth usage.',
+        text: 'Update',
+      );
+
+      if (confirmed == true) {
+        bool isStoreOpen =
+            await _versionCheckService.launchStore(context, needUpdate);
+        if (!isStoreOpen) {
+          ToastUtils.show(
+            message: 'The store URL cannot be opened.',
+            type: ToastType.error,
+          );
+          await _moveToMain();
+        }
+      }
+    } else {
+      await _moveToMain();
+    }
+  }
+
+  Future _moveToMain() async {
+    await Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const RootPage()),
+        );
+      }
+    });
   }
 
   @override

@@ -1,6 +1,6 @@
 name: eng_word_storage
 description: A word storage application for language learning
-version: 1.0.0+7
+version: 1.0.0+8
 
 environment:
     sdk: '>=3.1.5 <4.0.0'
@@ -27,6 +27,7 @@ dependencies:
     firebase_core: ^2.24.2
     firebase_analytics: ^10.7.4
     in_app_purchase: ^3.2.0
+    firebase_remote_config: ^4.3.8
 
 dev_dependencies:
     flutter_test:
