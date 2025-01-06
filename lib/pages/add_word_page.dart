@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eng_word_storage/ads/interstitial_ad_widget.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
+import 'package:eng_word_storage/services/purchase_service.dart';
 import 'package:eng_word_storage/utils/content_language.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,8 @@ class AddWordPage extends StatefulWidget {
 class _AddWordPageState extends State<AddWordPage> {
   static const String FIRST_RUN_KEY = 'is_first_run';
   static const String _lastSelectedLanguageKey = 'last_selected_language';
+  static const String _adWordCountKey = 'ad_word_count';
+  static const int _adWordThreshold = 3;
   int _adWordCount = 0;
   InterstitialAd? _interstitialAd;
   final _wordController = TextEditingController();
@@ -114,7 +117,6 @@ class _AddWordPageState extends State<AddWordPage> {
   }
 
   Future<void> _saveWord() async {
-    final prefs = await SharedPreferences.getInstance();
     if (_canSave) {
       final int groupId;
       if (_selectedGroup?.id != null) {
@@ -138,20 +140,11 @@ class _AddWordPageState extends State<AddWordPage> {
 
       if (widget.wordToEdit == null) {
         await _databaseService.createWord(word);
-        _adWordCount++;
 
-        if (_adWordCount % 3 == 0) {
-          await prefs.setInt('ad_word_count', 0);
-          await InterstitialAdService().loadInterstitialAd();
-
-          if (InterstitialAdService().isAdLoaded) {
-            InterstitialAdService().showInterstitialAd();
-          } else {
-            print('Ad is not loaded yet.');
-          }
+        bool isAdRemoved = await PurchaseService.instance.isAdRemoved();
+        if (!isAdRemoved) {
+          await _handleAdWordCount();
         }
-
-        await prefs.setInt('ad_word_count', _adWordCount);
 
         if (mounted) {
           ToastUtils.show(
@@ -175,9 +168,8 @@ class _AddWordPageState extends State<AddWordPage> {
         FocusScope.of(context).requestFocus(FocusNode());
         FocusScope.of(context).requestFocus(_wordFocusNode);
 
-        final isFirstRun = prefs.getBool(FIRST_RUN_KEY) ?? true;
+        final isFirstRun = await _checkFirstRun();
 
-        print('isFirstRun: $isFirstRun');
         if (isFirstRun && mounted) {
           Navigator.pop(context, true);
         }
@@ -197,6 +189,34 @@ class _AddWordPageState extends State<AddWordPage> {
         }
       }
     }
+  }
+
+  Future<void> _handleAdWordCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    int currentCount = prefs.getInt(_adWordCountKey) ?? 0;
+    currentCount++;
+
+    if (currentCount >= _adWordThreshold) {
+      await prefs.setInt(_adWordCountKey, 0);
+      await _showInterstitialAd();
+    } else {
+      await prefs.setInt(_adWordCountKey, currentCount);
+    }
+  }
+
+  Future<void> _showInterstitialAd() async {
+    await InterstitialAdService().loadInterstitialAd();
+
+    if (InterstitialAdService().isAdLoaded) {
+      InterstitialAdService().showInterstitialAd();
+    } else {
+      print('Ad is not loaded yet.');
+    }
+  }
+
+  Future<bool> _checkFirstRun() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(FIRST_RUN_KEY) ?? true;
   }
 
   @override

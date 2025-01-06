@@ -80,8 +80,9 @@ class _SettingsPageState extends State<SettingsPage> {
           _SettingsSection(
             title: 'Premium',
             children: [
-              FutureBuilder<bool>(
-                future: PurchaseService.instance.isAdRemoved(),
+              StreamBuilder<bool>(
+                stream: PurchaseService.instance.adsRemovedStream,
+                initialData: isAdRemoved,
                 builder: (context, snapshot) {
                   bool isAdRemoved = snapshot.data ?? false;
                   return Column(
@@ -110,9 +111,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                   try {
                                     await PurchaseService.instance
                                         .buyRemoveAds();
-                                    setState(() {
-                                      isAdRemoved = true;
-                                    });
                                   } catch (e) {
                                     ToastUtils.show(
                                       message:
@@ -133,11 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           leading: Icon(Icons.restore),
                           onTap: () async {
                             await PurchaseService.instance.restorePurchases();
-                            final isAdRemoved =
-                                await PurchaseService.instance.isAdRemoved();
-                            setState(() {
-                              this.isAdRemoved = isAdRemoved;
-                            });
+                            // setState 필요 없음, StreamBuilder가 자동으로 업데이트
                           },
                         ),
                     ],

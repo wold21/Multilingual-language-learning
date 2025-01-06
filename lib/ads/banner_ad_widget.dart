@@ -20,6 +20,14 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_bannerAd == null) {
+      _loadAd();
+    }
+  }
+
   Future<void> _loadAd() async {
     if (_bannerAd != null) {
       return;
@@ -65,6 +73,9 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
       return const SizedBox.shrink();
     }
 
+    print("Banner Width: ${_bannerAd!.size.width}");
+    print("Banner Height: ${_bannerAd!.size.height}");
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 25.0,
@@ -77,10 +88,9 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
-          child: Container(
-            width: _bannerAd!.size.width.toDouble(),
-            height: _bannerAd!.size.height.toDouble(),
-            alignment: Alignment.center,
+          child: SizedBox(
+            width: _bannerAd?.size.width.toDouble() ?? 0,
+            height: _bannerAd?.size.height.toDouble() ?? 0,
             child: AdWidget(ad: _bannerAd!),
           ),
         ),
