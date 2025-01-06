@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:eng_word_storage/services/tts_service.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
 import '../models/word.dart';

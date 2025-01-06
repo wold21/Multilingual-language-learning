@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:eng_word_storage/services/purchase_service.dart';
 
 class LanguageConditionPage extends StatefulWidget {
-  List<String> currentLanguages;
-  LanguageConditionPage({
+  final List<String> currentLanguages;
+  const LanguageConditionPage({
     super.key,
     required this.currentLanguages,
   });
