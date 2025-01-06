@@ -147,9 +147,10 @@ class _WordCardState extends State<WordCard> {
                                   }
                                 },
                                 child: const Center(
-                                  child: FaIcon(FontAwesomeIcons.personWalking,
-                                      size: 20),
-                                ),
+                                    child: Text(
+                                  '🐢',
+                                  style: TextStyle(fontSize: 18.0),
+                                )),
                               ),
                             ),
                           ),
@@ -168,8 +169,10 @@ class _WordCardState extends State<WordCard> {
                                   }
                                 },
                                 child: const Center(
-                                  child: FaIcon(FontAwesomeIcons.personRunning,
-                                      size: 20),
+                                  child: Text(
+                                    '🐇',
+                                    style: TextStyle(fontSize: 20.0),
+                                  ),
                                 ),
                               ),
                             ),
@@ -189,8 +192,10 @@ class _WordCardState extends State<WordCard> {
                                   }
                                 },
                                 child: const Center(
-                                  child:
-                                      FaIcon(FontAwesomeIcons.bolt, size: 20),
+                                  child: Text(
+                                    '🐆',
+                                    style: TextStyle(fontSize: 22.0),
+                                  ),
                                 ),
                               ),
                             ),

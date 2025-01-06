@@ -6,6 +6,9 @@ enum ContentLanguage {
   ko(code: 'ko', name: 'Korean', flag: '🇰🇷', ttsCode: 'ko-KR'),
   ph(code: 'ph', name: 'Filipino', flag: '🇵🇭', ttsCode: 'fil-PH');
 
+  // 미얀마어 (안드로이드 tts미지원)
+  // mm(code: 'mm', name: 'Burmese', flag: '🇲🇲', ttsCode: 'my-MM');
+
   final String code;
   final String name;
   final String flag;
