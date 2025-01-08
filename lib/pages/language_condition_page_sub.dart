@@ -16,7 +16,6 @@ class LanguageConditionPage extends StatefulWidget {
 }
 
 class _LanguageConditionPageState extends State<LanguageConditionPage> {
-  bool isAdRemoved = false;
   late List<String> _currentLanguages;
   bool _isAllSelected = false;
 
@@ -26,12 +25,6 @@ class _LanguageConditionPageState extends State<LanguageConditionPage> {
     _isAllSelected = widget.currentLanguages.isEmpty;
     _currentLanguages =
         _isAllSelected ? [] : List.from(widget.currentLanguages);
-    _checkAdRemovalStatus();
-  }
-
-  Future<void> _checkAdRemovalStatus() async {
-    isAdRemoved = await PurchaseService.instance.isAdRemoved();
-    setState(() {});
   }
 
   @override
@@ -68,7 +61,27 @@ class _LanguageConditionPageState extends State<LanguageConditionPage> {
       ),
       body: Column(
         children: [
-          BannerAdWidget(isAdRemoved: isAdRemoved),
+          FutureBuilder<bool>(
+            future: PurchaseService.instance.isAdRemoved(),
+            builder: (context, futureSnapshot) {
+              if (futureSnapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox.shrink();
+              }
+
+              final initialAdRemoved = futureSnapshot.data ?? false;
+
+              return StreamBuilder<bool>(
+                stream: PurchaseService.instance.adsRemovedStream,
+                initialData: initialAdRemoved,
+                builder: (context, snapshot) {
+                  bool isAdRemoved = snapshot.data ?? false;
+                  return isAdRemoved
+                      ? const SizedBox.shrink()
+                      : BannerAdWidget(isAdRemoved: isAdRemoved);
+                },
+              );
+            },
+          ),
           Expanded(
             child: Theme(
               data: Theme.of(context).copyWith(

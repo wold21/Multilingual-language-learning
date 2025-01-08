@@ -35,7 +35,6 @@ class _GroupPageState extends State<GroupPage> {
   List<Group> groups = [];
   Group? selectedGroup;
   List<int> selectedGroupIds = [];
-  bool isAdRemoved = false;
 
   @override
   void initState() {
@@ -54,13 +53,7 @@ class _GroupPageState extends State<GroupPage> {
         );
       }
     }
-    _checkAdRemovalStatus();
     _loadGroups();
-  }
-
-  Future<void> _checkAdRemovalStatus() async {
-    isAdRemoved = await PurchaseService.instance.isAdRemoved();
-    setState(() {});
   }
 
   Future<void> _loadGroups() async {
@@ -197,7 +190,27 @@ class _GroupPageState extends State<GroupPage> {
         ],
       ),
       body: Column(children: [
-        BannerAdWidget(isAdRemoved: isAdRemoved),
+        FutureBuilder<bool>(
+          future: PurchaseService.instance.isAdRemoved(),
+          builder: (context, futureSnapshot) {
+            if (futureSnapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox.shrink();
+            }
+
+            final initialAdRemoved = futureSnapshot.data ?? false;
+
+            return StreamBuilder<bool>(
+              stream: PurchaseService.instance.adsRemovedStream,
+              initialData: initialAdRemoved,
+              builder: (context, snapshot) {
+                bool isAdRemoved = snapshot.data ?? false;
+                return isAdRemoved
+                    ? const SizedBox.shrink()
+                    : BannerAdWidget(isAdRemoved: isAdRemoved);
+              },
+            );
+          },
+        ),
         Expanded(
           child: ListView.builder(
             itemCount: groups.length,

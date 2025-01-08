@@ -31,18 +31,11 @@ class SortPage extends StatefulWidget {
 
 class _SortPageState extends State<SortPage> {
   late SortType _selectedSort;
-  bool isAdRemoved = false;
 
   @override
   void initState() {
     super.initState();
     _selectedSort = widget.currentSort;
-    _checkAdRemovalStatus();
-  }
-
-  Future<void> _checkAdRemovalStatus() async {
-    isAdRemoved = await PurchaseService.instance.isAdRemoved();
-    setState(() {});
   }
 
   @override
@@ -79,7 +72,27 @@ class _SortPageState extends State<SortPage> {
       ),
       body: Column(
         children: [
-          BannerAdWidget(isAdRemoved: isAdRemoved),
+          FutureBuilder<bool>(
+            future: PurchaseService.instance.isAdRemoved(),
+            builder: (context, futureSnapshot) {
+              if (futureSnapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox.shrink();
+              }
+
+              final initialAdRemoved = futureSnapshot.data ?? false;
+
+              return StreamBuilder<bool>(
+                stream: PurchaseService.instance.adsRemovedStream,
+                initialData: initialAdRemoved,
+                builder: (context, snapshot) {
+                  bool isAdRemoved = snapshot.data ?? false;
+                  return isAdRemoved
+                      ? const SizedBox.shrink()
+                      : BannerAdWidget(isAdRemoved: isAdRemoved);
+                },
+              );
+            },
+          ),
           Expanded(
             child: Theme(
               data: Theme.of(context).copyWith(

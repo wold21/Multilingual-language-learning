@@ -19,17 +19,9 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool isAdRemoved = false;
-
   @override
   void initState() {
     super.initState();
-    _checkAdRemovalStatus();
-  }
-
-  Future<void> _checkAdRemovalStatus() async {
-    isAdRemoved = await PurchaseService.instance.isAdRemoved();
-    setState(() {});
   }
 
   Future<void> _resetData(BuildContext context) async {
@@ -75,66 +67,110 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: ListView(
         children: [
-          BannerAdWidget(isAdRemoved: isAdRemoved),
-          const SizedBox(height: 16),
+          FutureBuilder<bool>(
+            future: PurchaseService.instance.isAdRemoved(),
+            builder: (context, futureSnapshot) {
+              if (futureSnapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox.shrink();
+              }
+
+              final initialAdRemoved = futureSnapshot.data ?? false;
+
+              return StreamBuilder<bool>(
+                stream: PurchaseService.instance.adsRemovedStream,
+                initialData: initialAdRemoved,
+                builder: (context, snapshot) {
+                  bool isAdRemoved = snapshot.data ?? false;
+                  return isAdRemoved
+                      ? const SizedBox.shrink()
+                      : BannerAdWidget(isAdRemoved: isAdRemoved);
+                },
+              );
+            },
+          ),
+          const SizedBox(height: 12),
           _SettingsSection(
             title: 'Premium',
             children: [
-              StreamBuilder<bool>(
-                stream: PurchaseService.instance.adsRemovedStream,
-                initialData: isAdRemoved,
-                builder: (context, snapshot) {
-                  bool isAdRemoved = snapshot.data ?? false;
-                  return Column(
-                    children: [
-                      ListTile(
+              FutureBuilder<bool>(
+                future: PurchaseService.instance.isAdRemoved(),
+                builder: (context, futureSnapshot) {
+                  if (futureSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const ListTile(
                         title: Text(
-                          isAdRemoved ? 'Premium Active' : 'Remove Ads',
+                          'Loading...',
                           style: TextStyle(fontSize: 15),
                         ),
                         subtitle: Text(
-                          isAdRemoved
-                              ? 'Thank you for supporting us!'
-                              : 'Enjoy an ad-free experience',
+                          'Retrieving payment history',
                           style: TextStyle(fontSize: 13),
                         ),
                         leading: Icon(
-                          isAdRemoved
-                              ? Icons.workspace_premium
-                              : Icons.ads_click,
-                          color: isAdRemoved ? Colors.amber : null,
-                        ),
-                        trailing: isAdRemoved
-                            ? null
-                            : TextButton(
-                                onPressed: () async {
-                                  try {
-                                    await PurchaseService.instance
-                                        .buyRemoveAds();
-                                  } catch (e) {
-                                    ToastUtils.show(
-                                      message:
-                                          'Purchase failed: ${e.toString()}',
-                                      type: ToastType.error,
-                                    );
-                                  }
-                                },
-                                child: const Text('BUY'),
-                              ),
-                      ),
-                      if (Platform.isIOS)
-                        ListTile(
-                          title: const Text(
-                            'Restore Purchases',
-                            style: TextStyle(fontSize: 15),
+                          Icons.watch_later_outlined,
+                        ));
+                  }
+
+                  final initialAdRemoved = futureSnapshot.data ?? false;
+
+                  return StreamBuilder<bool>(
+                    stream: PurchaseService.instance.adsRemovedStream,
+                    initialData: initialAdRemoved,
+                    builder: (context, snapshot) {
+                      bool isAdRemoved = snapshot.data ?? false;
+                      return Column(
+                        children: [
+                          ListTile(
+                            title: Text(
+                              isAdRemoved ? 'Premium Active' : 'Remove Ads',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            subtitle: Text(
+                              isAdRemoved
+                                  ? 'Thank you for supporting us!'
+                                  : 'Enjoy an ad-free experience',
+                              style: TextStyle(fontSize: 13),
+                            ),
+                            leading: Icon(
+                              isAdRemoved
+                                  ? Icons.workspace_premium
+                                  : Icons.ads_click,
+                              color: isAdRemoved ? Colors.amber : null,
+                            ),
+                            trailing: isAdRemoved
+                                ? null
+                                : TextButton(
+                                    onPressed: () async {
+                                      try {
+                                        await PurchaseService.instance
+                                            .buyRemoveAds();
+                                      } catch (e) {
+                                        ToastUtils.show(
+                                          message:
+                                              'Purchase failed: ${e.toString()}',
+                                          type: ToastType.error,
+                                        );
+                                      }
+                                    },
+                                    child: const Text('BUY'),
+                                  ),
                           ),
-                          leading: Icon(Icons.restore),
-                          onTap: () async {
-                            await PurchaseService.instance.restorePurchases();
-                            // setState 필요 없음, StreamBuilder가 자동으로 업데이트
-                          },
-                        ),
-                    ],
+                          if (Platform.isIOS)
+                            ListTile(
+                              title: const Text(
+                                'Restore Purchases',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              leading: Icon(Icons.restore),
+                              onTap: () async {
+                                await PurchaseService.instance
+                                    .restorePurchases();
+                                // setState 필요 없음, StreamBuilder가 자동으로 업데이트
+                              },
+                            ),
+                        ],
+                      );
+                    },
                   );
                 },
               ),

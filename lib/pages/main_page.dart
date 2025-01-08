@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:eng_word_storage/ads/banner_ad_widget.dart';
 import 'package:eng_word_storage/components/confirm_dialog.dart';
 import 'package:eng_word_storage/components/guide/intro_dialog.dart';
 import 'package:eng_word_storage/components/guide/outro_dialog.dart';
@@ -12,7 +11,6 @@ import 'package:eng_word_storage/pages/add_word_page.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/pages/language_condition_page_sub.dart';
 import 'package:eng_word_storage/pages/sort_page.dart';
-import 'package:eng_word_storage/services/purchase_service.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -51,8 +49,6 @@ class _MainPageState extends State<MainPage> {
   List<int> selectedGroupIds = [];
   List<String> selectedLanguageCodes = [];
 
-  bool isAdRemoved = false;
-
   bool isLoading = false;
   int offset = 0;
   static const int limit = 300;
@@ -64,7 +60,6 @@ class _MainPageState extends State<MainPage> {
     _initializePreferences();
     _scrollController.addListener(_scrollListener);
     _initializeApp();
-    _checkAdRemovalStatus();
   }
 
   @override
@@ -109,11 +104,6 @@ class _MainPageState extends State<MainPage> {
     } else {
       _loadWords();
     }
-  }
-
-  Future<void> _checkAdRemovalStatus() async {
-    isAdRemoved = await PurchaseService.instance.isAdRemoved();
-    setState(() {});
   }
 
   Future<void> _initializePreferences() async {
@@ -280,12 +270,15 @@ class _MainPageState extends State<MainPage> {
             ],
           ),
           // Padding(
-          //   padding: const EdgeInsets.only(left: 15, top: 10),
-          //   child: Text(
-          //     '${words.length} words', // 단어 수 표시
-          //     style: TextStyle(
-          //       fontSize: 14,
-          //       color: Theme.of(context).textTheme.bodyMedium?.color,
+          //   padding: const EdgeInsets.only(left: 0, top: 0),
+          //   child: Align(
+          //     alignment: Alignment.centerLeft,
+          //     child: Text(
+          //       '${words.length} words', // 단어 수 표시
+          //       style: TextStyle(
+          //         fontSize: 14,
+          //         color: Theme.of(context).textTheme.bodyMedium?.color,
+          //       ),
           //     ),
           //   ),
           // ),
@@ -486,65 +479,49 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
-      body: Stack(clipBehavior: Clip.none, children: [
-        Padding(
-          padding: isAdRemoved == true
-              ? EdgeInsets.zero
-              : const EdgeInsets.only(top: 75.0),
-          child: words.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const FaIcon(
-                          FontAwesomeIcons.paw,
-                          size: 35,
-                          color: Color.fromARGB(255, 234, 161, 72),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          getRandomEmptyMessage(),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+      body: words.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const FaIcon(
+                      FontAwesomeIcons.paw,
+                      size: 35,
+                      color: Color.fromARGB(255, 234, 161, 72),
                     ),
-                  ),
-                )
-              : ListView.builder(
-                  controller: _scrollController,
-                  itemCount: words.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == words.length) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Center(
-                          child: isLoading
-                              ? const BouncingDotsIndicator()
-                              : const SizedBox(),
-                        ),
-                      );
-                    }
-                    if (index == 0) {
-                      BannerAdWidget(isAdRemoved: isAdRemoved);
-                    }
-                    return _buildWordCard(words[index]);
-                  },
+                    const SizedBox(height: 16),
+                    Text(
+                      getRandomEmptyMessage(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-        ),
-        if (isAdRemoved == false)
-          Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: BannerAdWidget(isAdRemoved: isAdRemoved)),
-      ]),
+              ),
+            )
+          : ListView.builder(
+              controller: _scrollController,
+              itemCount: words.length + 1,
+              itemBuilder: (context, index) {
+                if (index == words.length) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Center(
+                      child: isLoading
+                          ? const BouncingDotsIndicator()
+                          : const SizedBox(),
+                    ),
+                  );
+                }
+                return _buildWordCard(words[index]);
+              },
+            ),
       floatingActionButton: Container(
         margin: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
         child: FloatingActionButton(

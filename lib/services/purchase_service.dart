@@ -24,6 +24,7 @@ class PurchaseService {
     if (!available) return;
 
     _inAppPurchase.purchaseStream.listen(_handlePurchaseUpdate);
+    _adsRemovedController.add(await isAdRemoved());
   }
 
   Future<void> buyRemoveAds() async {

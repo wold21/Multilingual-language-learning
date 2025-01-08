@@ -26,7 +26,6 @@ class _AddWordPageState extends State<AddWordPage> {
   static const String _lastSelectedLanguageKey = 'last_selected_language';
   static const String _adWordCountKey = 'ad_word_count';
   static const int _adWordThreshold = 3;
-  int _adWordCount = 0;
   InterstitialAd? _interstitialAd;
   final _wordController = TextEditingController();
   final _meaningController = TextEditingController();
@@ -44,7 +43,6 @@ class _AddWordPageState extends State<AddWordPage> {
   @override
   void initState() {
     super.initState();
-    _loadWordCount();
     _updateSaveButton();
     _loadLastSelectedLanguage();
     _wordController.addListener(_updateSaveButton);
@@ -77,13 +75,6 @@ class _AddWordPageState extends State<AddWordPage> {
               ContentLanguage.fromCode(widget.wordToEdit!.language);
         });
       }
-    });
-  }
-
-  Future<void> _loadWordCount() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _adWordCount = prefs.getInt('ad_word_count') ?? 0;
     });
   }
 
@@ -210,7 +201,10 @@ class _AddWordPageState extends State<AddWordPage> {
     if (InterstitialAdService().isAdLoaded) {
       InterstitialAdService().showInterstitialAd();
     } else {
-      print('Ad is not loaded yet.');
+      ToastUtils.show(
+        message: 'Ad is not loaded yet.',
+        type: ToastType.error,
+      );
     }
   }
 

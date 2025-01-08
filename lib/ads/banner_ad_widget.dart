@@ -1,4 +1,5 @@
 import 'package:eng_word_storage/ads/ad_helper.dart';
+import 'package:eng_word_storage/components/indicator/indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -70,16 +71,16 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   @override
   Widget build(BuildContext context) {
     if (_bannerAd == null || !_isAdLoaded || widget.isAdRemoved) {
-      return const SizedBox.shrink();
+      return const SizedBox(
+        height: 55,
+        child: BouncingDotsIndicator(),
+      );
     }
-
-    print("Banner Width: ${_bannerAd!.size.width}");
-    print("Banner Height: ${_bannerAd!.size.height}");
 
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 25.0,
-        vertical: 10.0,
+        vertical: 0,
       ),
       child: Card(
         margin: EdgeInsets.zero,
