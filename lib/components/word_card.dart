@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:eng_word_storage/ads/interstitial_ad_widget.dart';
+import 'package:eng_word_storage/services/purchase_service.dart';
 import 'package:eng_word_storage/services/tts_service.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/word.dart';
 
 class WordCard extends StatefulWidget {
@@ -21,6 +24,9 @@ class _WordCardState extends State<WordCard> {
   final TtsService _tts = TtsService();
   bool isExpanded = false;
   bool _showContent = false;
+
+  static const String _adTtsCountKey = 'ad_tts_count';
+  static const int _adTtsThreshold = 5;
 
   @override
   void initState() {
@@ -41,6 +47,8 @@ class _WordCardState extends State<WordCard> {
         widget.word.language,
         speechRate,
       );
+
+      await _handleAdWordCount();
     } catch (e) {
       if (mounted) {
         ToastUtils.show(
@@ -48,6 +56,32 @@ class _WordCardState extends State<WordCard> {
           type: ToastType.error,
         );
       }
+    }
+  }
+
+  Future<void> _handleAdWordCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    int currentCount = prefs.getInt(_adTtsCountKey) ?? 0;
+    currentCount++;
+
+    if (currentCount >= _adTtsThreshold) {
+      await prefs.setInt(_adTtsCountKey, 0);
+      await _showInterstitialAd();
+    } else {
+      await prefs.setInt(_adTtsCountKey, currentCount);
+    }
+  }
+
+  Future<void> _showInterstitialAd() async {
+    bool adLoaded = await InterstitialAdService().loadInterstitialAd();
+
+    if (adLoaded) {
+      InterstitialAdService().showInterstitialAd();
+    } else {
+      ToastUtils.show(
+        message: 'Ad is not loaded yet.',
+        type: ToastType.error,
+      );
     }
   }
 

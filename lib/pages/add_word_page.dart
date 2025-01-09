@@ -132,10 +132,7 @@ class _AddWordPageState extends State<AddWordPage> {
       if (widget.wordToEdit == null) {
         await _databaseService.createWord(word);
 
-        bool isAdRemoved = await PurchaseService.instance.isAdRemoved();
-        if (!isAdRemoved) {
-          await _handleAdWordCount();
-        }
+        await _handleAdWordCount();
 
         if (mounted) {
           ToastUtils.show(
@@ -186,7 +183,6 @@ class _AddWordPageState extends State<AddWordPage> {
     final prefs = await SharedPreferences.getInstance();
     int currentCount = prefs.getInt(_adWordCountKey) ?? 0;
     currentCount++;
-
     if (currentCount >= _adWordThreshold) {
       await prefs.setInt(_adWordCountKey, 0);
       await _showInterstitialAd();
@@ -196,9 +192,9 @@ class _AddWordPageState extends State<AddWordPage> {
   }
 
   Future<void> _showInterstitialAd() async {
-    await InterstitialAdService().loadInterstitialAd();
+    bool adLoaded = await InterstitialAdService().loadInterstitialAd();
 
-    if (InterstitialAdService().isAdLoaded) {
+    if (adLoaded) {
       InterstitialAdService().showInterstitialAd();
     } else {
       ToastUtils.show(

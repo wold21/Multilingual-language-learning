@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eng_word_storage/ads/ad_helper.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:eng_word_storage/services/purchase_service.dart';
@@ -13,11 +15,13 @@ class InterstitialAdService {
 
   InterstitialAdService._internal();
 
-  Future<void> loadInterstitialAd() async {
+  Future<bool> loadInterstitialAd({int retryCount = 3}) async {
     _isAdRemoved = await PurchaseService.instance.isAdRemoved();
     if (_isAdRemoved) {
-      return; // 광고 제거된 경우 광고 로드하지 않음
+      return false;
     }
+
+    Completer<bool> completer = Completer<bool>();
 
     InterstitialAd.load(
       adUnitId: AdHelper.interstitialAdUnitId,
@@ -25,22 +29,29 @@ class InterstitialAdService {
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
           _interstitialAd = ad;
+          completer.complete(true);
         },
-        onAdFailedToLoad: (LoadAdError error) {
-          print('Interstitial ad failed to load: $error');
+        onAdFailedToLoad: (LoadAdError error) async {
+          if (retryCount > 0) {
+            await Future.delayed(Duration(seconds: 5));
+            bool result = await loadInterstitialAd(retryCount: retryCount - 1);
+            completer.complete(result);
+          } else {
+            completer.complete(false);
+          }
         },
       ),
     );
+    return completer.future;
   }
 
   void showInterstitialAd() {
     if (_interstitialAd == null) {
-      print('Interstitial ad is not loaded yet.');
       return;
     }
 
     _interstitialAd!.show();
-    _interstitialAd = null; // 광고가 표시된 후 null로 설정
+    _interstitialAd = null;
   }
 
   void dispose() {

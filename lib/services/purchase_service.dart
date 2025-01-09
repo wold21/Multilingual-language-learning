@@ -58,7 +58,6 @@ class PurchaseService {
       } else {
         await _savePurchaseStatus(false);
       }
-
       if (purchaseDetails.pendingCompletePurchase) {
         await _inAppPurchase.completePurchase(purchaseDetails);
       }
