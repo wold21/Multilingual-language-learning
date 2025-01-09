@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:eng_word_storage/ads/interstitial_ad_widget.dart';
-import 'package:eng_word_storage/services/purchase_service.dart';
 import 'package:eng_word_storage/services/tts_service.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';

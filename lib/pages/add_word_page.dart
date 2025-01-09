@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:eng_word_storage/ads/interstitial_ad_widget.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
-import 'package:eng_word_storage/services/purchase_service.dart';
 import 'package:eng_word_storage/utils/content_language.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/cupertino.dart';
