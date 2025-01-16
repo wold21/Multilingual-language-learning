@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:eng_word_storage/ads/banner_ad_widget.dart';
 import 'package:eng_word_storage/utils/content_language.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +36,9 @@ class _LanguageConditionPageState extends State<LanguageConditionPage> {
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Language Filter',
-          style: TextStyle(
+        title: Text(
+          'mainPage.languageFilter.title'.tr(),
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -49,7 +50,7 @@ class _LanguageConditionPageState extends State<LanguageConditionPage> {
               Navigator.pop(context, _currentLanguages);
             },
             child: Text(
-              'Done',
+              'common.button.done'.tr(),
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.bold,

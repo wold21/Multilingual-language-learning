@@ -1,11 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:eng_word_storage/ads/banner_ad_widget.dart';
 import 'package:eng_word_storage/components/confirm_dialog.dart';
+import 'package:eng_word_storage/components/language_dialog.dart';
 import 'package:eng_word_storage/services/app_info_service.dart';
 import 'package:eng_word_storage/services/data_backup_service.dart';
 import 'package:eng_word_storage/services/database_service.dart';
 import 'package:eng_word_storage/services/feedback_service.dart';
 import 'package:eng_word_storage/services/legal_service.dart';
 import 'package:eng_word_storage/services/purchase_service.dart';
+import 'package:eng_word_storage/utils/system_language.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
 import '../services/theme_service.dart';
@@ -27,9 +30,8 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _resetData(BuildContext context) async {
     final confirmed = await ConfirmDialog.show(
       context: context,
-      title: 'Reset Data',
-      content:
-          'This will delete all words and groups. This action cannot be undone. Are you sure you want to continue?',
+      title: 'setting.title.resetData'.tr(),
+      content: 'setting.message.resetData'.tr(),
     );
 
     if (confirmed == true) {
@@ -38,12 +40,12 @@ class _SettingsPageState extends State<SettingsPage> {
         await DatabaseService.instance.deleteAllGroups();
 
         ToastUtils.show(
-          message: 'All data has been reset',
+          message: 'setting.message.resetSuccess'.tr(),
           type: ToastType.success,
         );
       } catch (e) {
         ToastUtils.show(
-          message: 'Failed to reset data',
+          message: 'setting.message.resetFailed'.tr(),
           type: ToastType.error,
         );
       }
@@ -52,11 +54,19 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    String currentLocale = EasyLocalization.of(context)!
+        .currentLocale!
+        .toString()
+        .replaceAll('_', "-");
+    SystemLanguage currentLanguage = SystemLanguage.values.firstWhere(
+      (lang) => lang.code == currentLocale,
+      orElse: () => SystemLanguage.enUS,
+    );
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Settings',
-          style: TextStyle(
+        title: Text(
+          'title.settings'.tr(),
+          style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
@@ -90,23 +100,23 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const SizedBox(height: 12),
           _SettingsSection(
-            title: 'Premium',
+            title: 'setting.menu.premium'.tr(),
             children: [
               FutureBuilder<bool>(
                 future: PurchaseService.instance.isAdRemoved(),
                 builder: (context, futureSnapshot) {
                   if (futureSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return const ListTile(
+                    return ListTile(
                         title: Text(
-                          'Loading...',
-                          style: TextStyle(fontSize: 15),
+                          'common.message.loading'.tr(),
+                          style: const TextStyle(fontSize: 15),
                         ),
                         subtitle: Text(
-                          'Retrieving payment history',
-                          style: TextStyle(fontSize: 13),
+                          'common.message.premiumLoadMessage'.tr(),
+                          style: const TextStyle(fontSize: 13),
                         ),
-                        leading: Icon(
+                        leading: const Icon(
                           Icons.watch_later_outlined,
                         ));
                   }
@@ -122,14 +132,16 @@ class _SettingsPageState extends State<SettingsPage> {
                         children: [
                           ListTile(
                             title: Text(
-                              isAdRemoved ? 'Premium Active' : 'Remove Ads',
-                              style: TextStyle(fontSize: 15),
+                              isAdRemoved
+                                  ? 'setting.title.premiumActive'.tr()
+                                  : 'setting.title.removeAds'.tr(),
+                              style: const TextStyle(fontSize: 15),
                             ),
                             subtitle: Text(
                               isAdRemoved
-                                  ? 'Thank you for supporting us!'
-                                  : 'Enjoy an ad-free experience',
-                              style: TextStyle(fontSize: 13),
+                                  ? 'setting.subtitle.premiumActive'.tr()
+                                  : 'setting.subtitle.removeAds'.tr(),
+                              style: const TextStyle(fontSize: 13),
                             ),
                             leading: Icon(
                               isAdRemoved
@@ -147,21 +159,28 @@ class _SettingsPageState extends State<SettingsPage> {
                                       } catch (e) {
                                         ToastUtils.show(
                                           message:
-                                              'Purchase failed: ${e.toString()}',
+                                              'common.errorMessage.purchaseError'
+                                                  .tr(args: [e.toString()]),
                                           type: ToastType.error,
                                         );
                                       }
                                     },
-                                    child: const Text('BUY'),
+                                    child: Text(
+                                      'button.buy'.tr(),
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontSize: 15,
+                                      ),
+                                    ),
                                   ),
                           ),
                           if (Platform.isIOS)
                             ListTile(
-                              title: const Text(
-                                'Restore Purchases',
-                                style: TextStyle(fontSize: 15),
+                              title: Text(
+                                'restorePurchases'.tr(),
+                                style: const TextStyle(fontSize: 15),
                               ),
-                              leading: Icon(Icons.restore),
+                              leading: const Icon(Icons.restore),
                               onTap: () async {
                                 await PurchaseService.instance
                                     .restorePurchases();
@@ -177,34 +196,55 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           ),
           _SettingsSection(
-            title: 'Appearance',
+            title: 'setting.menu.language'.tr(),
+            children: [
+              ListTile(
+                title: Text('setting.title.selectLanguage'.tr(),
+                    style: const TextStyle(fontSize: 15)),
+                subtitle: Text('setting.subtitle.selectLanguage'.tr(),
+                    style: const TextStyle(fontSize: 13)),
+                leading: Text(currentLanguage.flag,
+                    style: const TextStyle(fontSize: 20)),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const LanguageDialog(),
+                  )
+                },
+              ),
+            ],
+          ),
+          _SettingsSection(
+            title: 'setting.menu.appearance'.tr(),
             children: [
               _buildThemeSelector(),
             ],
           ),
           _SettingsSection(
-            title: 'Data Management',
+            title: 'setting.menu.dataManagement'.tr(),
             children: [
               ListTile(
-                title:
-                    const Text('Import Data', style: TextStyle(fontSize: 15)),
-                subtitle: const Text('Load words from a file',
-                    style: TextStyle(fontSize: 13)),
+                title: Text('setting.title.importData'.tr(),
+                    style: const TextStyle(fontSize: 15)),
+                subtitle: Text('setting.subtitle.importData'.tr(),
+                    style: const TextStyle(fontSize: 13)),
                 leading: const Icon(Icons.download_rounded),
                 onTap: () => DataBackupService.instance.importData(),
               ),
               ListTile(
-                title:
-                    const Text('Export Data', style: TextStyle(fontSize: 15)),
-                subtitle: const Text('Save your words as a file',
-                    style: TextStyle(fontSize: 13)),
+                title: Text('setting.title.exportData'.tr(),
+                    style: const TextStyle(fontSize: 15)),
+                subtitle: Text('setting.subtitle.exportData'.tr(),
+                    style: const TextStyle(fontSize: 13)),
                 leading: const Icon(Icons.upload_file),
                 onTap: () => DataBackupService.instance.exportData(),
               ),
               ListTile(
-                title: const Text('Reset Data', style: TextStyle(fontSize: 15)),
-                subtitle: const Text('Delete all words and groups',
-                    style: TextStyle(fontSize: 13)),
+                title: Text('setting.title.resetData'.tr(),
+                    style: const TextStyle(fontSize: 15)),
+                subtitle: Text('setting.subtitle.resetData'.tr(),
+                    style: const TextStyle(fontSize: 13)),
                 leading: const Icon(Icons.delete_forever),
                 textColor: Colors.red,
                 iconColor: Colors.red,
@@ -213,13 +253,14 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           ),
           _SettingsSection(
-            title: 'About',
+            title: 'setting.menu.about'.tr(),
             children: [
               FutureBuilder<String>(
                 future: AppInfoService.instance.getAppVersion(),
                 builder: (context, snapshot) {
                   return ListTile(
-                    title: const Text('Version'),
+                    title: Text('setting.title.version'.tr(),
+                        style: const TextStyle(fontSize: 15)),
                     subtitle: Text(snapshot.data ?? 'Loading...',
                         style: const TextStyle(fontSize: 13)),
                     leading: const Icon(Icons.info_outline),
@@ -227,28 +268,28 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
               ListTile(
-                title:
-                    const Text('Send Feedback', style: TextStyle(fontSize: 15)),
-                subtitle: const Text('Report bugs or suggest features',
-                    style: TextStyle(fontSize: 13)),
+                title: Text('setting.title.sendFeedback'.tr(),
+                    style: const TextStyle(fontSize: 15)),
+                subtitle: Text('setting.subtitle.sendFeedback'.tr(),
+                    style: const TextStyle(fontSize: 13)),
                 leading: const Icon(Icons.feedback_outlined),
                 onTap: () => FeedbackService.instance.sendFeedback(),
               ),
               ListTile(
-                title: const Text('Privacy Policy',
-                    style: TextStyle(fontSize: 15)),
+                title: Text('setting.title.privacyPolicy'.tr(),
+                    style: const TextStyle(fontSize: 15)),
                 leading: const Icon(Icons.privacy_tip_outlined),
                 onTap: () => LegalService.instance.showPrivacyPolicy(context),
               ),
               ListTile(
-                title: const Text('Terms of Service',
-                    style: TextStyle(fontSize: 15)),
+                title: Text('setting.title.termsOfService'.tr(),
+                    style: const TextStyle(fontSize: 15)),
                 leading: const Icon(Icons.description_outlined),
                 onTap: () => LegalService.instance.showTermsOfService(context),
               ),
               ListTile(
-                title: const Text('Open Source Licenses',
-                    style: TextStyle(fontSize: 15)),
+                title: Text('setting.title.openSourceLicenses'.tr(),
+                    style: const TextStyle(fontSize: 15)),
                 leading: const Icon(Icons.source_outlined),
                 onTap: () => LegalService.instance.showLicenses(context),
               ),
@@ -305,7 +346,8 @@ Widget _buildThemeSelector() {
     valueListenable: ThemeService.instance.themeMode,
     builder: (context, ThemeMode themeMode, child) {
       return ListTile(
-        title: const Text('Theme', style: TextStyle(fontSize: 15)),
+        title: Text('setting.title.theme'.tr(),
+            style: const TextStyle(fontSize: 15)),
         subtitle: Text(
             themeMode.name.substring(0, 1).toUpperCase() +
                 themeMode.name.substring(1),
@@ -335,7 +377,8 @@ class _ThemeSelectorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return SimpleDialog(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      title: const Text('Select Theme', style: TextStyle(fontSize: 18)),
+      title: Text('setting.title.selectTheme'.tr(),
+          style: const TextStyle(fontSize: 18)),
       children: ThemeMode.values.map((mode) {
         return SimpleDialogOption(
           onPressed: () {

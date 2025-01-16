@@ -9,7 +9,7 @@ import 'package:eng_word_storage/components/sheet/search_sheet.dart';
 import 'package:eng_word_storage/components/word_card.dart';
 import 'package:eng_word_storage/pages/add_word_page.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
-import 'package:eng_word_storage/pages/language_condition_page_sub.dart';
+import 'package:eng_word_storage/pages/language_condition_page.dart';
 import 'package:eng_word_storage/pages/sort_page.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/services.dart';

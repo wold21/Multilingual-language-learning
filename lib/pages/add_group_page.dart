@@ -1,7 +1,10 @@
+import 'package:eng_word_storage/services/database_service.dart';
+import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../models/group.dart';
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 
 class AddGroupPage extends StatefulWidget {
   const AddGroupPage({super.key});
@@ -40,7 +43,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
       return CupertinoTextField(
         controller: controller,
         autofocus: autofocus,
-        placeholder: 'Enter group name',
+        placeholder: 'mainPage.selectGroup.menu.subtitle.enterGroupName'.tr(),
         placeholderStyle: const TextStyle(color: Colors.grey),
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 12.0),
         decoration: const BoxDecoration(
@@ -56,8 +59,8 @@ class _AddGroupPageState extends State<AddGroupPage> {
         controller: controller,
         autofocus: autofocus,
         maxLength: 20, // 20글자 제한
-        decoration: const InputDecoration(
-          hintText: 'Enter group name',
+        decoration: InputDecoration(
+          hintText: 'mainPage.selectGroup.menu.subtitle.enterGroupName'.tr(),
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,
           counterText: '', // 글자 수 카운터 숨기기
@@ -78,9 +81,9 @@ class _AddGroupPageState extends State<AddGroupPage> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const Text(
-          'New Group',
-          style: TextStyle(
+        title: Text(
+          'mainPage.selectGroup.menu.title.newGroup'.tr(),
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -88,17 +91,28 @@ class _AddGroupPageState extends State<AddGroupPage> {
         actions: [
           TextButton(
             onPressed: _canSave
-                ? () {
-                    final newGroup = Group(
-                      name: _textController.text,
-                      createdAt: DateTime.now().millisecondsSinceEpoch,
-                      updatedAt: DateTime.now().millisecondsSinceEpoch,
-                    );
-                    Navigator.pop(context, newGroup);
+                ? () async {
+                    Group? findGroup = await DatabaseService.instance
+                        .findGroupByName(_textController.text);
+                    if (findGroup == null) {
+                      final newGroup = Group(
+                        name: _textController.text,
+                        createdAt: DateTime.now().millisecondsSinceEpoch,
+                        updatedAt: DateTime.now().millisecondsSinceEpoch,
+                      );
+                      Navigator.pop(context, newGroup);
+                    } else {
+                      ToastUtils.show(
+                        message:
+                            'mainPage.selectGroup.errorMassage.groupDuplicate'
+                                .tr(),
+                        type: ToastType.error,
+                      );
+                    }
                   }
                 : null,
             child: Text(
-              'Done',
+              'common.button.done'.tr(),
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -121,9 +135,9 @@ class _AddGroupPageState extends State<AddGroupPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Group Name',
-                  style: TextStyle(
+                Text(
+                  'mainPage.selectGroup.menu.subtitle.groupName'.tr(),
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),

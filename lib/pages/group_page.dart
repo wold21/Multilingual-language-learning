@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import '../models/group.dart';
 import '../services/database_service.dart';
 import '../components/group_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 enum GroupSelectionMode {
   single,
@@ -155,9 +156,9 @@ class _GroupPageState extends State<GroupPage> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const Text(
-          'Select Group',
-          style: TextStyle(
+        title: Text(
+          'mainPage.selectGroup.title'.tr(),
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -170,7 +171,8 @@ class _GroupPageState extends State<GroupPage> {
                   Navigator.pop(context, selectedGroup);
                 } else {
                   ToastUtils.show(
-                    message: 'Please select a group',
+                    message:
+                        'mainPage.seelctGroup.errorMassage.groupSelect'.tr(),
                     type: ToastType.error,
                   );
                 }
@@ -179,7 +181,7 @@ class _GroupPageState extends State<GroupPage> {
               }
             },
             child: Text(
-              'Done',
+              'common.button.done'.tr(),
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
