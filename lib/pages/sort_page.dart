@@ -73,27 +73,7 @@ class _SortPageState extends State<SortPage> {
       ),
       body: Column(
         children: [
-          FutureBuilder<bool>(
-            future: PurchaseService.instance.isAdRemoved(),
-            builder: (context, futureSnapshot) {
-              if (futureSnapshot.connectionState == ConnectionState.waiting) {
-                return const SizedBox.shrink();
-              }
-
-              final initialAdRemoved = futureSnapshot.data ?? false;
-
-              return StreamBuilder<bool>(
-                stream: PurchaseService.instance.adsRemovedStream,
-                initialData: initialAdRemoved,
-                builder: (context, snapshot) {
-                  bool isAdRemoved = snapshot.data ?? false;
-                  return isAdRemoved
-                      ? const SizedBox.shrink()
-                      : BannerAdWidget(isAdRemoved: isAdRemoved);
-                },
-              );
-            },
-          ),
+          const AdSection(),
           Expanded(
             child: Theme(
               data: Theme.of(context).copyWith(
@@ -107,39 +87,106 @@ class _SortPageState extends State<SortPage> {
                   ),
                 ),
               ),
-              child: ListView.builder(
-                itemCount: SortType.values.length,
-                itemBuilder: (context, index) {
-                  final sortType = SortType.values[index];
-                  return ListTile(
-                    title: Text(
-                        'mainPage.sortBy.attributes.${sortType.label}'.tr()),
-                    onTap: () async {
-                      await HapticFeedback.lightImpact();
-                      setState(() {
-                        _selectedSort = sortType;
-                      });
-                    },
-                    leading: Checkbox(
-                      value: _selectedSort == sortType,
-                      onChanged: (bool? value) {
-                        if (value == true) {
-                          setState(() {
-                            _selectedSort = sortType;
-                          });
-                        }
-                      },
-                      activeColor: Theme.of(context).primaryColor,
-                      checkColor: Colors.white,
-                    ),
-                    splashColor: Colors.transparent,
-                  );
+              child: SortList(
+                selectedSort: _selectedSort,
+                onSortChanged: (sortType) {
+                  setState(() {
+                    _selectedSort = sortType;
+                  });
                 },
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class AdSection extends StatelessWidget {
+  const AdSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: PurchaseService.instance.isAdRemoved(),
+      builder: (context, futureSnapshot) {
+        if (futureSnapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox.shrink();
+        }
+
+        final initialAdRemoved = futureSnapshot.data ?? false;
+
+        return StreamBuilder<bool>(
+          stream: PurchaseService.instance.adsRemovedStream,
+          initialData: initialAdRemoved,
+          builder: (context, snapshot) {
+            bool isAdRemoved = snapshot.data ?? false;
+            return isAdRemoved
+                ? const SizedBox.shrink()
+                : BannerAdWidget(isAdRemoved: isAdRemoved);
+          },
+        );
+      },
+    );
+  }
+}
+
+class SortList extends StatefulWidget {
+  final SortType selectedSort;
+  final ValueChanged<SortType> onSortChanged;
+
+  const SortList({
+    Key? key,
+    required this.selectedSort,
+    required this.onSortChanged,
+  }) : super(key: key);
+
+  @override
+  State<SortList> createState() => _SortListState();
+}
+
+class _SortListState extends State<SortList> {
+  late SortType _localSelected;
+
+  @override
+  void initState() {
+    super.initState();
+    _localSelected = widget.selectedSort;
+  }
+
+  void _handleChange(SortType sortType) {
+    setState(() {
+      _localSelected = sortType;
+    });
+    widget.onSortChanged(sortType);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: SortType.values.length,
+      itemBuilder: (context, index) {
+        final sortType = SortType.values[index];
+        return ListTile(
+          title: Text('mainPage.sortBy.attributes.${sortType.label}'.tr()),
+          onTap: () async {
+            await HapticFeedback.lightImpact();
+            _handleChange(sortType);
+          },
+          leading: Checkbox(
+            value: _localSelected == sortType,
+            onChanged: (bool? checked) {
+              if (checked == true) {
+                _handleChange(sortType);
+              }
+            },
+            activeColor: Theme.of(context).primaryColor,
+            checkColor: Colors.white,
+          ),
+          splashColor: Colors.transparent,
+        );
+      },
     );
   }
 }

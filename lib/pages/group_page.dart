@@ -129,24 +129,6 @@ class _GroupPageState extends State<GroupPage> {
     }
   }
 
-  void _handleSelection(Group group) {
-    setState(() {
-      if (widget.mode == GroupSelectionMode.single) {
-        selectedGroup = group;
-      } else {
-        if (group.name == 'All') {
-          selectedGroupIds.clear();
-        } else {
-          if (selectedGroupIds.contains(group.id)) {
-            selectedGroupIds.remove(group.id);
-          } else {
-            selectedGroupIds.add(group.id!);
-          }
-        }
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,57 +173,27 @@ class _GroupPageState extends State<GroupPage> {
           ),
         ],
       ),
-      body: Column(children: [
-        FutureBuilder<bool>(
-          future: PurchaseService.instance.isAdRemoved(),
-          builder: (context, futureSnapshot) {
-            if (futureSnapshot.connectionState == ConnectionState.waiting) {
-              return const SizedBox.shrink();
-            }
-
-            final initialAdRemoved = futureSnapshot.data ?? false;
-
-            return StreamBuilder<bool>(
-              stream: PurchaseService.instance.adsRemovedStream,
-              initialData: initialAdRemoved,
-              builder: (context, snapshot) {
-                bool isAdRemoved = snapshot.data ?? false;
-                return isAdRemoved
-                    ? const SizedBox.shrink()
-                    : BannerAdWidget(isAdRemoved: isAdRemoved);
+      body: Column(
+        children: [
+          // 광고 영역을 별도 위젯으로 분리
+          const AdSection(),
+          Expanded(
+            child: GroupList(
+              mode: widget.mode,
+              groups: groups,
+              selectedGroup: selectedGroup,
+              selectedGroupIds: selectedGroupIds,
+              onSelectionChanged: (updatedGroup, updatedIds) {
+                setState(() {
+                  selectedGroup = updatedGroup;
+                  selectedGroupIds = updatedIds;
+                });
               },
-            );
-          },
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: groups.length,
-            itemBuilder: (context, index) {
-              final group = groups[index];
-              final isSelected = widget.mode == GroupSelectionMode.single
-                  ? selectedGroup?.id == group.id
-                  : (group.name == 'All'
-                      ? selectedGroupIds.isEmpty
-                      : selectedGroupIds.contains(group.id));
-
-              return GroupCard(
-                group: group,
-                isSelected: isSelected,
-                onTap: () async {
-                  await HapticFeedback.lightImpact();
-                  _handleSelection(group);
-                },
-                onLongPress: () async {
-                  await HapticFeedback.mediumImpact();
-                  if (group.id != 1 && group.id != 2) {
-                    _showBottomSheet(group);
-                  }
-                },
-              );
-            },
+              onShowBottomSheet: _showBottomSheet,
+            ),
           ),
-        )
-      ]),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push<Group>(
@@ -263,6 +215,115 @@ class _GroupPageState extends State<GroupPage> {
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+}
+
+// 광고 위젯
+class AdSection extends StatelessWidget {
+  const AdSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: PurchaseService.instance.isAdRemoved(),
+      builder: (context, futureSnapshot) {
+        if (futureSnapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox.shrink();
+        }
+
+        final initialAdRemoved = futureSnapshot.data ?? false;
+
+        return StreamBuilder<bool>(
+          stream: PurchaseService.instance.adsRemovedStream,
+          initialData: initialAdRemoved,
+          builder: (context, snapshot) {
+            bool isAdRemoved = snapshot.data ?? false;
+            return isAdRemoved
+                ? const SizedBox.shrink()
+                : Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: BannerAdWidget(isAdRemoved: isAdRemoved),
+                  );
+          },
+        );
+      },
+    );
+  }
+}
+
+// 그룹 목록 위젯
+class GroupList extends StatefulWidget {
+  final GroupSelectionMode mode;
+  final List<Group> groups;
+  final Group? selectedGroup;
+  final List<int> selectedGroupIds;
+  final Function(Group?, List<int>) onSelectionChanged;
+  final Function(Group) onShowBottomSheet;
+
+  const GroupList({
+    Key? key,
+    required this.mode,
+    required this.groups,
+    required this.selectedGroup,
+    required this.selectedGroupIds,
+    required this.onSelectionChanged,
+    required this.onShowBottomSheet,
+  }) : super(key: key);
+
+  @override
+  State<GroupList> createState() => _GroupListState();
+}
+
+class _GroupListState extends State<GroupList> {
+  void _handleSelection(Group group) {
+    Group? newSelectedGroup = widget.selectedGroup;
+    List<int> newSelectedIds = List.from(widget.selectedGroupIds);
+
+    if (widget.mode == GroupSelectionMode.single) {
+      newSelectedGroup = group;
+    } else {
+      if (group.name == 'All') {
+        newSelectedIds.clear();
+      } else {
+        if (newSelectedIds.contains(group.id)) {
+          newSelectedIds.remove(group.id);
+        } else {
+          newSelectedIds.add(group.id!);
+        }
+      }
+    }
+
+    widget.onSelectionChanged(newSelectedGroup, newSelectedIds);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: widget.groups.length,
+      itemBuilder: (context, index) {
+        final group = widget.groups[index];
+        final isSelected = widget.mode == GroupSelectionMode.single
+            ? widget.selectedGroup?.id == group.id
+            : (group.name == 'All'
+                ? widget.selectedGroupIds.isEmpty
+                : widget.selectedGroupIds.contains(group.id));
+
+        return GroupCard(
+          group: group,
+          isSelected: isSelected,
+          onTap: () async {
+            await HapticFeedback.lightImpact();
+            _handleSelection(group);
+          },
+          onLongPress: () async {
+            await HapticFeedback.mediumImpact();
+            if (group.id != 1 && group.id != 2) {
+              widget.onShowBottomSheet(group);
+            }
+          },
+        );
+      },
     );
   }
 }

@@ -62,27 +62,7 @@ class _LanguageConditionPageState extends State<LanguageConditionPage> {
       ),
       body: Column(
         children: [
-          FutureBuilder<bool>(
-            future: PurchaseService.instance.isAdRemoved(),
-            builder: (context, futureSnapshot) {
-              if (futureSnapshot.connectionState == ConnectionState.waiting) {
-                return const SizedBox.shrink();
-              }
-
-              final initialAdRemoved = futureSnapshot.data ?? false;
-
-              return StreamBuilder<bool>(
-                stream: PurchaseService.instance.adsRemovedStream,
-                initialData: initialAdRemoved,
-                builder: (context, snapshot) {
-                  bool isAdRemoved = snapshot.data ?? false;
-                  return isAdRemoved
-                      ? const SizedBox.shrink()
-                      : BannerAdWidget(isAdRemoved: isAdRemoved);
-                },
-              );
-            },
-          ),
+          const AdSection(),
           Expanded(
             child: Theme(
               data: Theme.of(context).copyWith(
@@ -96,90 +76,146 @@ class _LanguageConditionPageState extends State<LanguageConditionPage> {
                   ),
                 ),
               ),
-              child: ListView.builder(
-                itemCount: ContentLanguage.values.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return ListTile(
-                      title: const Text('🌎 All Languages'),
-                      onTap: () async {
-                        await HapticFeedback.lightImpact();
-                        setState(() {
-                          _isAllSelected = !_isAllSelected;
-                          if (_isAllSelected) {
-                            _currentLanguages.clear();
-                          }
-                        });
-                      },
-                      leading: Checkbox(
-                        value: _isAllSelected,
-                        onChanged: (bool? value) {
-                          if (value != null) {
-                            setState(() {
-                              _isAllSelected = value;
-                              if (_isAllSelected) {
-                                _currentLanguages.clear();
-                              }
-                            });
-                          }
-                        },
-                        activeColor: Theme.of(context).primaryColor,
-                        checkColor: Colors.white,
-                      ),
-                      splashColor: Colors.transparent,
-                    );
-                  }
-
-                  final lang = ContentLanguage.values[index - 1];
-                  return ListTile(
-                    title: Text('${lang.flag} ${lang.name}'),
-                    onTap: () async {
-                      await HapticFeedback.lightImpact();
-                      setState(() {
-                        _isAllSelected = false;
-                        if (_currentLanguages.contains(lang.code)) {
-                          _currentLanguages.remove(lang.code);
-                        } else {
-                          _currentLanguages.add(lang.code);
-                        }
-
-                        if (_currentLanguages.isEmpty) {
-                          _isAllSelected = true;
-                        }
-                      });
-                    },
-                    leading: Checkbox(
-                      value: !_isAllSelected &&
-                          _currentLanguages.contains(lang.code),
-                      onChanged: (bool? value) {
-                        if (value != null) {
-                          setState(() {
-                            _isAllSelected = false;
-                            if (value) {
-                              if (!_currentLanguages.contains(lang.code)) {
-                                _currentLanguages.add(lang.code);
-                              }
-                            } else {
-                              _currentLanguages.remove(lang.code);
-                            }
-
-                            if (_currentLanguages.isEmpty) {
-                              _isAllSelected = true;
-                            }
-                          });
-                        }
-                      },
-                      activeColor: Theme.of(context).primaryColor,
-                      checkColor: Colors.white,
-                    ),
-                    splashColor: Colors.transparent,
-                  );
+              child: LanguageList(
+                isAllSelected: _isAllSelected,
+                currentLanguages: _currentLanguages,
+                onChanged: (allSelected, langs) {
+                  setState(() {
+                    _isAllSelected = allSelected;
+                    _currentLanguages = langs;
+                  });
                 },
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class AdSection extends StatelessWidget {
+  const AdSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: PurchaseService.instance.isAdRemoved(),
+      builder: (context, futureSnapshot) {
+        if (futureSnapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox.shrink();
+        }
+
+        final initialAdRemoved = futureSnapshot.data ?? false;
+
+        return StreamBuilder<bool>(
+          stream: PurchaseService.instance.adsRemovedStream,
+          initialData: initialAdRemoved,
+          builder: (context, snapshot) {
+            bool isAdRemoved = snapshot.data ?? false;
+            return isAdRemoved
+                ? const SizedBox.shrink()
+                : BannerAdWidget(isAdRemoved: isAdRemoved);
+          },
+        );
+      },
+    );
+  }
+}
+
+class LanguageList extends StatefulWidget {
+  final bool isAllSelected;
+  final List<String> currentLanguages;
+  final Function(bool, List<String>) onChanged;
+
+  const LanguageList({
+    Key? key,
+    required this.isAllSelected,
+    required this.currentLanguages,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  State<LanguageList> createState() => _LanguageListState();
+}
+
+class _LanguageListState extends State<LanguageList> {
+  late bool _localAllSelected;
+  late List<String> _localLanguages;
+
+  @override
+  void initState() {
+    super.initState();
+    _localAllSelected = widget.isAllSelected;
+    _localLanguages = List.from(widget.currentLanguages);
+  }
+
+  void _toggleAll() {
+    setState(() {
+      _localAllSelected = !_localAllSelected;
+      if (_localAllSelected) {
+        _localLanguages.clear();
+      }
+      widget.onChanged(_localAllSelected, _localLanguages);
+    });
+  }
+
+  void _toggleLanguage(String code) {
+    setState(() {
+      _localAllSelected = false;
+      if (_localLanguages.contains(code)) {
+        _localLanguages.remove(code);
+      } else {
+        _localLanguages.add(code);
+      }
+      if (_localLanguages.isEmpty) {
+        _localAllSelected = true;
+      }
+      widget.onChanged(_localAllSelected, _localLanguages);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: ContentLanguage.values.length + 1,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return ListTile(
+            title: const Text('🌎 All Languages'),
+            onTap: () async {
+              await HapticFeedback.lightImpact();
+              _toggleAll();
+            },
+            leading: Checkbox(
+              value: _localAllSelected,
+              onChanged: (bool? value) {
+                if (value != null) _toggleAll();
+              },
+              activeColor: Theme.of(context).primaryColor,
+              checkColor: Colors.white,
+            ),
+            splashColor: Colors.transparent,
+          );
+        }
+        final lang = ContentLanguage.values[index - 1];
+        return ListTile(
+          title: Text('${lang.flag} ${lang.name}'),
+          onTap: () async {
+            await HapticFeedback.lightImpact();
+            _toggleLanguage(lang.code);
+          },
+          leading: Checkbox(
+            value: !_localAllSelected && _localLanguages.contains(lang.code),
+            onChanged: (bool? value) {
+              if (value != null) _toggleLanguage(lang.code);
+            },
+            activeColor: Theme.of(context).primaryColor,
+            checkColor: Colors.white,
+          ),
+          splashColor: Colors.transparent,
+        );
+      },
     );
   }
 }
