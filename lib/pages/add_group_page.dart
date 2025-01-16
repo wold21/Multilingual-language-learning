@@ -43,7 +43,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
       return CupertinoTextField(
         controller: controller,
         autofocus: autofocus,
-        placeholder: 'mainPage.selectGroup.menu.subtitle.enterGroupName'.tr(),
+        placeholder: 'mainPage.group.menu.subtitle.enterGroupName'.tr(),
         placeholderStyle: const TextStyle(color: Colors.grey),
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 12.0),
         decoration: const BoxDecoration(
@@ -60,7 +60,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
         autofocus: autofocus,
         maxLength: 20, // 20글자 제한
         decoration: InputDecoration(
-          hintText: 'mainPage.selectGroup.menu.subtitle.enterGroupName'.tr(),
+          hintText: 'mainPage.group.menu.subtitle.enterGroupName'.tr(),
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,
           counterText: '', // 글자 수 카운터 숨기기
@@ -82,7 +82,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
         ),
         centerTitle: true,
         title: Text(
-          'mainPage.selectGroup.menu.title.newGroup'.tr(),
+          'mainPage.group.menu.title.newGroup'.tr(),
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -104,8 +104,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
                     } else {
                       ToastUtils.show(
                         message:
-                            'mainPage.selectGroup.errorMassage.groupDuplicate'
-                                .tr(),
+                            'mainPage.group.errorMassage.groupDuplicate'.tr(),
                         type: ToastType.error,
                       );
                     }
@@ -136,7 +135,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'mainPage.selectGroup.menu.subtitle.groupName'.tr(),
+                  'mainPage.group.menu.subtitle.groupName'.tr(),
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,

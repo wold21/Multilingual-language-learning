@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 enum ActionType {
   word,
@@ -39,7 +40,7 @@ class CommonBottomSheet extends StatelessWidget {
                 color: primaryColor,
               ),
               title: Text(
-                'Edit',
+                'common.button.edit'.tr(),
                 style: TextStyle(
                   color: Theme.of(context).textTheme.titleMedium?.color,
                   fontSize: 16,
@@ -56,7 +57,7 @@ class CommonBottomSheet extends StatelessWidget {
                 color: primaryColor,
               ),
               title: Text(
-                'Delete',
+                'common.button.delete'.tr(),
                 style: TextStyle(
                   color: Theme.of(context).textTheme.titleMedium?.color,
                   fontSize: 16,

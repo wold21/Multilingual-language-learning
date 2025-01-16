@@ -13,8 +13,13 @@
             "loading": "로딩중...",
             "premiumLoadMessage": "결제 내역을 불러오는 중"
         },
-        "errorMessage": {
-            "purchaseError": "결제 실패: {}"
+        "errorMassage": {
+            "ttsError": "TTS Error"
+        },
+        "ad": {
+            "errorMassage": {
+                "loadYet": "Ad is not loaded yet"
+            }
         }
     },
     "mainPage": {
@@ -32,25 +37,51 @@
                 "long": "긴 순"
             }
         },
-        "selectGroup": {
+        "searchBar": {
+            "placeholderGroup": "현재 그룹에서 검색",
+            "placeholderAll": "모든 그룹에서 검색"
+        },
+        "group": {
             "title": "그룹 선택",
             "menu": {
                 "title": {
-                    "newGroup": "새 그룹"
+                    "newGroup": "새 그룹",
+                    "editGroup": "그룹 수정",
+                    "deleteGroup": "그룹 삭제"
                 },
                 "subtitle": {
                     "groupName": "그룹 이름",
                     "enterGroupName": "그룹 이름을 입력하세요"
                 }
             },
+            "messages": {
+                "deleteGroup": "이 그룹을 삭제하시겠습니까?"
+            },
             "errorMassage": {
-                "groupSelect": "그룹을 선택해주세요",
-                "groupDuplicate": "그룹 이름이 이미 존재합니다"
+                "groupSelect": "그룹을 선택하세요",
+                "groupDuplicate": "이미 존재하는 그룹입니다"
             }
         },
-        "searchBar": {
-            "placeholderGroup": "현재 그룹에서 검색",
-            "placeholderAll": "모든 그룹에서 검색"
+        "word": {
+            "title": {
+                "newWord": "단어 추가",
+                "editWord": "단어 수정"
+            },
+            "input": {
+                "word": "단어",
+                "meaning": "뜻",
+                "memo": "메모(선택사항)",
+                "group": "그룹",
+                "language": "언어"
+            },
+            "massages": {
+                "wordSave": "저장됨",
+                "wordDelete": "삭제됨",
+                "wordUpdated": "수정됨"
+            },
+            "errorMassage": {
+                "word": "단어를 입력하세요"
+            }
         }
     },
     "setting": {
@@ -97,7 +128,7 @@
             "resetFailed": "데이터 재설정에 실패했습니다."
         },
         "errorMessage": {
-            "purchaseError": "구매 실패: {}"
+            "purchaseError": "결제 실패: {}"
         }
     }
 }

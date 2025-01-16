@@ -10,7 +10,17 @@
             "buy": "Buy"
         },
         "message": {
-            "loading": "Loading..."
+            "loading": "Loading...",
+            "deleted": "Deleted",
+            "groupCreated": "Group created"
+        },
+        "errorMassage": {
+            "ttsError": "TTS Error"
+        },
+        "ad": {
+            "errorMassage": {
+                "loadYet": "Ad is not loaded yet"
+            }
         }
     },
     "mainPage": {
@@ -28,73 +38,98 @@
                 "long": "Long"
             }
         },
-        "selectGroup": {
+        "searchBar": {
+            "placeholderGroup": "Search in current group",
+            "placeholderAll": "Search in all groups"
+        },
+        "group": {
             "title": "Select Group",
             "menu": {
                 "title": {
                     "newGroup": "New Group",
+                    "editGroup": "Edit Group",
                     "deleteGroup": "Delete Group"
                 },
                 "subtitle": {
                     "groupName": "Group Name",
                     "enterGroupName": "Enter group name"
+                },
+                "messages": {
+                    "deleteGroup": "Are you sure you want to delete this group?"
+                },
+                "errorMassage": {
+                    "groupSelect": "Please select a group",
+                    "groupDuplicate": "Group name already exists"
                 }
             },
-            "errorMassage": {
-                "groupSelect": "Please select a group",
-                "groupDuplicate": "Group name already exists"
+            "word": {
+                "title": {
+                    "newWord": "New Word",
+                    "editWord": "Edit Word"
+                },
+                "input": {
+                    "word": "Word",
+                    "meaning": "Meaning",
+                    "memo": "Memo(optional)",
+                    "group": "Group",
+                    "language": "Language"
+                },
+                "massages": {
+                    "wordSave": "Saved",
+                    "wordDelete": "Deleted",
+                    "wordUpdated": "Updated"
+                },
+                "errorMassage": {
+                    "word": "Please enter a word"
+                }
             }
         },
-        "searchBar": {
-            "placeholderGroup": "Search in current group",
-            "placeholderAll": "Search in all groups"
-        }
-    },
-    "setting": {
-        "menu": {
-            "premium": "Premium",
-            "language": "Language",
-            "dataManagement": "Data Management",
-            "appearance": "Appearance",
-            "about": "About"
-        },
-        "title": {
-            "removeAds": "Remove Ads",
-            "premiumActive": "Premium Active",
-            "restorePurchase": "Restore Purchase",
-            "selectLanguage": "Select Language",
-            "theme": "Theme",
-            "selectTheme": "Select Theme",
-            "importData": "Import Data",
-            "exportData": "Export Data",
-            "resetData": "Reset Data",
-            "version": "Version",
-            "sendFeedback": "Send Feedback",
-            "privacyPolicy": "Privacy Policy",
-            "termsOfService": "Terms of Service",
-            "openSourceLicenses": "Open Source Licenses"
-        },
-        "subtitle": {
-            "removeAds": "Enjoy an ad-free experience",
-            "premiumActive": "Thank you for supporting us!",
-            "selectLanguage": "Change the language of the app",
-            "importData": "Load words from a file",
-            "exportData": "Save your words as a file",
-            "resetData": "Delete all words and groups",
-            "sendFeedback": "Report bugs or suggest features",
-            "theme": {
-                "light": "Light",
-                "dark": "Dark"
+        "setting": {
+            "menu": {
+                "premium": "Premium",
+                "language": "Language",
+                "dataManagement": "Data Management",
+                "appearance": "Appearance",
+                "about": "About"
+            },
+            "title": {
+                "removeAds": "Remove Ads",
+                "premiumActive": "Premium Active",
+                "restorePurchase": "Restore Purchase",
+                "selectLanguage": "Select Language",
+                "theme": "Theme",
+                "selectTheme": "Select Theme",
+                "importData": "Import Data",
+                "exportData": "Export Data",
+                "resetData": "Reset Data",
+                "version": "Version",
+                "sendFeedback": "Send Feedback",
+                "privacyPolicy": "Privacy Policy",
+                "termsOfService": "Terms of Service",
+                "openSourceLicenses": "Open Source Licenses"
+            },
+            "subtitle": {
+                "removeAds": "Enjoy an ad-free experience",
+                "premiumActive": "Thank you for supporting us!",
+                "selectLanguage": "Change the language of the app",
+                "importData": "Load words from a file",
+                "exportData": "Save your words as a file",
+                "resetData": "Delete all words and groups",
+                "sendFeedback": "Report bugs or suggest features",
+                "theme": {
+                    "light": "Light",
+                    "dark": "Dark"
+                }
+            },
+            "massages": {
+                "premiumLoadMessage": "Retrieving payment history",
+                "resetData": "This will delete all words and groups. This action cannot be undone. Are you sure you want to continue?",
+                "resetSuccess": "All data has been reset",
+                "resetFailed": "Failed to reset data"
+            },
+            "errorMessage": {
+                "purchaseError": "Purchase failed: {}"
             }
-        },
-        "massages": {
-            "premiumLoadMessage": "Retrieving payment history",
-            "resetData": "This will delete all words and groups. This action cannot be undone. Are you sure you want to continue?",
-            "resetSuccess": "All data has been reset",
-            "resetFailed": "Failed to reset data"
-        },
-        "errorMessage": {
-            "purchaseError": "Purchase failed: {}"
         }
     }
 }

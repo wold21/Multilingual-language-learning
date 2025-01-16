@@ -76,7 +76,6 @@ class _GroupPageState extends State<GroupPage> {
           selectedGroup = actualGroup;
         }
       } else {
-        // 다중 선택 모드: 모든 그룹 표시
         groups = loadedGroups;
       }
     });
@@ -109,8 +108,8 @@ class _GroupPageState extends State<GroupPage> {
   Future<void> _showDeleteConfirmDialog(Group group) async {
     final confirmed = await ConfirmDialog.show(
       context: context,
-      title: 'Delete Group',
-      content: 'Are you sure you want to delete this group?',
+      title: 'mainPage.group.menu.title.deleteGroup'.tr(),
+      content: 'mainPage.group.menu.message.deleteGroup'.tr(),
     );
 
     if (confirmed == true) {
@@ -121,7 +120,7 @@ class _GroupPageState extends State<GroupPage> {
       });
 
       ToastUtils.show(
-        message: 'Deleted',
+        message: 'common.message.deleted'.tr(),
         type: ToastType.success,
       );
 
@@ -139,7 +138,7 @@ class _GroupPageState extends State<GroupPage> {
         ),
         centerTitle: true,
         title: Text(
-          'mainPage.selectGroup.title'.tr(),
+          'mainPage.group.title'.tr(),
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -175,7 +174,6 @@ class _GroupPageState extends State<GroupPage> {
       ),
       body: Column(
         children: [
-          // 광고 영역을 별도 위젯으로 분리
           const AdSection(),
           Expanded(
             child: GroupList(
@@ -207,7 +205,7 @@ class _GroupPageState extends State<GroupPage> {
           if (result != null) {
             await _databaseService.createGroup(result);
             ToastUtils.show(
-              message: 'Group created',
+              message: 'common.message.groupCreated'.tr(),
               type: ToastType.success,
             );
             _loadGroups();
@@ -219,7 +217,6 @@ class _GroupPageState extends State<GroupPage> {
   }
 }
 
-// 광고 위젯
 class AdSection extends StatelessWidget {
   const AdSection({Key? key}) : super(key: key);
 
@@ -252,7 +249,6 @@ class AdSection extends StatelessWidget {
   }
 }
 
-// 그룹 목록 위젯
 class GroupList extends StatefulWidget {
   final GroupSelectionMode mode;
   final List<Group> groups;

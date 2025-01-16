@@ -166,7 +166,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       }
                                     },
                                     child: Text(
-                                      'button.buy'.tr(),
+                                      'common.button.buy'.tr(),
                                       style: TextStyle(
                                         color: Theme.of(context).primaryColor,
                                         fontSize: 15,

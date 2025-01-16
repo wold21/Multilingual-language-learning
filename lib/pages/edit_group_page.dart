@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../models/group.dart';
@@ -49,7 +50,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
       return CupertinoTextField(
         controller: controller,
         autofocus: autofocus,
-        placeholder: 'Enter group name',
+        placeholder: 'mainPage.group.menu.subtitle.enterGroupName'.tr(),
         placeholderStyle: const TextStyle(color: Colors.grey),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         decoration: BoxDecoration(
@@ -57,7 +58,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
           borderRadius: BorderRadius.circular(8),
         ),
         style: const TextStyle(fontSize: 16),
-        maxLength: 20, // 20글자 제한
+        maxLength: 20,
         autocorrect: false,
         enableSuggestions: false,
       );
@@ -65,12 +66,12 @@ class _EditGroupPageState extends State<EditGroupPage> {
       return TextField(
         controller: controller,
         autofocus: autofocus,
-        maxLength: 20, // 20글자 제한
-        decoration: const InputDecoration(
-          hintText: 'Enter group name',
+        maxLength: 20,
+        decoration: InputDecoration(
+          hintText: 'mainPage.group.menu.subtitle.enterGroupName'.tr(),
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,
-          counterText: '', // 글자 수 카운터 숨기기
+          counterText: '',
         ),
         style: const TextStyle(fontSize: 16),
         keyboardType: TextInputType.text,
@@ -88,9 +89,9 @@ class _EditGroupPageState extends State<EditGroupPage> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const Text(
-          'Edit Group',
-          style: TextStyle(
+        title: Text(
+          'mainPage.group.menu.title.edtiGroup'.tr(),
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -109,7 +110,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
                   }
                 : null,
             child: Text(
-              'Done',
+              'common.button.done'.tr(),
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -132,9 +133,9 @@ class _EditGroupPageState extends State<EditGroupPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Group Name',
-                  style: TextStyle(
+                Text(
+                  'mainPage.group.menu.subtitle.groupName'.tr(),
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:eng_word_storage/ads/interstitial_ad_widget.dart';
 import 'package:eng_word_storage/pages/group_page.dart';
 import 'package:eng_word_storage/utils/content_language.dart';
@@ -135,7 +136,7 @@ class _AddWordPageState extends State<AddWordPage> {
 
         if (mounted) {
           ToastUtils.show(
-            message: 'Saved',
+            message: 'mainPage.word.massages.wordSave'.tr(),
             type: ToastType.success,
           );
         }
@@ -166,7 +167,7 @@ class _AddWordPageState extends State<AddWordPage> {
 
         if (mounted) {
           ToastUtils.show(
-            message: 'Updated',
+            message: 'mainPage.word.massages.wordUpdated'.tr(),
             type: ToastType.success,
           );
         }
@@ -197,7 +198,7 @@ class _AddWordPageState extends State<AddWordPage> {
       InterstitialAdService().showInterstitialAd();
     } else {
       ToastUtils.show(
-        message: 'Ad is not loaded yet.',
+        message: 'common.ad.errorMassage.loadYet'.tr(),
         type: ToastType.error,
       );
     }
@@ -291,7 +292,9 @@ class _AddWordPageState extends State<AddWordPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          widget.wordToEdit == null ? 'New Word' : 'Edit Word',
+          widget.wordToEdit == null
+              ? 'mainPage.word.title.newWord'.tr()
+              : 'mainPage.word.title.editWord'.tr(),
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -316,7 +319,7 @@ class _AddWordPageState extends State<AddWordPage> {
                   }
                 : null,
             child: Text(
-              'Save',
+              '',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -335,21 +338,21 @@ class _AddWordPageState extends State<AddWordPage> {
                 controller: _wordController,
                 focusNode: _wordFocusNode,
                 autofocus: true,
-                hintText: 'Word',
+                hintText: 'mainPage.word.input.word'.tr(),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 controller: _meaningController,
-                hintText: 'Meaning',
+                hintText: 'mainPage.word.input.meaning'.tr(),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 controller: _memoController,
-                hintText: 'Memo (optional)',
+                hintText: 'mainPage.word.input.memo'.tr(),
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.multiline,
               ),
@@ -357,9 +360,9 @@ class _AddWordPageState extends State<AddWordPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Group',
-                    style: TextStyle(
+                  Text(
+                    'mainPage.word.input.group'.tr(),
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w900,
                     ),
@@ -402,9 +405,9 @@ class _AddWordPageState extends State<AddWordPage> {
                 ],
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                const Text(
-                  'Language',
-                  style: TextStyle(
+                Text(
+                  'mainPage.word.input.language'.tr(),
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
                   ),

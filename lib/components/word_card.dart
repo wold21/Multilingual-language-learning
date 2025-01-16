@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:eng_word_storage/ads/interstitial_ad_widget.dart';
 import 'package:eng_word_storage/services/tts_service.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
@@ -51,7 +52,7 @@ class _WordCardState extends State<WordCard> {
     } catch (e) {
       if (mounted) {
         ToastUtils.show(
-          message: 'TTS Error',
+          message: 'common.errorMessage.ttsError'.tr(),
           type: ToastType.error,
         );
       }
@@ -78,7 +79,7 @@ class _WordCardState extends State<WordCard> {
       InterstitialAdService().showInterstitialAd();
     } else {
       ToastUtils.show(
-        message: 'Ad is not loaded yet.',
+        message: 'common.ad.errorMassage.loadYet'.tr(),
         type: ToastType.error,
       );
     }
