@@ -1,0 +1,185 @@
+{
+    "appTitle": "Laboca",
+    "common": {
+        "button": {
+            "save": "I-save",
+            "cancel": "Kanselahin",
+            "delete": "Tanggalin",
+            "done": "Tapos na",
+            "edit": "I-edit",
+            "buy": "Bumili"
+        },
+        "message": {
+            "loading": "Naglo-load..."
+        },
+        "errorMassage": {
+            "ttsError": "TTS Error"
+        },
+        "ad": {
+            "errorMassage": {
+                "loadYet": "Wala pang mga ad"
+            }
+        },
+        "toast": {
+            "errorLoadingPreferences": "Hindi mabasa ang mga setting",
+            "errorSavingSortPreferences": "Hindi masave ang mga sorting preferences",
+            "errorSavingGroupPreferences": "Hindi masave ang mga group preferences",
+            "errorSavingLanguagePreferences": "Hindi masave ang language preferences",
+            "errorLoadingWords": "Hindi mabasa ang mga salita",
+            "errorOpenStore": "Hindi mabuksan ang store URL",
+            "word": {
+                "success": {
+                    "saved": "Naisave na",
+                    "deleted": "Natanggal na",
+                    "updated": "Na-update na"
+                },
+                "error": {}
+            },
+            "group": {
+                "success": {
+                    "created": "Nalikha na",
+                    "deleted": "Naitanggal na",
+                    "updated": "Na-update na"
+                },
+                "error": {
+                    "duplicated": "Magkapareho ang pangalan ng grupo",
+                    "groupSelect": "Piliin ang grupo"
+                }
+            },
+            "settings": {
+                "importData": {
+                    "dialog": {
+                        "title": "Mag-import ng Walang laman na mga Datos"
+                    },
+                    "info": {
+                        "importDataEmpty": "Walang datos na mai-import"
+                    },
+                    "success": {
+                        "importData": "{} mga salita ang na-import"
+                    },
+                    "error": {
+                        "importData": "Hindi ma-import ang mga datos: {}"
+                    }
+                },
+                "exportData": {
+                    "info": {
+                        "exportDataCancelled": "Inurong ang export"
+                    },
+                    "success": {
+                        "exportData": "{} mga salita ang na-export"
+                    },
+                    "error": {
+                        "exportData": "Hindi ma-export ang mga datos: {}"
+                    }
+                },
+                "feedback": {
+                    "error": {
+                        "lanchEmail": "Error sa pag-launch ng email"
+                    }
+                }
+            }
+        }
+    },
+    "mainPage": {
+        "languageFilter": {
+            "title": "Filter ng Wika"
+        },
+        "sortBy": {
+            "title": "I-sort ayon sa",
+            "attributes": {
+                "newest": "Pinakabago",
+                "oldest": "Pinakamatawid",
+                "alphabeticalAZ": "Alpabetikal A-Z",
+                "alphabeticalZA": "Alpabetikal Z-A",
+                "short": "Maikli",
+                "long": "Mahaba"
+            }
+        },
+        "searchBar": {
+            "placeholderGroup": "Maghanap sa kasalukuyang grupo",
+            "placeholderAll": "Maghanap sa lahat ng mga grupo"
+        },
+        "group": {
+            "title": "Piliin ang Grupo",
+            "menu": {
+                "title": {
+                    "newGroup": "Bagong Grupo",
+                    "editGroup": "I-edit ang Grupo",
+                    "deleteGroup": "Tanggalin ang Grupo"
+                },
+                "subtitle": {
+                    "groupName": "Pangalan ng Grupo",
+                    "enterGroupName": "Ilagay ang Pangalan ng Grupo"
+                },
+                "messages": {
+                    "deleteGroup": "Sigurado ka bang gusto mong tanggalin ang grupo?"
+                }
+            }
+        },
+        "word": {
+            "title": {
+                "newWord": "Bagong Salita",
+                "editWord": "I-edit ang Salita",
+                "deleteWord": "Tanggalin ang Salita"
+            },
+            "input": {
+                "word": "Salita",
+                "meaning": "Kahulugan",
+                "memo": "Memo (Opsyonal)",
+                "group": "Grupo",
+                "language": "Wika"
+            },
+            "messages": {
+                "deleteWord": "Sigurado ka bang gusto mong tanggalin ang salita?"
+            },
+            "errorMassage": {
+                "word": "Mangyaring maglagay ng salita"
+            }
+        }
+    },
+    "setting": {
+        "menu": {
+            "premium": "Premium",
+            "language": "Wika",
+            "dataManagement": "Pamamahala ng Data",
+            "appearance": "Hitsura",
+            "about": "Tungkol sa App"
+        },
+        "title": {
+            "removeAds": "Alisin ang mga Ads",
+            "premiumActive": "Premium Activated",
+            "restorePurchase": "I-restore ang Pagbili",
+            "selectLanguage": "Pumili ng Wika",
+            "theme": "Tema",
+            "selectTheme": "Piliin ang Tema",
+            "importData": "Mag-import ng Data",
+            "exportData": "Mag-export ng Data",
+            "resetData": "I-reset ang Data",
+            "version": "Bersyon",
+            "sendFeedback": "Magpadala ng Feedback",
+            "privacyPolicy": "Patakaran sa Privacy",
+            "termsOfService": "Mga Termino ng Serbisyo",
+            "openSourceLicenses": "Mga Lisensya ng Open Source"
+        },
+        "subtitle": {
+            "removeAds": "Magkaroon ng karanasan na walang Ads",
+            "premiumActive": "Maraming salamat sa iyong suporta!",
+            "selectLanguage": "Palitan ang Wika ng App",
+            "importData": "I-import ang mga salita mula sa file",
+            "exportData": "I-export ang iyong mga salita sa isang file",
+            "resetData": "I-reset ang mga na-save na salita",
+            "sendFeedback": "I-report ang mga bugs o magbigay ng feedback",
+            "theme": {
+                "light": "Maliwanag",
+                "dark": "Madilim"
+            }
+        },
+        "massages": {
+            "premiumLoadMessage": "Naglo-load ang premium status",
+            "resetData": "Ang lahat ng iyong mga salita ay mabubura, gusto mo bang ituloy?"
+        },
+        "errorMessage": {
+            "purchaseError": "Error sa pagbili: {}"
+        }
+    }
+}

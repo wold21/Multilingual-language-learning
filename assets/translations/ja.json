@@ -1,0 +1,187 @@
+{
+    "appTitle": "Laboca",
+    "common": {
+        "button": {
+            "save": "保存",
+            "cancel": "キャンセル",
+            "delete": "削除",
+            "done": "完了",
+            "edit": "編集",
+            "buy": "購入"
+        },
+        "message": {
+            "loading": "読み込み中..."
+        },
+        "errorMassage": {
+            "ttsError": "TTSエラー"
+        },
+        "ad": {
+            "errorMassage": {
+                "loadYet": "広告がまだ読み込まれていません"
+            }
+        },
+        "toast": {
+            "errorLoadingPreferences": "設定の読み込みに失敗しました",
+            "errorSavingSortPreferences": "並び替え設定の保存に失敗しました",
+            "errorSavingGroupPreferences": "グループ設定の保存に失敗しました",
+            "errorSavingLanguagePreferences": "言語設定の保存に失敗しました",
+            "errorLoadingWords": "単語の読み込みに失敗しました",
+            "errorOpenStore": "ストアURLを開くことができません",
+            "word": {
+                "success": {
+                    "saved": "保存されました",
+                    "deleted": "削除されました",
+                    "updated": "更新されました"
+                },
+                "error": {}
+            },
+            "group": {
+                "success": {
+                    "created": "作成されました",
+                    "deleted": "削除されました",
+                    "updated": "更新されました"
+                },
+                "error": {
+                    "duplicated": "グループ名が既に存在します",
+                    "groupSelect": "グループを選択してください"
+                }
+            },
+            "settings": {
+                "importData": {
+                    "dialog": {
+                        "title": "単語のインポート"
+                    },
+                    "info": {
+                        "importDataEmpty": "インポートするデータがありません"
+                    },
+                    "success": {
+                        "importData": "{}個の単語がインポートされました"
+                    },
+                    "error": {
+                        "importData": "データのインポートに失敗しました: {}"
+                    }
+                },
+                "exportData": {
+                    "info": {
+                        "exportDataCancelled": "エクスポートがキャンセルされました"
+                    },
+                    "success": {
+                        "exportData": "{}個の単語がエクスポートされました"
+                    },
+                    "error": {
+                        "exportData": "データのエクスポートに失敗しました: {}"
+                    }
+                },
+                "feedback": {
+                    "error": {
+                        "lanchEmail": "メールクライアントを開くことができませんでした"
+                    }
+                }
+            }
+        }
+    },
+    "mainPage": {
+        "languageFilter": {
+            "title": "言語フィルター"
+        },
+        "sortBy": {
+            "title": "並び替え",
+            "attributes": {
+                "newest": "新しい順",
+                "oldest": "古い順",
+                "alphabeticalAZ": "アルファベット順 A-Z",
+                "alphabeticalZA": "アルファベット順 Z-A",
+                "short": "短い順",
+                "long": "長い順"
+            }
+        },
+        "searchBar": {
+            "placeholderGroup": "現在のグループで検索",
+            "placeholderAll": "すべてのグループで検索"
+        },
+        "group": {
+            "title": "グループを選択",
+            "menu": {
+                "title": {
+                    "newGroup": "新しいグループ",
+                    "editGroup": "グループを編集",
+                    "deleteGroup": "グループを削除"
+                },
+                "subtitle": {
+                    "groupName": "グループ名",
+                    "enterGroupName": "グループ名を入力してください"
+                },
+                "messages": {
+                    "deleteGroup": "このグループを削除してもよろしいですか？"
+                }
+            }
+        },
+        "word": {
+            "title": {
+                "newWord": "新しい単語",
+                "editWord": "単語を編集",
+                "deleteWord": "単語を削除"
+            },
+            "input": {
+                "word": "単語",
+                "meaning": "意味",
+                "memo": "メモ (オプション)",
+                "group": "グループ",
+                "language": "言語"
+            },
+            "messages": {
+                "deleteWord": "この単語を削除してもよろしいですか？"
+            },
+            "errorMassage": {
+                "word": "単語を入力してください"
+            }
+        }
+    },
+    "setting": {
+        "menu": {
+            "premium": "プレミアム",
+            "language": "言語",
+            "dataManagement": "データ管理",
+            "appearance": "外観",
+            "about": "アプリについて"
+        },
+        "title": {
+            "removeAds": "広告を削除",
+            "premiumActive": "プレミアムが有効",
+            "restorePurchase": "購入履歴を復元",
+            "selectLanguage": "言語を選択",
+            "theme": "テーマ",
+            "selectTheme": "テーマを選択",
+            "importData": "データをインポート",
+            "exportData": "データをエクスポート",
+            "resetData": "データをリセット",
+            "version": "バージョン",
+            "sendFeedback": "フィードバックを送信",
+            "privacyPolicy": "プライバシーポリシー",
+            "termsOfService": "利用規約",
+            "openSourceLicenses": "オープンソースライセンス"
+        },
+        "subtitle": {
+            "removeAds": "広告なしでお楽しみください",
+            "premiumActive": "ご支援ありがとうございます！",
+            "selectLanguage": "アプリの言語を変更",
+            "importData": "ファイルから単語を読み込む",
+            "exportData": "単語をファイルに保存",
+            "resetData": "すべての単語とグループを削除",
+            "sendFeedback": "バグ報告や機能提案",
+            "theme": {
+                "light": "ライト",
+                "dark": "ダーク"
+            }
+        },
+        "massages": {
+            "premiumLoadMessage": "購入履歴を取得中",
+            "resetData": "すべての単語とグループが削除されます。この操作は元に戻せません。本当に続行しますか？",
+            "resetSuccess": "すべてのデータがリセットされました",
+            "resetFailed": "データのリセットに失敗しました"
+        },
+        "errorMessage": {
+            "purchaseError": "購入に失敗しました: {}"
+        }
+    }
+}

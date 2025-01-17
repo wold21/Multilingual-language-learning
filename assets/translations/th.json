@@ -1,0 +1,187 @@
+{
+    "appTitle": "Laboca",
+    "common": {
+        "button": {
+            "save": "บันทึก",
+            "cancel": "ยกเลิก",
+            "delete": "ลบ",
+            "done": "เสร็จสิ้น",
+            "edit": "แก้ไข",
+            "buy": "ซื้อ"
+        },
+        "message": {
+            "loading": "กำลังโหลด..."
+        },
+        "errorMassage": {
+            "ttsError": "ข้อผิดพลาด TTS"
+        },
+        "ad": {
+            "errorMassage": {
+                "loadYet": "โฆษณายังไม่โหลด"
+            }
+        },
+        "toast": {
+            "errorLoadingPreferences": "เกิดข้อผิดพลาดในการโหลดการตั้งค่า",
+            "errorSavingSortPreferences": "เกิดข้อผิดพลาดในการบันทึกการตั้งค่าการเรียงลำดับ",
+            "errorSavingGroupPreferences": "เกิดข้อผิดพลาดในการบันทึกการตั้งค่ากลุ่ม",
+            "errorSavingLanguagePreferences": "เกิดข้อผิดพลาดในการบันทึกการตั้งค่าภาษา",
+            "errorLoadingWords": "เกิดข้อผิดพลาดในการโหลดคำ",
+            "errorOpenStore": "ไม่สามารถเปิด URL ของร้านค้าได้",
+            "word": {
+                "success": {
+                    "saved": "บันทึกแล้ว",
+                    "deleted": "ลบแล้ว",
+                    "updated": "อัพเดตแล้ว"
+                },
+                "error": {}
+            },
+            "group": {
+                "success": {
+                    "created": "สร้างแล้ว",
+                    "deleted": "ลบแล้ว",
+                    "updated": "อัพเดตแล้ว"
+                },
+                "error": {
+                    "duplicated": "ชื่อกลุ่มมีอยู่แล้ว",
+                    "groupSelect": "กรุณาเลือกกลุ่ม"
+                }
+            },
+            "settings": {
+                "importData": {
+                    "dialog": {
+                        "title": "นำเข้าคำศัพท์"
+                    },
+                    "info": {
+                        "importDataEmpty": "ไม่มีข้อมูลที่จะนำเข้า"
+                    },
+                    "success": {
+                        "importData": "นำเข้าคำศัพท์ {} คำ"
+                    },
+                    "error": {
+                        "importData": "การนำเข้าข้อมูลล้มเหลว: {}"
+                    }
+                },
+                "exportData": {
+                    "info": {
+                        "exportDataCancelled": "การส่งออกถูกยกเลิก"
+                    },
+                    "success": {
+                        "exportData": "ส่งออกคำศัพท์ {} คำ"
+                    },
+                    "error": {
+                        "exportData": "การส่งออกข้อมูลล้มเหลว: {}"
+                    }
+                },
+                "feedback": {
+                    "error": {
+                        "lanchEmail": "ไม่สามารถเปิดอีเมลไคลเอนต์ได้"
+                    }
+                }
+            }
+        }
+    },
+    "mainPage": {
+        "languageFilter": {
+            "title": "ตัวกรองภาษา"
+        },
+        "sortBy": {
+            "title": "จัดเรียงโดย",
+            "attributes": {
+                "newest": "ล่าสุด",
+                "oldest": "เก่าสุด",
+                "alphabeticalAZ": "ตัวอักษร A-Z",
+                "alphabeticalZA": "ตัวอักษร Z-A",
+                "short": "สั้น",
+                "long": "ยาว"
+            }
+        },
+        "searchBar": {
+            "placeholderGroup": "ค้นหาภายในกลุ่มนี้",
+            "placeholderAll": "ค้นหาภายในทุกกลุ่ม"
+        },
+        "group": {
+            "title": "เลือกกลุ่ม",
+            "menu": {
+                "title": {
+                    "newGroup": "กลุ่มใหม่",
+                    "editGroup": "แก้ไขกลุ่ม",
+                    "deleteGroup": "ลบกลุ่ม"
+                },
+                "subtitle": {
+                    "groupName": "ชื่อกลุ่ม",
+                    "enterGroupName": "กรอกชื่อกลุ่ม"
+                },
+                "messages": {
+                    "deleteGroup": "คุณแน่ใจหรือว่าต้องการลบกลุ่มนี้?"
+                }
+            }
+        },
+        "word": {
+            "title": {
+                "newWord": "คำใหม่",
+                "editWord": "แก้ไขคำ",
+                "deleteWord": "ลบคำ"
+            },
+            "input": {
+                "word": "คำ",
+                "meaning": "ความหมาย",
+                "memo": "บันทึก (ไม่บังคับ)",
+                "group": "กลุ่ม",
+                "language": "ภาษา"
+            },
+            "messages": {
+                "deleteWord": "คุณแน่ใจหรือว่าต้องการลบคำนี้?"
+            },
+            "errorMassage": {
+                "word": "กรุณากรอกคำ"
+            }
+        }
+    },
+    "setting": {
+        "menu": {
+            "premium": "พรีเมียม",
+            "language": "ภาษา",
+            "dataManagement": "การจัดการข้อมูล",
+            "appearance": "การแสดงผล",
+            "about": "เกี่ยวกับ"
+        },
+        "title": {
+            "removeAds": "ลบโฆษณา",
+            "premiumActive": "พรีเมียมเปิดใช้งาน",
+            "restorePurchase": "คืนค่าการซื้อ",
+            "selectLanguage": "เลือกภาษา",
+            "theme": "ธีม",
+            "selectTheme": "เลือกธีม",
+            "importData": "นำเข้าข้อมูล",
+            "exportData": "ส่งออกข้อมูล",
+            "resetData": "รีเซ็ตข้อมูล",
+            "version": "เวอร์ชัน",
+            "sendFeedback": "ส่งความคิดเห็น",
+            "privacyPolicy": "นโยบายความเป็นส่วนตัว",
+            "termsOfService": "ข้อตกลงการให้บริการ",
+            "openSourceLicenses": "ใบอนุญาตซอฟต์แวร์โอเพนซอร์ส"
+        },
+        "subtitle": {
+            "removeAds": "เพลิดเพลินกับประสบการณ์ที่ไม่มีโฆษณา",
+            "premiumActive": "ขอบคุณที่สนับสนุนเรา!",
+            "selectLanguage": "เปลี่ยนภาษาแอป",
+            "importData": "โหลดคำจากไฟล์",
+            "exportData": "บันทึกคำของคุณเป็นไฟล์",
+            "resetData": "ลบคำและกลุ่มทั้งหมด",
+            "sendFeedback": "รายงานข้อผิดพลาดหรือแนะนำฟีเจอร์",
+            "theme": {
+                "light": "โหมดสว่าง",
+                "dark": "โหมดมืด"
+            }
+        },
+        "massages": {
+            "premiumLoadMessage": "กำลังดึงประวัติการชำระเงิน",
+            "resetData": "การดำเนินการนี้จะลบคำและกลุ่มทั้งหมด ข้อความนี้ไม่สามารถย้อนกลับได้ คุณแน่ใจหรือว่าต้องการดำเนินการต่อ?",
+            "resetSuccess": "ข้อมูลทั้งหมดถูกรีเซ็ต",
+            "resetFailed": "ไม่สามารถรีเซ็ตข้อมูลได้"
+        },
+        "errorMessage": {
+            "purchaseError": "การซื้อไม่สำเร็จ: {}"
+        }
+    }
+}

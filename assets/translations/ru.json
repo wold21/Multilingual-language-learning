@@ -1,0 +1,187 @@
+{
+    "appTitle": "Laboca",
+    "common": {
+        "button": {
+            "save": "Сохранить",
+            "cancel": "Отмена",
+            "delete": "Удалить",
+            "done": "Готово",
+            "edit": "Редактировать",
+            "buy": "Купить"
+        },
+        "message": {
+            "loading": "Загрузка..."
+        },
+        "errorMassage": {
+            "ttsError": "Ошибка TTS"
+        },
+        "ad": {
+            "errorMassage": {
+                "loadYet": "Реклама еще не загружена"
+            }
+        },
+        "toast": {
+            "errorLoadingPreferences": "Ошибка загрузки настроек",
+            "errorSavingSortPreferences": "Ошибка сохранения настроек сортировки",
+            "errorSavingGroupPreferences": "Ошибка сохранения настроек группы",
+            "errorSavingLanguagePreferences": "Ошибка сохранения настроек языка",
+            "errorLoadingWords": "Ошибка загрузки слов",
+            "errorOpenStore": "Невозможно открыть URL магазина",
+            "word": {
+                "success": {
+                    "saved": "Сохранено",
+                    "deleted": "Удалено",
+                    "updated": "Обновлено"
+                },
+                "error": {}
+            },
+            "group": {
+                "success": {
+                    "created": "Создано",
+                    "deleted": "Удалено",
+                    "updated": "Обновлено"
+                },
+                "error": {
+                    "duplicated": "Группа с таким именем уже существует",
+                    "groupSelect": "Пожалуйста, выберите группу"
+                }
+            },
+            "settings": {
+                "importData": {
+                    "dialog": {
+                        "title": "Импорт словаря"
+                    },
+                    "info": {
+                        "importDataEmpty": "Нет данных для импорта"
+                    },
+                    "success": {
+                        "importData": "{} слов импортировано"
+                    },
+                    "error": {
+                        "importData": "Ошибка при импорте данных: {}"
+                    }
+                },
+                "exportData": {
+                    "info": {
+                        "exportDataCancelled": "Экспорт отменен"
+                    },
+                    "success": {
+                        "exportData": "{} слов экспортировано"
+                    },
+                    "error": {
+                        "exportData": "Ошибка при экспорте данных: {}"
+                    }
+                },
+                "feedback": {
+                    "error": {
+                        "lanchEmail": "Не удалось открыть почтовый клиент"
+                    }
+                }
+            }
+        }
+    },
+    "mainPage": {
+        "languageFilter": {
+            "title": "Фильтр языка"
+        },
+        "sortBy": {
+            "title": "Сортировать по",
+            "attributes": {
+                "newest": "Новейшие",
+                "oldest": "Старейшие",
+                "alphabeticalAZ": "По алфавиту A-Z",
+                "alphabeticalZA": "По алфавиту Z-A",
+                "short": "Короткие",
+                "long": "Длинные"
+            }
+        },
+        "searchBar": {
+            "placeholderGroup": "Поиск в текущей группе",
+            "placeholderAll": "Поиск по всем группам"
+        },
+        "group": {
+            "title": "Выберите группу",
+            "menu": {
+                "title": {
+                    "newGroup": "Новая группа",
+                    "editGroup": "Редактировать группу",
+                    "deleteGroup": "Удалить группу"
+                },
+                "subtitle": {
+                    "groupName": "Название группы",
+                    "enterGroupName": "Введите название группы"
+                },
+                "messages": {
+                    "deleteGroup": "Вы уверены, что хотите удалить эту группу?"
+                }
+            }
+        },
+        "word": {
+            "title": {
+                "newWord": "Новое слово",
+                "editWord": "Редактировать слово",
+                "deleteWord": "Удалить слово"
+            },
+            "input": {
+                "word": "Слово",
+                "meaning": "Значение",
+                "memo": "Заметка (необязательно)",
+                "group": "Группа",
+                "language": "Язык"
+            },
+            "messages": {
+                "deleteWord": "Вы уверены, что хотите удалить это слово?"
+            },
+            "errorMassage": {
+                "word": "Пожалуйста, введите слово"
+            }
+        }
+    },
+    "setting": {
+        "menu": {
+            "premium": "Премиум",
+            "language": "Язык",
+            "dataManagement": "Управление данными",
+            "appearance": "Внешний вид",
+            "about": "О приложении"
+        },
+        "title": {
+            "removeAds": "Удалить рекламу",
+            "premiumActive": "Премиум активен",
+            "restorePurchase": "Восстановить покупку",
+            "selectLanguage": "Выбрать язык",
+            "theme": "Тема",
+            "selectTheme": "Выбрать тему",
+            "importData": "Импорт данных",
+            "exportData": "Экспорт данных",
+            "resetData": "Сбросить данные",
+            "version": "Версия",
+            "sendFeedback": "Отправить отзыв",
+            "privacyPolicy": "Политика конфиденциальности",
+            "termsOfService": "Условия обслуживания",
+            "openSourceLicenses": "Лицензии с открытым исходным кодом"
+        },
+        "subtitle": {
+            "removeAds": "Наслаждайтесь приложением без рекламы",
+            "premiumActive": "Спасибо за поддержку!",
+            "selectLanguage": "Измените язык приложения",
+            "importData": "Загрузить слова из файла",
+            "exportData": "Сохранить ваши слова в файл",
+            "resetData": "Удалить все слова и группы",
+            "sendFeedback": "Сообщить об ошибках или предложить функции",
+            "theme": {
+                "light": "Светлая",
+                "dark": "Тёмная"
+            }
+        },
+        "massages": {
+            "premiumLoadMessage": "Получение истории покупок",
+            "resetData": "Это удалит все слова и группы. Это действие нельзя отменить. Вы уверены, что хотите продолжить?",
+            "resetSuccess": "Все данные были сброшены",
+            "resetFailed": "Не удалось сбросить данные"
+        },
+        "errorMessage": {
+            "purchaseError": "Ошибка покупки: {}"
+        }
+    }
+}

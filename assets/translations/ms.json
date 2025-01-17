@@ -1,0 +1,187 @@
+{
+    "appTitle": "Laboca",
+    "common": {
+        "button": {
+            "save": "Simpan",
+            "cancel": "Batal",
+            "delete": "Hapus",
+            "done": "Selesai",
+            "edit": "Sunting",
+            "buy": "Beli"
+        },
+        "message": {
+            "loading": "Memuat..."
+        },
+        "errorMassage": {
+            "ttsError": "Ralat TTS"
+        },
+        "ad": {
+            "errorMassage": {
+                "loadYet": "Iklan belum dimuat"
+            }
+        },
+        "toast": {
+            "errorLoadingPreferences": "Ralat memuat tetapan",
+            "errorSavingSortPreferences": "Ralat menyimpan tetapan susunan",
+            "errorSavingGroupPreferences": "Ralat menyimpan tetapan kumpulan",
+            "errorSavingLanguagePreferences": "Ralat menyimpan tetapan bahasa",
+            "errorLoadingWords": "Ralat memuatkan perkataan",
+            "errorOpenStore": "URL kedai tidak boleh dibuka",
+            "word": {
+                "success": {
+                    "saved": "Disimpan",
+                    "deleted": "Dihapus",
+                    "updated": "Dikemas kini"
+                },
+                "error": {}
+            },
+            "group": {
+                "success": {
+                    "created": "Dicipta",
+                    "deleted": "Dihapus",
+                    "updated": "Dikemas kini"
+                },
+                "error": {
+                    "duplicated": "Nama kumpulan sudah wujud",
+                    "groupSelect": "Sila pilih kumpulan"
+                }
+            },
+            "settings": {
+                "importData": {
+                    "dialog": {
+                        "title": "Import kosa kata"
+                    },
+                    "info": {
+                        "importDataEmpty": "Tiada data untuk diimport"
+                    },
+                    "success": {
+                        "importData": "{} perkataan diimport"
+                    },
+                    "error": {
+                        "importData": "Gagal mengimport data: {}"
+                    }
+                },
+                "exportData": {
+                    "info": {
+                        "exportDataCancelled": "Eksport dibatalkan"
+                    },
+                    "success": {
+                        "exportData": "{} perkataan dieksport"
+                    },
+                    "error": {
+                        "exportData": "Gagal mengeksport data: {}"
+                    }
+                },
+                "feedback": {
+                    "error": {
+                        "lanchEmail": "Tidak dapat membuka klien emel"
+                    }
+                }
+            }
+        }
+    },
+    "mainPage": {
+        "languageFilter": {
+            "title": "Penapis Bahasa"
+        },
+        "sortBy": {
+            "title": "Susun mengikut",
+            "attributes": {
+                "newest": "Terkini",
+                "oldest": "Terlama",
+                "alphabeticalAZ": "Abjad A-Z",
+                "alphabeticalZA": "Abjad Z-A",
+                "short": "Pendek",
+                "long": "Panjang"
+            }
+        },
+        "searchBar": {
+            "placeholderGroup": "Cari dalam kumpulan semasa",
+            "placeholderAll": "Cari dalam semua kumpulan"
+        },
+        "group": {
+            "title": "Pilih Kumpulan",
+            "menu": {
+                "title": {
+                    "newGroup": "Kumpulan Baru",
+                    "editGroup": "Sunting Kumpulan",
+                    "deleteGroup": "Hapus Kumpulan"
+                },
+                "subtitle": {
+                    "groupName": "Nama Kumpulan",
+                    "enterGroupName": "Masukkan nama kumpulan"
+                },
+                "messages": {
+                    "deleteGroup": "Adakah anda pasti ingin memadam kumpulan ini?"
+                }
+            }
+        },
+        "word": {
+            "title": {
+                "newWord": "Perkataan Baru",
+                "editWord": "Sunting Perkataan",
+                "deleteWord": "Hapus Perkataan"
+            },
+            "input": {
+                "word": "Perkataan",
+                "meaning": "Maksud",
+                "memo": "Memo (pilihan)",
+                "group": "Kumpulan",
+                "language": "Bahasa"
+            },
+            "messages": {
+                "deleteWord": "Adakah anda pasti ingin memadam perkataan ini?"
+            },
+            "errorMassage": {
+                "word": "Sila masukkan perkataan"
+            }
+        }
+    },
+    "setting": {
+        "menu": {
+            "premium": "Premium",
+            "language": "Bahasa",
+            "dataManagement": "Pengurusan Data",
+            "appearance": "Penampilan",
+            "about": "Tentang"
+        },
+        "title": {
+            "removeAds": "Alihkan Iklan",
+            "premiumActive": "Premium Aktif",
+            "restorePurchase": "Pulihkan Pembelian",
+            "selectLanguage": "Pilih Bahasa",
+            "theme": "Tema",
+            "selectTheme": "Pilih Tema",
+            "importData": "Import Data",
+            "exportData": "Eksport Data",
+            "resetData": "Tetapkan Semula Data",
+            "version": "Versi",
+            "sendFeedback": "Hantar Maklum Balas",
+            "privacyPolicy": "Dasar Privasi",
+            "termsOfService": "Terma Perkhidmatan",
+            "openSourceLicenses": "Lesen Sumber Terbuka"
+        },
+        "subtitle": {
+            "removeAds": "Nikmati pengalaman tanpa iklan",
+            "premiumActive": "Terima kasih kerana menyokong kami!",
+            "selectLanguage": "Tukar bahasa aplikasi",
+            "importData": "Muatkan perkataan dari fail",
+            "exportData": "Simpan perkataan anda sebagai fail",
+            "resetData": "Padam semua perkataan dan kumpulan",
+            "sendFeedback": "Laporkan pepijat atau cadangkan ciri",
+            "theme": {
+                "light": "Cahaya",
+                "dark": "Gelap"
+            }
+        },
+        "massages": {
+            "premiumLoadMessage": "Mengambil sejarah pembayaran",
+            "resetData": "Ini akan memadamkan semua perkataan dan kumpulan. Tindakan ini tidak dapat dipulihkan. Adakah anda pasti ingin teruskan?",
+            "resetSuccess": "Semua data telah ditetapkan semula",
+            "resetFailed": "Gagal menetapkan semula data"
+        },
+        "errorMessage": {
+            "purchaseError": "Pembelian gagal: {}"
+        }
+    }
+}

@@ -1,0 +1,185 @@
+{
+    "appTitle": "Laboca",
+    "common": {
+        "button": {
+            "save": "သိမ်းဆည်းရန်",
+            "cancel": "မပေါ်ပါ",
+            "delete": "ဖျက်ပါ",
+            "done": "ပြီးပြီ",
+            "edit": "ပြင်ရန်",
+            "buy": "ဝယ်ရန်"
+        },
+        "message": {
+            "loading": "ဖြည့်နေသည်..."
+        },
+        "errorMassage": {
+            "ttsError": "TTS အမှား"
+        },
+        "ad": {
+            "errorMassage": {
+                "loadYet": "ကြော်ငြာများ မရှိပါ"
+            }
+        },
+        "toast": {
+            "errorLoadingPreferences": "ကဲ့ရာ အချက်အလက်များ မဖတ်နိုင်ပါ",
+            "errorSavingSortPreferences": "စီစဉ်ထားသည့် အချက်အလက်များ မသိမ်းဆည်းနိုင်ပါ",
+            "errorSavingGroupPreferences": "အုပ်စုများ ထည့်သွင်းမထားနိုင်ပါ",
+            "errorSavingLanguagePreferences": "ဘာသာစကားများ မသိမ်းဆည်းနိုင်ပါ",
+            "errorLoadingWords": "စာလုံးများ မဖတ်နိုင်ပါ",
+            "errorOpenStore": "စတိုး URL ကို မဖွင့်နိုင်ပါ",
+            "word": {
+                "success": {
+                    "saved": "သိမ်းဆည်းပါ",
+                    "deleted": "ဖျက်ပြီးပါ",
+                    "updated": "အသစ်ပြင်ဆင်ပြီးပါ"
+                },
+                "error": {}
+            },
+            "group": {
+                "success": {
+                    "created": "ဖန်တီးပြီးပါ",
+                    "deleted": "ဖျက်ပြီးပါ",
+                    "updated": "အသစ်ပြင်ဆင်ပြီးပါ"
+                },
+                "error": {
+                    "duplicated": "အုပ်စုအမည် မတူညီပါ",
+                    "groupSelect": "အုပ်စုကို ရွေးပါ"
+                }
+            },
+            "settings": {
+                "importData": {
+                    "dialog": {
+                        "title": "ဝါလ်ဗလာ အချက်အလက်များ တင်သွင်းပါ"
+                    },
+                    "info": {
+                        "importDataEmpty": "တင်သွင်းရန် အချက်အလက် မရှိပါ"
+                    },
+                    "success": {
+                        "importData": "{} စကားလုံးများ တင်သွင်းပြီးပါ"
+                    },
+                    "error": {
+                        "importData": "အချက်အလက်များ တင်သွင်းနိုင်ခြင်း မရှိပါ: {}"
+                    }
+                },
+                "exportData": {
+                    "info": {
+                        "exportDataCancelled": "တင်သွင်းမှု ရပ်စဲပါ"
+                    },
+                    "success": {
+                        "exportData": "{} စကားလုံးများ တင်သွင်းပြီးပါ"
+                    },
+                    "error": {
+                        "exportData": "အချက်အလက်များ တင်သွင်းမထားနိုင်ပါ: {}"
+                    }
+                },
+                "feedback": {
+                    "error": {
+                        "lanchEmail": "အီးမေးလ် ပေါ်တွင် အမှား ဖြစ်ပေါ်ပါ"
+                    }
+                }
+            }
+        }
+    },
+    "mainPage": {
+        "languageFilter": {
+            "title": "ဘာသာစကား စစ်ဆေးမှု"
+        },
+        "sortBy": {
+            "title": "ဒီဖြင့် စီစဉ်ပါ",
+            "attributes": {
+                "newest": "အသစ်ဆုံး",
+                "oldest": "ဟောင်းဆုံး",
+                "alphabeticalAZ": "အက္ခရာ A-Z",
+                "alphabeticalZA": "အက္ခရာ Z-A",
+                "short": "တိုရှည်",
+                "long": "ရှည်"
+            }
+        },
+        "searchBar": {
+            "placeholderGroup": "လက်ရှိအုပ်စုတွင် ရှာပါ",
+            "placeholderAll": "အားလုံးအုပ်စုတွင် ရှာပါ"
+        },
+        "group": {
+            "title": "အုပ်စုကို ရွေးပါ",
+            "menu": {
+                "title": {
+                    "newGroup": "အုပ်စုအသစ်",
+                    "editGroup": "အုပ်စု ပြင်ဆင်ခြင်း",
+                    "deleteGroup": "အုပ်စု ဖျက်ရန်"
+                },
+                "subtitle": {
+                    "groupName": "အုပ်စုအမည်",
+                    "enterGroupName": "အုပ်စုအမည် ရိုက်ထည့်ပါ"
+                },
+                "messages": {
+                    "deleteGroup": "သင်မှ အုပ်စုကို ဖျက်လိုပါသလား?"
+                }
+            }
+        },
+        "word": {
+            "title": {
+                "newWord": "အသစ်သော စကားလုံး",
+                "editWord": "စကားလုံး ပြင်ဆင်ခြင်း",
+                "deleteWord": "စကားလုံး ဖျက်ရန်"
+            },
+            "input": {
+                "word": "စကားလုံး",
+                "meaning": "အဓိပ္ပာယ်",
+                "memo": "မှတ်ချက် (ရွေးချယ်နိုင်)",
+                "group": "အုပ်စု",
+                "language": "ဘာသာစကား"
+            },
+            "messages": {
+                "deleteWord": "သင်မှ စကားလုံးကို ဖျက်လိုပါသလား?"
+            },
+            "errorMassage": {
+                "word": "စကားလုံး တစ်ခု ထည့်ပေးပါ"
+            }
+        }
+    },
+    "setting": {
+        "menu": {
+            "premium": "ပရီးမီယံ",
+            "language": "ဘာသာစကား",
+            "dataManagement": "ဒေတာစီမံခန့်ခွဲမှု",
+            "appearance": "ပုံသဏ္ဍာန်",
+            "about": "အက်ပလီကေးရှင်းအကြောင်း"
+        },
+        "title": {
+            "removeAds": "ကြော်ငြာများ ဖယ်ရှားပါ",
+            "premiumActive": "ပရီးမီယံ အသုံးပြုမည်",
+            "restorePurchase": "ဝယ်ယူမှု ပြန်လည် ရယူရန်",
+            "selectLanguage": "ဘာသာစကား ရွေးပါ",
+            "theme": "အမိုးအနှံ",
+            "selectTheme": "အမိုးအနှံ ရွေးပါ",
+            "importData": "ဒေတာ တင်သွင်းပါ",
+            "exportData": "ဒေတာ တင်သွင်းရန်",
+            "resetData": "ဒေတာ ပြန်လည် အစ အမှတ်တရ ပြန်သွားပါ",
+            "version": "ဗားရှင်း",
+            "sendFeedback": "အကြံပြုချက် ပို့ပါ",
+            "privacyPolicy": "ပုဂ္ဂိုလ်ရေး မူဝါဒ",
+            "termsOfService": "ဝန်ဆောင်မှု အခြေအနေများ",
+            "openSourceLicenses": "အပွုအစ အတိတ်စာတမ်းများ"
+        },
+        "subtitle": {
+            "removeAds": "ကြော်ငြာမပါသော အတွေ့အကြုံရရှိပါ",
+            "premiumActive": "ကျေးဇူးပြုပြီး ကျွန်တော်တို့ကို ပံ့ပိုးပါ!",
+            "selectLanguage": "အက်ပလီကေးရှင်း၏ ဘာသာစကား ကို ပြောင်းပါ",
+            "importData": "ဖိုင်မှ စကားလုံးများကို ထည့်သွင်းပါ",
+            "exportData": "သင်၏ စကားလုံးများကို ဖိုင်တွင် သိမ်းပါ",
+            "resetData": "အားလုံး ရှေ့ပြန်ပေးသော အချက်အလက်များကို ဖျက်ပါ",
+            "sendFeedback": "အမှားတွေ ထည့်သွင်းမှု၊ သို့မဟုတ် အကြံပြုချက်",
+            "theme": {
+                "light": "အလင်း",
+                "dark": "အမှောင်"
+            }
+        },
+        "massages": {
+            "premiumLoadMessage": "လျှောက်လွှာ အသုံးပြုမှု အဖြေ စောင့်နေပါ",
+            "resetData": "ဒါဟာ စားသုံးသူ၏ စကားလုံးများ အနည်းဆုံး ကို ဖျက်ပါ၊ နောက်တစ်ကြိမ် ပြန်လည်မလျှောက်ခဲ့မည်။ မကြာမီ ပြန်ဆင်လိုသူ?"
+        },
+        "errorMessage": {
+            "purchaseError": "ဝယ်ယူမှု အမှားဖြစ်ပါ: {}"
+        }
+    }
+}

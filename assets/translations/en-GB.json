@@ -17,7 +17,7 @@
         },
         "ad": {
             "errorMassage": {
-                "loadYet": "Ad is not loaded yet"
+                "loadYet": "Ad has not been loaded yet"
             }
         },
         "toast": {
@@ -63,7 +63,7 @@
                 },
                 "exportData": {
                     "info": {
-                        "exportDataCancelled": "Export canceled"
+                        "exportDataCancelled": "Export cancelled"
                     },
                     "success": {
                         "exportData": "{} words exported"
@@ -125,7 +125,7 @@
             "input": {
                 "word": "Word",
                 "meaning": "Meaning",
-                "memo": "Memo(optional)",
+                "memo": "Memo (optional)",
                 "group": "Group",
                 "language": "Language"
             },
@@ -135,53 +135,53 @@
             "errorMassage": {
                 "word": "Please enter a word"
             }
+        }
+    },
+    "setting": {
+        "menu": {
+            "premium": "Premium",
+            "language": "Language",
+            "dataManagement": "Data Management",
+            "appearance": "Appearance",
+            "about": "About"
         },
-        "setting": {
-            "menu": {
-                "premium": "Premium",
-                "language": "Language",
-                "dataManagement": "Data Management",
-                "appearance": "Appearance",
-                "about": "About"
-            },
-            "title": {
-                "removeAds": "Remove Ads",
-                "premiumActive": "Premium Active",
-                "restorePurchase": "Restore Purchase",
-                "selectLanguage": "Select Language",
-                "theme": "Theme",
-                "selectTheme": "Select Theme",
-                "importData": "Import Data",
-                "exportData": "Export Data",
-                "resetData": "Reset Data",
-                "version": "Version",
-                "sendFeedback": "Send Feedback",
-                "privacyPolicy": "Privacy Policy",
-                "termsOfService": "Terms of Service",
-                "openSourceLicenses": "Open Source Licenses"
-            },
-            "subtitle": {
-                "removeAds": "Enjoy an ad-free experience",
-                "premiumActive": "Thank you for supporting us!",
-                "selectLanguage": "Change the language of the app",
-                "importData": "Load words from a file",
-                "exportData": "Save your words as a file",
-                "resetData": "Delete all words and groups",
-                "sendFeedback": "Report bugs or suggest features",
-                "theme": {
-                    "light": "Light",
-                    "dark": "Dark"
-                }
-            },
-            "massages": {
-                "premiumLoadMessage": "Retrieving payment history",
-                "resetData": "This will delete all words and groups. This action cannot be undone. Are you sure you want to continue?",
-                "resetSuccess": "All data has been reset",
-                "resetFailed": "Failed to reset data"
-            },
-            "errorMessage": {
-                "purchaseError": "Purchase failed: {}"
+        "title": {
+            "removeAds": "Remove Adverts",
+            "premiumActive": "Premium Active",
+            "restorePurchase": "Restore Purchase",
+            "selectLanguage": "Select Language",
+            "theme": "Theme",
+            "selectTheme": "Select Theme",
+            "importData": "Import Data",
+            "exportData": "Export Data",
+            "resetData": "Reset Data",
+            "version": "Version",
+            "sendFeedback": "Send Feedback",
+            "privacyPolicy": "Privacy Policy",
+            "termsOfService": "Terms of Service",
+            "openSourceLicenses": "Open Source Licences"
+        },
+        "subtitle": {
+            "removeAds": "Enjoy an ad-free experience",
+            "premiumActive": "Thank you for supporting us!",
+            "selectLanguage": "Change the language of the app",
+            "importData": "Load words from a file",
+            "exportData": "Save your words as a file",
+            "resetData": "Delete all words and groups",
+            "sendFeedback": "Report bugs or suggest features",
+            "theme": {
+                "light": "Light",
+                "dark": "Dark"
             }
+        },
+        "massages": {
+            "premiumLoadMessage": "Retrieving payment history",
+            "resetData": "This will delete all words and groups. This action cannot be undone. Are you sure you want to continue?",
+            "resetSuccess": "All data has been reset",
+            "resetFailed": "Failed to reset data"
+        },
+        "errorMessage": {
+            "purchaseError": "Purchase failed: {}"
         }
     }
 }

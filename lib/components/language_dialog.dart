@@ -15,7 +15,7 @@ class LanguageDialog extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'mainPage.setting.title.selectLanguage'.tr(),
+              'setting.title.selectLanguage'.tr(),
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
@@ -47,12 +47,17 @@ class LanguageDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       onTap: () {
                         final parts = locale.code.split('-');
-                        if (parts.length == 2) {
-                          context.setLocale(Locale(parts[0], parts[1]));
-                        } else {
-                          context.setLocale(Locale(locale.code));
+                        try {
+                          if (parts.length == 2) {
+                            context.setLocale(Locale(parts[0], parts[1]));
+                          } else {
+                            context.setLocale(Locale(locale.code));
+                          }
+                        } catch (e) {
+                          context.setLocale(const Locale('en', 'US'));
+                        } finally {
+                          Navigator.pop(context);
                         }
-                        Navigator.pop(context);
                       },
                       child: Container(
                         decoration: BoxDecoration(
