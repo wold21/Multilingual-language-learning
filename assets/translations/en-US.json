@@ -10,9 +10,7 @@
             "buy": "Buy"
         },
         "message": {
-            "loading": "Loading...",
-            "deleted": "Deleted",
-            "groupCreated": "Group created"
+            "loading": "Loading..."
         },
         "errorMassage": {
             "ttsError": "TTS Error"
@@ -20,6 +18,65 @@
         "ad": {
             "errorMassage": {
                 "loadYet": "Ad is not loaded yet"
+            }
+        },
+        "toast": {
+            "errorLoadingPreferences": "Error loading preferences",
+            "errorSavingSortPreferences": "Error saving sort preference",
+            "errorSavingGroupPreferences": "Error saving group preferences",
+            "errorSavingLanguagePreferences": "Error saving language preferences",
+            "errorLoadingWords": "Error loading words",
+            "errorOpenStore": "The store URL cannot be opened",
+            "word": {
+                "success": {
+                    "saved": "Saved",
+                    "deleted": "Deleted",
+                    "updated": "Updated"
+                },
+                "error": {}
+            },
+            "group": {
+                "success": {
+                    "created": "Created",
+                    "deleted": "Deleted",
+                    "updated": "Updated"
+                },
+                "error": {
+                    "duplicated": "Group name already exists",
+                    "groupSelect": "Please select a group"
+                }
+            },
+            "settings": {
+                "importData": {
+                    "dialog": {
+                        "title": "Import vocabulary"
+                    },
+                    "info": {
+                        "importDataEmpty": "No data to import"
+                    },
+                    "success": {
+                        "importData": "{} words imported"
+                    },
+                    "error": {
+                        "importData": "Failed to import data: {}"
+                    }
+                },
+                "exportData": {
+                    "info": {
+                        "exportDataCancelled": "Export canceled"
+                    },
+                    "success": {
+                        "exportData": "{} words exported"
+                    },
+                    "error": {
+                        "exportData": "Failed to export data: {}"
+                    }
+                },
+                "feedback": {
+                    "error": {
+                        "lanchEmail": "Could not open email client"
+                    }
+                }
             }
         }
     },
@@ -56,10 +113,6 @@
                 },
                 "messages": {
                     "deleteGroup": "Are you sure you want to delete this group?"
-                },
-                "errorMassage": {
-                    "groupSelect": "Please select a group",
-                    "groupDuplicate": "Group name already exists"
                 }
             },
             "word": {
@@ -73,11 +126,6 @@
                     "memo": "Memo(optional)",
                     "group": "Group",
                     "language": "Language"
-                },
-                "massages": {
-                    "wordSave": "Saved",
-                    "wordDelete": "Deleted",
-                    "wordUpdated": "Updated"
                 },
                 "errorMassage": {
                     "word": "Please enter a word"

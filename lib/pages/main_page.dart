@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:eng_word_storage/components/confirm_dialog.dart';
 import 'package:eng_word_storage/components/guide/intro_dialog.dart';
 import 'package:eng_word_storage/components/guide/outro_dialog.dart';
@@ -142,7 +143,7 @@ class _MainPageState extends State<MainPage> {
       setState(() {});
     } catch (e) {
       ToastUtils.show(
-        message: 'Error loading preferences',
+        message: 'common.toast.errorLoadingPreferences'.tr(),
         type: ToastType.error,
       );
     }
@@ -155,7 +156,7 @@ class _MainPageState extends State<MainPage> {
       await prefs.setInt(SORT_KEY, sort.index);
     } catch (e) {
       ToastUtils.show(
-        message: 'Error saving sort preference',
+        message: 'common.toast.errorSavingSortPreferences'.tr(),
         type: ToastType.error,
       );
     }
@@ -171,7 +172,7 @@ class _MainPageState extends State<MainPage> {
       );
     } catch (e) {
       ToastUtils.show(
-        message: 'Error saving group IDs',
+        message: 'common.toast.errorSavingGroupPreferences'.tr(),
         type: ToastType.error,
       );
     }
@@ -183,7 +184,7 @@ class _MainPageState extends State<MainPage> {
       await prefs.setStringList(LANGUAGE_CODE_KEY, languageCodes);
     } catch (e) {
       ToastUtils.show(
-        message: 'Error saving language preferences',
+        message: 'common.toast.errorSavingLanguagePreferences'.tr(),
         type: ToastType.error,
       );
     }
@@ -235,7 +236,7 @@ class _MainPageState extends State<MainPage> {
       }
     } catch (e) {
       ToastUtils.show(
-        message: 'Error loading words',
+        message: 'common.toast.errorLoadingWords'.tr(),
         type: ToastType.error,
       );
     } finally {
@@ -604,7 +605,7 @@ class _MainPageState extends State<MainPage> {
     if (confirmed == true) {
       await _databaseService.deleteWord(word.id!);
       ToastUtils.show(
-        message: 'Word deleted',
+        message: 'common.toast.word.success.deleted'.tr(),
         type: ToastType.success,
       );
       setState(() {

@@ -31,7 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final confirmed = await ConfirmDialog.show(
       context: context,
       title: 'setting.title.resetData'.tr(),
-      content: 'setting.message.resetData'.tr(),
+      content: 'setting.massages.resetData'.tr(),
     );
 
     if (confirmed == true) {
@@ -40,12 +40,12 @@ class _SettingsPageState extends State<SettingsPage> {
         await DatabaseService.instance.deleteAllGroups();
 
         ToastUtils.show(
-          message: 'setting.message.resetSuccess'.tr(),
+          message: 'setting.massages.resetSuccess'.tr(),
           type: ToastType.success,
         );
       } catch (e) {
         ToastUtils.show(
-          message: 'setting.message.resetFailed'.tr(),
+          message: 'setting.massages.resetFailed'.tr(),
           type: ToastType.error,
         );
       }

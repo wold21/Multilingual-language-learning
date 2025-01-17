@@ -14,11 +14,11 @@
             "premiumLoadMessage": "결제 내역을 불러오는 중"
         },
         "errorMassage": {
-            "ttsError": "TTS Error"
+            "ttsError": "TTS 오류"
         },
         "ad": {
             "errorMassage": {
-                "loadYet": "Ad is not loaded yet"
+                "loadYet": "광고가 아직 로드되지 않았습니다"
             }
         }
     },
@@ -55,7 +55,8 @@
                 }
             },
             "messages": {
-                "deleteGroup": "이 그룹을 삭제하시겠습니까?"
+                "deleteGroup": "이 그룹을 삭제하시겠습니까?",
+                "createdGroup": "그룹이 생성되었습니다"
             },
             "errorMassage": {
                 "groupSelect": "그룹을 선택하세요",

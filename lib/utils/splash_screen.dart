@@ -6,6 +6,7 @@ import 'package:eng_word_storage/pages/root_page.dart';
 import 'package:eng_word_storage/services/version_check_service.dart';
 import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -66,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen>
             await _versionCheckService.launchStore(context, needUpdate);
         if (!isStoreOpen) {
           ToastUtils.show(
-            message: 'The store URL cannot be opened.',
+            message: 'common.toast.errorOpenStore'.tr(),
             type: ToastType.error,
           );
           await _moveToMain();

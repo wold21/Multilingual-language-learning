@@ -103,8 +103,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
                       Navigator.pop(context, newGroup);
                     } else {
                       ToastUtils.show(
-                        message:
-                            'mainPage.group.errorMassage.groupDuplicate'.tr(),
+                        message: 'common.toast.group.success.duplicated'.tr(),
                         type: ToastType.error,
                       );
                     }

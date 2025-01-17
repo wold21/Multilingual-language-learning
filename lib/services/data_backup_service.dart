@@ -7,6 +7,7 @@ import 'package:eng_word_storage/utils/toast_util.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DataBackupService {
   static final DataBackupService instance = DataBackupService._internal();
@@ -59,18 +60,21 @@ class DataBackupService {
 
       if (result.status == ShareResultStatus.success) {
         ToastUtils.show(
-          message: '${words.length} words exported',
+          message: 'common.toast.settings.exportData.success.exportData'
+              .tr(args: [words.length.toString()]),
           type: ToastType.success,
         );
       } else if (result.status == ShareResultStatus.dismissed) {
         ToastUtils.show(
-          message: 'Export cancelled',
+          message:
+              'common.toast.settings.exportData.info.exportDataCancelled'.tr(),
           type: ToastType.info,
         );
       }
     } catch (e) {
       ToastUtils.show(
-        message: 'Failed to export data: ${e.toString()}',
+        message: 'common.toast.settings.exportData.error.exportData'
+            .tr(args: [e.toString()]),
         type: ToastType.error,
       );
     }
@@ -81,7 +85,7 @@ class DataBackupService {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['csv'],
-        dialogTitle: 'Import Vocabulary',
+        dialogTitle: 'common.settings.importData.dialog.title'.tr(),
       );
 
       if (result == null || result.files.isEmpty) return;
@@ -90,7 +94,11 @@ class DataBackupService {
       final lines = await file.readAsLines();
 
       if (lines.isEmpty || lines.length == 1) {
-        throw Exception('No data to import');
+        // throw Exception('No data to import');
+        ToastUtils.show(
+          message: 'common.settings.importData.info.importDataEmpty'.tr(),
+          type: ToastType.info,
+        );
       }
 
       // 첫 줄은 헤더이므로 제외
@@ -134,12 +142,14 @@ class DataBackupService {
       }
 
       ToastUtils.show(
-        message: '$importCount words imported',
+        message: 'common.settings.importData.success.importData'
+            .tr(args: [importCount.toString()]),
         type: ToastType.success,
       );
     } catch (e) {
       ToastUtils.show(
-        message: 'Failed to import data: ${e.toString()}',
+        message: 'common.settings.importData.error.importData'
+            .tr(args: [e.toString()]),
         type: ToastType.error,
       );
     }

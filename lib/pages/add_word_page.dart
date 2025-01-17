@@ -136,7 +136,7 @@ class _AddWordPageState extends State<AddWordPage> {
 
         if (mounted) {
           ToastUtils.show(
-            message: 'mainPage.word.massages.wordSave'.tr(),
+            message: 'common.toast.word.success.saved'.tr(),
             type: ToastType.success,
           );
         }
@@ -167,7 +167,7 @@ class _AddWordPageState extends State<AddWordPage> {
 
         if (mounted) {
           ToastUtils.show(
-            message: 'mainPage.word.massages.wordUpdated'.tr(),
+            message: 'common.toast.word.success.updated'.tr(),
             type: ToastType.success,
           );
         }
@@ -319,7 +319,7 @@ class _AddWordPageState extends State<AddWordPage> {
                   }
                 : null,
             child: Text(
-              '',
+              'common.button.save'.tr(),
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,

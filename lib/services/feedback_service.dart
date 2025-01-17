@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:eng_word_storage/services/app_info_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../utils/toast_util.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class FeedbackService {
   static final FeedbackService instance = FeedbackService._internal();
@@ -20,7 +21,7 @@ class FeedbackService {
       await launchUrl(emailLaunchUri);
     } else {
       ToastUtils.show(
-        message: 'Could not open email client',
+        message: 'common.toast.settings.feedback.error.lanchEmail'.tr(),
         type: ToastType.error,
       );
     }

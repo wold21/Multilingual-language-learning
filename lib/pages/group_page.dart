@@ -109,7 +109,7 @@ class _GroupPageState extends State<GroupPage> {
     final confirmed = await ConfirmDialog.show(
       context: context,
       title: 'mainPage.group.menu.title.deleteGroup'.tr(),
-      content: 'mainPage.group.menu.message.deleteGroup'.tr(),
+      content: 'mainPage.group.messages.deleteGroup'.tr(),
     );
 
     if (confirmed == true) {
@@ -120,7 +120,7 @@ class _GroupPageState extends State<GroupPage> {
       });
 
       ToastUtils.show(
-        message: 'common.message.deleted'.tr(),
+        message: 'common.toast.group.success.deleted'.tr(),
         type: ToastType.success,
       );
 
@@ -152,8 +152,7 @@ class _GroupPageState extends State<GroupPage> {
                   Navigator.pop(context, selectedGroup);
                 } else {
                   ToastUtils.show(
-                    message:
-                        'mainPage.seelctGroup.errorMassage.groupSelect'.tr(),
+                    message: 'common.toast.group.error.groupSelect'.tr(),
                     type: ToastType.error,
                   );
                 }
@@ -205,7 +204,7 @@ class _GroupPageState extends State<GroupPage> {
           if (result != null) {
             await _databaseService.createGroup(result);
             ToastUtils.show(
-              message: 'common.message.groupCreated'.tr(),
+              message: 'common.toast.group.success.created'.tr(),
               type: ToastType.success,
             );
             _loadGroups();
