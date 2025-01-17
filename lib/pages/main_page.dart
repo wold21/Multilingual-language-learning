@@ -598,8 +598,8 @@ class _MainPageState extends State<MainPage> {
   Future<void> _showDeleteConfirmDialog(Word word) async {
     final confirmed = await ConfirmDialog.show(
       context: context,
-      title: 'Delete Word',
-      content: 'Are you sure you want to delete this word?',
+      title: 'mainPage.word.title.deleteWord'.tr(),
+      content: 'mainPage.word.messages.deleteWord'.tr(),
     );
 
     if (confirmed == true) {

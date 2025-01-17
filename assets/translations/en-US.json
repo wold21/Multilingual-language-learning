@@ -114,22 +114,26 @@
                 "messages": {
                     "deleteGroup": "Are you sure you want to delete this group?"
                 }
+            }
+        },
+        "word": {
+            "title": {
+                "newWord": "New Word",
+                "editWord": "Edit Word",
+                "deleteWord": "Delete Word"
             },
-            "word": {
-                "title": {
-                    "newWord": "New Word",
-                    "editWord": "Edit Word"
-                },
-                "input": {
-                    "word": "Word",
-                    "meaning": "Meaning",
-                    "memo": "Memo(optional)",
-                    "group": "Group",
-                    "language": "Language"
-                },
-                "errorMassage": {
-                    "word": "Please enter a word"
-                }
+            "input": {
+                "word": "Word",
+                "meaning": "Meaning",
+                "memo": "Memo(optional)",
+                "group": "Group",
+                "language": "Language"
+            },
+            "messages": {
+                "deleteWord": "Are you sure you want to delete this word?"
+            },
+            "errorMassage": {
+                "word": "Please enter a word"
             }
         },
         "setting": {

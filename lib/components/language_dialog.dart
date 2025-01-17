@@ -15,8 +15,8 @@ class LanguageDialog extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Select Language',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              'mainPage.setting.title.selectLanguage'.tr(),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           Expanded(

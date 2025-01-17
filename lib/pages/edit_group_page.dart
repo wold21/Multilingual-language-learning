@@ -90,7 +90,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
         ),
         centerTitle: true,
         title: Text(
-          'mainPage.group.menu.title.edtiGroup'.tr(),
+          'mainPage.group.menu.title.editGroup'.tr(),
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

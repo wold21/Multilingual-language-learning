@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:eng_word_storage/models/word.dart';
 import 'package:flutter/material.dart';
 
@@ -86,8 +87,8 @@ class _SearchSheetState extends State<SearchSheet> {
                         onSubmitted: _performSearch,
                         decoration: InputDecoration(
                           hintText: _searchInAllGroups
-                              ? 'Search in all groups'
-                              : 'Search in current group',
+                              ? 'mainPage.searchBar.placeholderAll'.tr()
+                              : 'mainPage.searchBar.placeholderGroup'.tr(),
                           hintStyle: TextStyle(
                             color: Colors.grey.withOpacity(0.5),
                           ),
@@ -136,8 +137,8 @@ class _SearchSheetState extends State<SearchSheet> {
                     });
                   },
                   tooltip: _searchInAllGroups
-                      ? 'Search in all groups'
-                      : 'Search in current group',
+                      ? 'mainPage.searchBar.placeholderAll'.tr()
+                      : 'mainPage.searchBar.placeholderGroup'.tr(),
                 ),
               ],
             ),

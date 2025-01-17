@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ConfirmDialog {
   static Future<bool?> show({
     required BuildContext context,
     required String title,
     required String content,
-    String cancelText = 'Cancel',
-    String confirmText = 'Delete',
   }) {
     return showDialog<bool>(
       context: context,
@@ -45,7 +44,7 @@ class ConfirmDialog {
                     padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
                   child: Text(
-                    cancelText,
+                    'common.button.cancel'.tr(),
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontSize: 16,
@@ -69,7 +68,7 @@ class ConfirmDialog {
                     padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
                   child: Text(
-                    confirmText,
+                    'common.button.delete'.tr(),
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontSize: 16,

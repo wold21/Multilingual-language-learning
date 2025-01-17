@@ -24,6 +24,7 @@ class AddWordPage extends StatefulWidget {
 class _AddWordPageState extends State<AddWordPage> {
   static const String FIRST_RUN_KEY = 'is_first_run';
   static const String _lastSelectedLanguageKey = 'last_selected_language';
+  static const String _lastSelectedGroupKey = 'last_selected_group';
   static const String _adWordCountKey = 'ad_word_count';
   static const int _adWordThreshold = 3;
   InterstitialAd? _interstitialAd;
@@ -45,6 +46,7 @@ class _AddWordPageState extends State<AddWordPage> {
     super.initState();
     _updateSaveButton();
     _loadLastSelectedLanguage();
+    _loadLastSelectedGroup();
     _wordController.addListener(_updateSaveButton);
     _meaningController.addListener(_updateSaveButton);
     if (widget.wordToEdit != null) {
@@ -95,9 +97,24 @@ class _AddWordPageState extends State<AddWordPage> {
     }
   }
 
+  Future<void> _loadLastSelectedGroup() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastGroupId = prefs.getString(_lastSelectedGroupKey);
+    Group? lastGroup =
+        await DatabaseService.instance.getGroup(int.parse(lastGroupId!));
+    setState(() {
+      _selectedGroup = lastGroup;
+    });
+  }
+
   Future<void> _saveSelectedLanguage(ContentLanguage language) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_lastSelectedLanguageKey, language.code);
+  }
+
+  Future<void> _saveSelectedGroup(int groupId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_lastSelectedGroupKey, groupId.toString());
   }
 
   void _updateSaveButton() {
@@ -388,6 +405,7 @@ class _AddWordPageState extends State<AddWordPage> {
                               setState(() {
                                 _selectedGroup = selectedGroup;
                               });
+                              await _saveSelectedGroup(selectedGroup.id!);
                             }
                           },
                           child: Text(

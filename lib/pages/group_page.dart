@@ -98,6 +98,10 @@ class _GroupPageState extends State<GroupPage> {
           if (result != null) {
             await _databaseService.updateGroup(result);
             _loadGroups();
+            ToastUtils.show(
+              message: 'common.toast.group.success.updated'.tr(),
+              type: ToastType.success,
+            );
           }
         },
         onDelete: () => _showDeleteConfirmDialog(group),
