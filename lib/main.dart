@@ -28,7 +28,7 @@ void main() async {
         Locale('hi'),
         Locale('ja'),
         Locale('my'),
-        Locale('ru'),
+        // Locale('ru'),
         Locale('th'),
         Locale('zh'),
       ],

@@ -4,12 +4,12 @@ enum SystemLanguage {
   enGB(code: 'en-GB', name: 'United Kingdom', flag: '🇬🇧'),
   th(code: 'th', name: 'ประเทศไทย', flag: '🇹🇭'),
   ms(code: 'ms', name: 'Malaysia', flag: '🇲🇾'),
-  ru(code: 'ru', name: 'Россия', flag: '🇷🇺'),
   zh(code: 'zh', name: '中国', flag: '🇨🇳'),
   ja(code: 'ja', name: '日本', flag: '🇯🇵'),
   my(code: 'my', name: 'မြန်မာ', flag: '🇲🇲'),
   hi(code: 'hi', name: 'भारत', flag: '🇮🇳');
 
+  // ru(code: 'ru', name: 'Россия', flag: '🇷🇺'),
   // fil(code: 'fil', name: 'Pilipinas', flag: '🇵🇭'),
 
   final String code;
