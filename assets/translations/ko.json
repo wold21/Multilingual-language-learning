@@ -146,6 +146,7 @@
             "about": "정보"
         },
         "title": {
+            "settings": "설정",
             "removeAds": "광고 제거",
             "premiumActive": "프리미엄 활성화",
             "restorePurchase": "구매 복원",

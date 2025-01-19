@@ -146,6 +146,7 @@
             "about": "О приложении"
         },
         "title": {
+            "settings": "настройки",
             "removeAds": "Удалить рекламу",
             "premiumActive": "Премиум активен",
             "restorePurchase": "Восстановить покупку",

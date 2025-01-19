@@ -65,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'title.settings'.tr(),
+          'setting.title.settings'.tr(),
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,

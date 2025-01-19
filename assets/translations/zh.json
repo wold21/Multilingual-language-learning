@@ -146,6 +146,7 @@
             "about": "关于应用"
         },
         "title": {
+            "settings": "设置",
             "removeAds": "移除广告",
             "premiumActive": "高级版已激活",
             "restorePurchase": "恢复购买",

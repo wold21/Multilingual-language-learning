@@ -146,6 +146,7 @@
             "about": "एप्लिकेशन के बारे में"
         },
         "title": {
+            "settings": "सेटिंग्स",
             "removeAds": "विज्ञापन हटाएं",
             "premiumActive": "प्रीमियम सक्रिय",
             "restorePurchase": "खरीदी बहाल करें",

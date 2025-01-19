@@ -146,6 +146,7 @@
             "about": "เกี่ยวกับ"
         },
         "title": {
+            "settings": "การตั้งค่า",
             "removeAds": "ลบโฆษณา",
             "premiumActive": "พรีเมียมเปิดใช้งาน",
             "restorePurchase": "คืนค่าการซื้อ",

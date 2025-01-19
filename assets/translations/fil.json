@@ -146,6 +146,7 @@
             "about": "Tungkol sa App"
         },
         "title": {
+            "settings": "Mga Setting",
             "removeAds": "Alisin ang mga Ads",
             "premiumActive": "Premium Activated",
             "restorePurchase": "I-restore ang Pagbili",

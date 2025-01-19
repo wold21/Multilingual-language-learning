@@ -146,6 +146,7 @@
             "about": "About"
         },
         "title": {
+            "settings": "Settings",
             "removeAds": "Remove Adverts",
             "premiumActive": "Premium Active",
             "restorePurchase": "Restore Purchase",

@@ -146,6 +146,7 @@
             "about": "アプリについて"
         },
         "title": {
+            "settings": "せってい",
             "removeAds": "広告を削除",
             "premiumActive": "プレミアムが有効",
             "restorePurchase": "購入履歴を復元",
