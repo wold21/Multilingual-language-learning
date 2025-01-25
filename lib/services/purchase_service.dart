@@ -52,11 +52,13 @@ class PurchaseService {
 
   void _handlePurchaseUpdate(List<PurchaseDetails> purchaseDetailsList) {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.status == PurchaseStatus.purchased ||
-          purchaseDetails.status == PurchaseStatus.restored) {
-        await _savePurchaseStatus(true);
-      } else {
-        await _savePurchaseStatus(false);
+      if (purchaseDetails.productID == _removeAdsId) {
+        if (purchaseDetails.status == PurchaseStatus.purchased ||
+            purchaseDetails.status == PurchaseStatus.restored) {
+          await _savePurchaseStatus(true);
+        } else {
+          await _savePurchaseStatus(false);
+        }
       }
       if (purchaseDetails.pendingCompletePurchase) {
         await _inAppPurchase.completePurchase(purchaseDetails);
