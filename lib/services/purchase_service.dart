@@ -22,7 +22,7 @@ class PurchaseService {
   Future<void> init() async {
     final available = await _inAppPurchase.isAvailable();
     if (!available) return;
-
+    await restorePurchases();
     _inAppPurchase.purchaseStream.listen(_handlePurchaseUpdate);
     _adsRemovedController.add(await isAdRemoved());
   }
