@@ -179,7 +179,9 @@
             "premiumLoadMessage": "Retrieving payment history",
             "resetData": "This will delete all words and groups. This action cannot be undone. Are you sure you want to continue?",
             "resetSuccess": "All data has been reset",
-            "resetFailed": "Failed to reset data"
+            "resetFailed": "Failed to reset data",
+            "purchased": "Purchase completed",
+            "purchaseRestored": "Purchase restored"
         },
         "errorMessage": {
             "purchaseError": "Purchase failed: {}"

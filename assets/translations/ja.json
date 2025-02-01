@@ -179,7 +179,9 @@
             "premiumLoadMessage": "購入履歴を取得中",
             "resetData": "すべての単語とグループが削除されます。この操作は元に戻せません。本当に続行しますか？",
             "resetSuccess": "すべてのデータがリセットされました",
-            "resetFailed": "データのリセットに失敗しました"
+            "resetFailed": "データのリセットに失敗しました",
+            "purchased": "購入完了",
+            "purchaseRestored": "購入が復元されました"
         },
         "errorMessage": {
             "purchaseError": "購入に失敗しました: {}"

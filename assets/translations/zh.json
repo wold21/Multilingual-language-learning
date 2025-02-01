@@ -179,7 +179,9 @@
             "premiumLoadMessage": "正在获取购买记录",
             "resetData": "所有单词和分组将被删除，此操作不可撤销。您确定要继续吗？",
             "resetSuccess": "所有数据已重置",
-            "resetFailed": "数据重置失败"
+            "resetFailed": "数据重置失败",
+            "purchased": "购买成功",
+            "purchaseRestored": "购买已恢复"
         },
         "errorMessage": {
             "purchaseError": "购买失败: {}"

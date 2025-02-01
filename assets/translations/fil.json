@@ -177,7 +177,11 @@
         },
         "massages": {
             "premiumLoadMessage": "Naglo-load ang premium status",
-            "resetData": "Ang lahat ng iyong mga salita ay mabubura, gusto mo bang ituloy?"
+            "resetData": "Ang lahat ng iyong mga salita ay mabubura, gusto mo bang ituloy?",
+            "resetSuccess": "Ang lahat ng data ay na-reset",
+            "resetFailed": "Hindi na-reset ang data",
+            "purchased": "Ang pagbili ay nagtagumpay",
+            "purchaseRestored": "Ang pagbili ay na-restore"
         },
         "errorMessage": {
             "purchaseError": "Error sa pagbili: {}"

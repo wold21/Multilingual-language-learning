@@ -179,7 +179,9 @@
             "premiumLoadMessage": "Mengambil sejarah pembayaran",
             "resetData": "Ini akan memadamkan semua perkataan dan kumpulan. Tindakan ini tidak dapat dipulihkan. Adakah anda pasti ingin teruskan?",
             "resetSuccess": "Semua data telah ditetapkan semula",
-            "resetFailed": "Gagal menetapkan semula data"
+            "resetFailed": "Gagal menetapkan semula data",
+            "purchased": "Pembelian selesai",
+            "purchaseRestored": "Pembelian dipulihkan"
         },
         "errorMessage": {
             "purchaseError": "Pembelian gagal: {}"
